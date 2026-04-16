@@ -33,14 +33,15 @@ Plans:
 
 **Plans**: To be planned
 
-**Status**: In Progress
+**Status**: Complete
 
-**Plans**: 3 plans
+**Plans**: 4 plans
 
 Plans:
-- [ ] 02-auth-system-01-PLAN.md — Supabase Auth 설정 및 기본 구조
-- [ ] 02-auth-system-02-PLAN.md — 소셜 로그인 구현
-- [ ] 02-auth-system-03-PLAN.md — 이메일 로그인 및 세션 관리
+- [x] 02-auth-system-01-PLAN.md — Supabase Auth 설정 및 기본 구조
+- [x] 02-auth-system-02-PLAN.md — 소셜 로그인 구현
+- [x] 02-auth-system-03-PLAN.md — 이메일 로그인 및 세션 관리
+- [x] 02-auth-system-gap-closure-PLAN.md — Auth system gap closure (OAuth wiring, root layout, session hook)
 
 ---
 
