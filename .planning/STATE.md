@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-last_updated: "2026-04-16T06:58:03.586Z"
+last_updated: "2026-04-16T07:04:07.156Z"
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # State
@@ -22,7 +22,7 @@ progress:
 ## Current Position
 
 Phase: 01 (template-engine) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 - **Phase**: 01-template-engine
 - **Focus**: 템플릿 엔진 개발
@@ -30,7 +30,8 @@ Plan: 2 of 3
 
 ## Decisions
 
-None yet.
+- [Phase 01-template-engine]: Date format: Use Korean format 'YYYY 년 MM 월 DD 일' for date fields
+- [Phase 01-template-engine]: Location rendering: Include Google Maps link for location fields
 
 ## Blockers
 
