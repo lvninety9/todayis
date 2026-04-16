@@ -1,108 +1,97 @@
-# ROADMAP.md
+# Todayis - Wedding Invitation Platform
 
-## Project Overview
+## Phase 1: 템플릿 엔진 개발
 
-Todayis - 웨딩 초대장 제작 플랫폼
+**Goal**: 기본 템플릿 렌더링 시스템, 실시간 미리보기, 데이터 바인딩 구현
 
-## Phase Roadmap
+**Requirements**: 
+- TEMPLATE-01: 템플릿 타입 정의 및 구조 설계
+- TEMPLATE-02: 템플릿 렌더링 엔진 구현
+- TEMPLATE-03: 실시간 미리보기 기능 구현
+- TEMPLATE-04: 데이터 바인딩 시스템 구현
 
-### Phase 1: Setup (완료)
-- [x] 프로젝트 초기화
-- [x] shadcn/ui 컴포넌트 설치
-- [x] Supabase 설정
-- [x] 데이터베이스 스키마 생성
-- [x] Storage 버킷 설정
+**Plans**: 3 plans
 
-### Phase 2: Auth (인증 시스템)
-**Goal:** 사용자 인증 시스템 구현
-**Requirements:** AUTH-01, AUTH-02, AUTH-03
-**Completed:** 2026-04-04
+Plans:
+- [x] 01-template-engine-01-PLAN.md — 템플릿 타입 정의 및 컴포넌트 skeleton 생성
+- [x] 01-template-engine-02-PLAN.md — 템플릿 유틸리티, 샘플 데이터, 렌더링 엔진 구현
+- [x] 01-template-engine-03-PLAN.md — 실시간 편집기 및 미리보기 연동 구현
 
-**Plans:**
-- [x] 02-auth-01-PLAN.md — Supabase Auth 연동 및 타입 정의
-- [x] 02-auth-02-PLAN.md — 로그인/회원가입 페이지 구현
-- [x] 02-auth-03-PLAN.md — 인증 보호 라우트 및 미들웨어 설정
-
-### Phase 3: Template (템플릿 엔진)
-**Goal:** 템플릿 목록 및 상세 페이지 구현
-**Requirements:** TEMP-01, TEMP-02
-
-**Plans:**
-- [ ] 03-template-01-PLAN.md — 템플릿 데이터 모델 및 API
-- [ ] 03-template-02-PLAN.md — 템플릿 목록 UI 구현
-
-### Phase 4: Editor (편집기)
-**Goal:** 초대장 편집기 구현
-**Requirements:** EDIT-01, EDIT-02, EDIT-03
-
-**Plans:**
-- [ ] 04-editor-01-PLAN.md — 편집기 기본 구조
-- [ ] 04-editor-02-PLAN.md — 텍스트/이미지 편집 기능
-- [ ] 04-editor-03-PLAN.md — 실시간 미리보기
-
-### Phase 5: Payment (결제 시스템)
-**Goal:** Toss Payments 연동
-**Requirements:** PAY-01, PAY-02
-
-**Plans:**
-- [ ] 05-payment-01-PLAN.md — Toss Payments API 연동
-- [ ] 05-payment-02-PLAN.md — 결제 페이지 UI
-
-### Phase 6: Publish (공개 기능)
-**Goal:** 초대장 공개 및 공유 기능
-**Requirements:** PUBL-01, PUBL-02
-
-**Plans:**
-- [ ] 06-publish-01-PLAN.md — 공개 초대장 라우트
-- [ ] 06-publish-02-PLAN.md — 공유 기능 (URL, SNS)
+**Status**: In Progress
 
 ---
 
-## Requirements
+## Phase 2: 인증 시스템 (Next)
 
-### AUTH-01: 사용자 등록
-- [x] Email/Password 인증
-- [x] Google OAuth 인증
-- [x] GitHub OAuth 인증
+**Goal**: Supabase Auth 를 통한 사용자 인증 구현
 
-### AUTH-02: 사용자 세션 관리
-- [ ] 자동 로그인 (refresh token)
-- [ ] 세션 만료 처리
-- [ ] 로그아웃 기능
+**Requirements**: 
+- AUTH-01: Supabase Auth 설정
+- AUTH-02: Google/GitHub 로그인 구현
+- AUTH-03: Email/비밀번호 로그인 구현
+- AUTH-04: 세션 관리 구현
 
-### TEMP-01: 템플릿 조회
-- [ ] 템플릿 목록 API
-- [ ] 템플릿 상세 API
+**Plans**: To be planned
 
-### TEMP-02: 템플릿 필터링
-- [ ] 카테고리별 필터링
-- [ ] 인기 템플릿 표시
+**Status**: Not Started
 
-### EDIT-01: 초대장 생성
-- [ ] 템플릿 기반 초대장 제작
-- [ ] 기본 정보 입력 (이름, 날짜, 장소)
+---
 
-### EDIT-02: 콘텐츠 편집
-- [ ] 텍스트 수정
-- [ ] 이미지 업로드
-- [ ] 레이아웃 조정
+## Phase 3: 템플릿 관리 (Next)
 
-### EDIT-03: 미리보기
-- [ ] 실시간 미리보기
-- [ ] 모바일/데스크톱 전환
+**Goal**: 템플릿 CRUD 및 라이브러리 관리
 
-### PAY-01: 결제 요청
-- [ ] Toss Payments API 연동
-- [ ] 결제 수단 선택
+**Requirements**: 
+- TEMPLATE-MANAGE-01: 템플릿 CRUD API 구현
+- TEMPLATE-MANAGE-02: 템플릿 라이브러리 UI 구현
+- TEMPLATE-MANAGE-03: 템플릿 업로드 기능 구현
 
-### PAY-02: 결제 완료 처리
-- [ ] 웹훅 핸들러
-- [ ] 유료 템플릿 활성화
+**Plans**: To be planned
 
-### PUBL-01: 공개 초대장
-- [ ] 고유 URL 생성
-- [ ] 비공개/공개 설정
+**Status**: Not Started
 
-### PUBL-02: 공유 기능
-- [ ] URL 복사
-- [ ] SNS 공유
+---
+
+## Phase 4: 결제 시스템 (Next)
+
+**Goal**: Toss Payments 연동을 통한 유료 템플릿 구매
+
+**Requirements**: 
+- PAYMENT-01: Toss Payments SDK 설정
+- PAYMENT-02: 결제 프로세스 구현
+- PAYMENT-03: 웹훅 핸들러 구현
+
+**Plans**: To be planned
+
+**Status**: Not Started
+
+---
+
+## Phase 5: 초대장 공개 (Next)
+
+**Goal**: 생성된 초대장을 공개하고 공유할 수 있도록 구현
+
+**Requirements**: 
+- PUBLISH-01: 초대장 공개 API 구현
+- PUBLISH-02: Subpath routing 구현
+- PUBLISH-03: 공유 기능 구현
+
+**Plans**: To be planned
+
+**Status**: Not Started
+
+---
+
+## Phase 6: 테스트 및 최적화 (Next)
+
+**Goal**: 전체 시스템 테스트 및 성능 최적화
+
+**Requirements**: 
+- TEST-01: 단위 테스트 작성
+- TEST-02: E2E 테스트 작성
+- TEST-03: 성능 최적화
+
+**Plans**: To be planned
+
+**Status**: Not Started
+
