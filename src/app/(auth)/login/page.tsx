@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import LoginForm from '@/components/forms/LoginForm';
 import ForgotPasswordForm from '@/components/forms/ForgotPasswordForm';
+import GoogleLoginButton from '@/components/auth/GoogleLoginButton';
+import GitHubLoginButton from '@/components/auth/GitHubLoginButton';
 
 export default function LoginPage() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -71,22 +73,8 @@ export default function LoginPage() {
               </div>
 
               <div className="mt-6 space-y-3">
-                <Link href="/api/auth?provider=google" className="block">
-                  <button
-                    type="button"
-                    className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Google 로 로그인
-                  </button>
-                </Link>
-                <Link href="/api/auth?provider=github" className="block">
-                  <button
-                    type="button"
-                    className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    GitHub 로 로그인
-                  </button>
-                </Link>
+                <GoogleLoginButton />
+                <GitHubLoginButton />
               </div>
             </div>
           </>
