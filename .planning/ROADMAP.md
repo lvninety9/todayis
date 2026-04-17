@@ -54,7 +54,12 @@ Plans:
 - TEMPLATE-MANAGE-02: 템플릿 라이브러리 UI 구현
 - TEMPLATE-MANAGE-03: 템플릿 업로드 기능 구현
 
-**Plans**: To be planned
+**Plans**: 3 plans
+
+Plans:
+- [ ] 03-template-management-01-PLAN.md — 템플릿 타입 정의 및 데이터베이스 스키마
+- [ ] 03-template-management-02-PLAN.md — 템플릿 CRUD API 구현
+- [ ] 03-template-management-03-PLAN.md — 템플릿 라이브러리 UI 구현
 
 **Status**: Not Started
 
