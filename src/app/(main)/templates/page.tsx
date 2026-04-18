@@ -93,9 +93,7 @@ export default function TemplatesPage() {
 
   // 템플릿 선택 (편집)
   const handleSelect = (template: Template) => {
-    setSelectedTemplate(template);
-    // TODO: Navigate to editor page
-    toast.info('편집 기능은 곧 제공됩니다');
+    router.push(`/templates/${template.id}/edit`);
   };
 
   // 템플릿 삭제
