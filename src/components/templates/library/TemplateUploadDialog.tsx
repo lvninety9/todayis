@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Template } from '@/types/template';
+import { Template, TemplateField, FieldType } from '@/types/template';
 import { TemplatePreview } from '../preview/TemplatePreview';
 import { TemplateData } from '@/types/template';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface TemplateUploadDialogProps {
   open: boolean;
@@ -17,6 +18,8 @@ interface TemplateUploadDialogProps {
     name: string;
     category: string;
     thumbnail: string;
+    fields: TemplateField[];
+    layout: string;
   }) => Promise<void>;
 }
 
@@ -36,11 +39,47 @@ export function TemplateUploadDialog({
   const [name, setName] = useState('');
   const [category, setCategory] = useState('wedding');
   const [thumbnail, setThumbnail] = useState('');
+  const [fields, setFields] = useState<TemplateField[]>([]);
+  const [layout, setLayout] = useState('simple');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // 카테고리 목록
   const categories = ['wedding', 'birthday', 'custom'];
+
+  // 필드 타입 목록
+  const fieldTypes: FieldType[] = ['text', 'date', 'image', 'location'];
+
+  // 레이아웃 옵션
+  const layoutOptions = [
+    { value: 'simple', label: '심플 (단일 컬럼)' },
+    { value: 'classic', label: '클래식 (헤더 + 콘텐츠 + 푸터)' },
+    { value: 'modern', label: '모던 (그리드 기반)' },
+  ];
+
+  // 필드 추가
+  const addField = () => {
+    const newField: TemplateField = {
+      name: `field_${fields.length + 1}`,
+      type: 'text',
+      label: `필드 ${fields.length + 1}`,
+      required: false,
+      defaultValue: null,
+    };
+    setFields([...fields, newField]);
+  };
+
+  // 필드 제거
+  const removeField = (index: number) => {
+    setFields(fields.filter((_, i) => i !== index));
+  };
+
+  // 필드 업데이트
+  const updateField = (index: number, data: Partial<TemplateField>) => {
+    const updatedFields = [...fields];
+    updatedFields[index] = { ...updatedFields[index], ...data };
+    setFields(updatedFields);
+  };
 
   // 유효성 검사
   const validateForm = (): boolean => {
@@ -91,12 +130,16 @@ export function TemplateUploadDialog({
         name: name.trim(),
         category,
         thumbnail: thumbnail.trim(),
+        fields,
+        layout,
       });
 
       // 성공 후 초기화
       setName('');
       setCategory('wedding');
       setThumbnail('');
+      setFields([]);
+      setLayout('simple');
       onOpenChange(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : '템플릿 생성에 실패했습니다');
@@ -177,6 +220,138 @@ export function TemplateUploadDialog({
               placeholder="https://example.com/image.jpg"
               disabled={isSubmitting}
             />
+          </div>
+
+          {/* 레이아웃 설정 */}
+          <div className="space-y-2">
+            <Label htmlFor="layout">레이아웃 *</Label>
+            <Select value={layout} onValueChange={setLayout} disabled={isSubmitting}>
+              <SelectTrigger id="layout">
+                <SelectValue placeholder="레이아웃 선택" />
+              </SelectTrigger>
+              <SelectContent>
+                {layoutOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* 필드 설정 */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <Label>템플릿 필드</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addField}
+                disabled={isSubmitting}
+              >
+                + 필드 추가
+              </Button>
+            </div>
+
+            {fields.length === 0 ? (
+              <div className="text-center py-4 text-gray-500 border rounded-lg">
+                필드가 없습니다. 필드를 추가해주세요.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {fields.map((field, index) => (
+                  <div
+                    key={index}
+                    className="border rounded-lg p-4 space-y-3 bg-gray-50"
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium">필드 {index + 1}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeField(index)}
+                        disabled={isSubmitting}
+                      >
+                        제거
+                      </Button>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor={`field-name-${index}`}>필드 이름</Label>
+                      <Input
+                        id={`field-name-${index}`}
+                        value={field.name}
+                        onChange={(e) =>
+                          updateField(index, { name: e.target.value })
+                        }
+                        placeholder="예: groom_name"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor={`field-label-${index}`}>표시 라벨</Label>
+                      <Input
+                        id={`field-label-${index}`}
+                        value={field.label}
+                        onChange={(e) =>
+                          updateField(index, { label: e.target.value })
+                        }
+                        placeholder="예: 신랑 이름"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor={`field-type-${index}`}>필드 타입</Label>
+                      <Select
+                        value={field.type}
+                        onValueChange={(value) =>
+                          updateField(index, { type: value as FieldType })
+                        }
+                        disabled={isSubmitting}
+                      >
+                        <SelectTrigger id={`field-type-${index}`}>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {fieldTypes.map((type) => (
+                            <SelectItem key={type} value={type}>
+                              {type === 'text'
+                                ? '텍스트'
+                                : type === 'date'
+                                ? '날짜'
+                                : type === 'image'
+                                ? '이미지'
+                                : '위치'}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`field-required-${index}`}
+                        checked={field.required}
+                        onCheckedChange={(checked) =>
+                          updateField(index, { required: checked as boolean })
+                        }
+                        disabled={isSubmitting}
+                      />
+                      <Label
+                        htmlFor={`field-required-${index}`}
+                        className="text-sm font-normal"
+                      >
+                        필수 필드
+                      </Label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* 미리보기 */}
