@@ -73,6 +73,8 @@ export default function TemplatesPage() {
     name: string;
     category: string;
     thumbnail: string;
+    fields: any[];
+    layout: string;
   }) => {
     const response = await fetch('/api/templates', {
       method: 'POST',
