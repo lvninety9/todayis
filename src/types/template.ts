@@ -44,6 +44,16 @@ export interface Template {
   fields: TemplateField[];
   /** 레이아웃 (JSON 문자열 또는 경로) */
   layout: string;
+  /** 사용자 ID (소유자) */
+  userId: string;
+  /** 생성일시 */
+  createdAt: string;
+  /** 수정일시 */
+  updatedAt: string;
+  /** 공개 여부 */
+  isPublished: boolean;
+  /** 다운로드 카운트 */
+  downloadCount: number;
 }
 
 /**
