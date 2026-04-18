@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User 모델 (Phase 2 auth-system 에서 정의)
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  phone         String?
+  confirmedAt   DateTime? @db.Timestamp(6)
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @updatedAt @db.Timestamp(6)
+
+  // Templates created by this user
+  templates     Template[]
+
+  @@map("users")
+}
+
+// Template 모델
+model Template {
+  id            String    @id @default(uuid())
+  userId        String
+  name          String    @map("name")
+  category      String    @map("category")
+  thumbnail     String    @map("thumbnail")
+  fields        String    @map("fields") // JSON stringified TemplateField[]
+  layout        String    @map("layout") // JSON stringified layout config
+  isPublished   Boolean   @default(false) @map("is_published")
+  downloadCount Int       @default(0) @map("download_count")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Indexes
+  @@index([userId])
+  @@index([isPublished])
+  @@index([userId, isPublished])
+
+  @@map("templates")
+}
