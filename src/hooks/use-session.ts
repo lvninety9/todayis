@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { User, AuthSession } from '@/types/auth';
 
@@ -18,26 +18,49 @@ export function useSession() {
     loading: true,
     error: null,
   });
+  const hasInitialized = useRef(false);
+  const lastSessionJson = useRef<string | null>(null);
 
   useEffect(() => {
-    // Get initial session
     const initializeSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
+        const { data: { session: currentSession }, error } = await supabase.auth.getSession();
+
+        if (error) {
+          setSession({
+            user: null,
+            session: null,
+            loading: false,
+            error: error.message,
+          });
+          return;
+        }
+
+        const sessionJson = currentSession ? JSON.stringify(currentSession) : null;
+        lastSessionJson.current = sessionJson;
+
         setSession({
-          user: session?.user ?? null,
-          session,
+          user: currentSession?.user ?? null,
+          session: currentSession,
           loading: false,
           error: null,
         });
 
-        // Listen for auth changes
+        hasInitialized.current = true;
+
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-          async (_event, session) => {
+          (_event, newSession) => {
+            const newSessionJson = newSession ? JSON.stringify(newSession) : null;
+
+            if (newSessionJson === lastSessionJson.current) {
+              return;
+            }
+
+            lastSessionJson.current = newSessionJson;
+
             setSession({
-              user: session?.user ?? null,
-              session,
+              user: newSession?.user ?? null,
+              session: newSession,
               loading: false,
               error: null,
             });
@@ -55,7 +78,9 @@ export function useSession() {
       }
     };
 
-    initializeSession();
+    if (!hasInitialized.current) {
+      initializeSession();
+    }
   }, []);
 
   return session;

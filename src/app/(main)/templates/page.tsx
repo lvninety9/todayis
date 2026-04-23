@@ -30,18 +30,22 @@ export default function TemplatesPage() {
 
   // 템플릿 목록 조회
   const fetchTemplates = useCallback(async () => {
+    if (!session.session?.access_token) {
+      setLoading(false);
+      return;
+    }
+
     try {
-      const token = session.session?.access_token;
-      const headers: Record<string, string> = {};
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+      const token = session.session.access_token;
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${token}`,
+      };
       
       const response = await fetch('/api/templates', { headers });
       
       if (!response.ok) {
         if (response.status === 401) {
-          router.push('/login');
+          setLoading(false);
           return;
         }
         throw new Error('템플릿을 불러오는데 실패했습니다');
@@ -62,11 +66,15 @@ export default function TemplatesPage() {
     } finally {
       setLoading(false);
     }
-  }, [router, session.session]);
+  }, [session.session?.access_token]);
 
   // 마운트 시 템플릿 조회
   useEffect(() => {
-    if (!session.loading && !session.user) {
+    if (session.loading) {
+      return;
+    }
+
+    if (!session.user) {
       router.push('/login');
       return;
     }

@@ -33,30 +33,40 @@
 - ✅ Supabase 설정 (client.ts, server.ts, middleware.ts)
 - ✅ .env.example 생성
 - ✅ GSD.md 생성
+- ✅ Phase 01: 템플릿 엔진 개발 (3/3 plan 완료)
+- ✅ Phase 02: 인증 시스템 (4/4 plan 완료)
+- ✅ OAuth 세션 버그 수정
+- ✅ /settings 프로필 설정 페이지
+- ✅ /admin 어드민 페이지 (회원/템플릿 관리)
+- ✅ 빌드 테스트 — 17 페이지 성공
 
 ## 진행 중인 작업
-- ⚠️ Supabase server.ts TypeScript 오류 수정 필요 (cookie handling)
-- ⚠️ 메인 페이지에 프로젝트 콘텐츠 반영 필요
+- ⚠️ 모든 변경사항 git commit되지 않음 (uncommitted)
+- ⚠️ ROADMAP.md가 실제 구현 상태와 불일치
 
 ## 남은 작업
-- ❌ Supabase 서버.ts 오류 수정
-- ❌ Supabase 데이터베이스 스키마 생성 (tables, storage buckets)
-- ❌ 인증 페이지 구현 (login, signup)
-- ❌ 템플릿 목록/상세 페이지 구현
-- ❌ 템플릿 에디터 구현
-- ❌ 템플릿 엔진 구현 (shadcn + Pretext 하이브리드)
+- ❌ git commit & push
+- ❌ 어드민 페이지 권한 검증 추가 (보안상 중요)
+- ❌ ROADMAP.md 업데이트
+- ❌ 프로필 이미지 업로드
+- ❌ 회원 목록 페이지네이션
+- ❌ 비밀번호 변경 기능
+- ❌ 계정 삭제 기능
 - ❌ Toss Payments 연동
 - ❌ Vercel 배포 설정
 
 ## GSD 프레임워크 사용법
 ```bash
-# 1. 현재 단계 계획
+# 1. 현재 단계 논의
+/gsd-discuss-phase
+
+# 2. 계획 수립
 /gsd-plan-phase
 
-# 2. 계획 실행
+# 3. 계획 실행
 /gsd-execute-phase
 
-# 3. 목표 검증
+# 4. 목표 검증
 /gsd-verify
 ```
 
@@ -69,14 +79,15 @@
 6. **개발 접근**: MVP 핵심 기능 먼저, 점진적 확장
 
 ## 다음 단계
-1. Supabase 서버.ts 오류 수정
-2. Supabase 데이터베이스 스키마 생성
-3. 인증 시스템 구현
-4. 템플릿 엔진 개발
-5. 결제 시스템 연동
+1. git commit & push
+2. /gsd-discuss-phase로 다음 작업 논의
+3. 어드민 권한 검증 추가
+4. ROADMAP.md 업데이트
+5. 프로필 이미지 업로드
 
 ## 참고
 - GSD 프레임워크: `/home/jay/.config/opencode/get-shit-done/`
 - Next.js 14 agent rules: `node_modules/next/dist/docs/`
 - 모든 입력값 검증, 보안 최우선
 - TypeScript strict 모드 준수
+- **상세 기록**: `SESSION-HANDOFF.md` 파일 참조

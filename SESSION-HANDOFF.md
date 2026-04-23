@@ -1,181 +1,225 @@
 # Todayis 프로젝트 세션 핸드오프 문서
 
 ## 프로젝트 개요
-
-**Todayis**는 웹 기반 웨딩 초대장 제작 플랫폼입니다.
-
-- **기술 스택**: Next.js 14 (App Router), Supabase (Auth + Database), shadcn/ui, Tailwind CSS v4
-- **핵심 기능**: 템플릿 생성/편집, 사용자 인증, 초대장 공유 (subpath)
-- **현재 상태**: MVP 개발 중 (Phase 02-auth → Phase 03-template-management)
+- **기술 스택**: Next.js 14 (App Router), Supabase, shadcn/ui, Tailwind CSS
+- **현재 상태**: MVP 개발 중 (Phase 02 완료, Phase 03 대기)
+- **GitHub**: https://github.com/lvninety9/todayis
 
 ---
 
-## 작업 완료 내역
+## 이번 세션에서 완료된 작업
 
-### 1. 빌드 오류 수정 (최근 작업)
+### 1. OAuth 세션 버그 수정 ✅
 
-| 파일 | 문제 | 해결 방법 |
-|------|------|-----------|
-| `src/lib/template-utils.ts` | JSX 포함 but `.ts` 확장자 | `.tsx`로 rename |
-| `src/app/api/auth/logout/route.ts` | `signOut()` 인자 오류 | 쿠키 기반 로그아웃으로 재구현 |
-| `src/app/api/templates/[id]/route.ts` | Template 타입 불일치 | `database.types` → `types/template` import 수정 |
-| `src/app/api/templates/route.ts` | 동일 | 동일하게 수정 |
-| `src/data/templates/sample.ts` | Template 필드 누락 | `userId`, `createdAt`, `updatedAt`, `isPublished`, `downloadCount` 추가 |
-| `src/types/auth.ts` | User 타입 호환성 오류 | Supabase User 타입 직접 사용으로 변경 |
-| `src/app/(auth)/signup/page.tsx` | `useSearchParams()` Suspense 오류 | 불필요한 useEffect 제거 |
+**버그 설명:**
+- OAuth 로그인 후 템플릿 라이브러리(`/templates`) 접근 시 강제 로그아웃되는 문제
+- `useSession` 훅에서 `access_token`이 null로 초기화되어 API 호출 시 401 에러 발생
+- 401 에러 → `/login` 리다이렉트 → 세션 초기화 → 다시 401 에러의 무한 루프
 
-### 2. 빌드 및 테스트 결과
+**수정 파일:**
+- `src/hooks/use-session.ts` — 세션 중복 업데이트 방지, JSON 기반 세션 비교 로직 추가
+- `src/app/(main)/templates/page.tsx` — 401 리다이렉트 루프 제거, access_token 없을 시 API 호출 중단
+- `src/app/(main)/dashboard/page.tsx` — 동일하게 수정
 
+**주요 변경 내용:**
+```typescript
+// use-session.ts
++ import { useEffect, useState, useRef } from 'react';
++ const hasInitialized = useRef(false);
++ const lastSessionJson = useRef<string | null>(null);
+
+// onAuthStateChange에서 JSON 비교로 중복 업데이트 방지
+const newSessionJson = newSession ? JSON.stringify(newSession) : null;
+if (newSessionJson === lastSessionJson.current) return;
+
+// initializeSession() 중복 호출 방지
+if (!hasInitialized.current) { initializeSession(); }
+```
+
+### 2. 프로필 설정 페이지 (`/settings`) ✅
+
+**새 파일:**
+- `src/app/(main)/settings/page.tsx` — 프로필 설정 UI (228 라인)
+- `src/app/api/profile/route.ts` — 프로필 조회/업데이트 API
+
+**기능:**
+- 이메일 표시 (변경 불가)
+- 닉네임 수정 (최대 50자)
+- 소개/바이오 수정 (최대 500자)
+- 계정 정보 표시 (가입일, 로그인 방법, 사용자 ID)
+- Supabase `user_metadata`에 nickname, bio 저장
+
+**API 엔드포인트:**
+- `GET /api/profile` — 프로필 정보 조회
+- `PATCH /api/profile` — 프로필 업데이트 (nickname, bio)
+
+### 3. 어드민 페이지 (`/admin`) ✅
+
+**새 파일:**
+- `src/app/(main)/admin/page.tsx` — 관리자 대시보드 UI
+- `src/app/api/admin/users/route.ts` — 회원 관리 API
+- `src/app/api/admin/templates/route.ts` — 템플릿 관리 API
+
+**기능:**
+- **회원 관리 탭**: 전체 회원 목록, 역할 변경 (user/admin), 회원 삭제
+- **템플릿 관리 탭**: 전체 템플릿 목록, 공개/비공개 토글, 템플릿 삭제, 페이지네이션
+
+**API 엔드포인트:**
+- `GET /api/admin/users` — 전체 회원 목록 조회
+- `PATCH /api/admin/users/[id]` — 회원 역할 업데이트
+- `DELETE /api/admin/users/[id]` — 회원 삭제
+- `GET /api/admin/templates?page=&limit=` — 템플릿 목록 조회 (페이지네이션)
+- `PATCH /api/admin/templates/[id]` — 템플릿 공개/비공개 토글
+- `DELETE /api/admin/templates/[id]` — 템플릿 삭제
+
+### 4. 빌드 테스트 ✅
 ```
 ✓ Compiled successfully
-✓ Generating static pages (12/12)
-
-테스트된 페이지:
-  /login              - 200 OK
-  /signup             - 200 OK
-  /dashboard          - 200 OK
-  /templates          - 200 OK
-  /reset-password     - 200 OK
-  /api/templates      - 401 (인증 없음, 정상)
+✓ 17 페이지 생성
+○ /admin, ○ /settings 신규 추가
 ```
 
 ---
 
-## 프로젝트 구조
+## 현재 파일 상태 (git status 기준)
 
-```
-todayis/
-├── src/
-│   ├── app/
-│   │   ├── (auth)/           # 인증 페이지 그룹
-│   │   │   ├── login/page.tsx
-│   │   │   ├── signup/page.tsx
-│   │   │   └── reset-password/page.tsx
-│   │   ├── (main)/           # 메인 페이지 그룹
-│   │   │   ├── dashboard/page.tsx
-│   │   │   └── templates/
-│   │   │       ├── page.tsx
-│   │   │       └── [id]/edit/page.tsx
-│   │   ├── api/
-│   │   │   ├── templates/route.ts
-│   │   │   ├── templates/[id]/route.ts
-│   │   │   └── auth/
-│   │   └── layout.tsx
-│   ├── components/
-│   │   ├── auth/             # OAuth 로그인 버튼
-│   │   ├── forms/            # LoginForm, SignupForm
-│   │   ├── templates/        # 템플릿 편집/미리보기
-│   │   └── ui/               # shadcn/ui 컴포넌트
-│   ├── hooks/
-│   │   ├── use-auth.ts       # 인증 (signIn, signUp, signOut)
-│   │   └── use-session.ts    # 세션 관리
-│   ├── lib/
-│   │   ├── supabase/
-│   │   │   ├── client.ts     # 브라우저 클라이언트
-│   │   │   └── database.types.ts
-│   │   └── utils.ts
-│   └── types/
-│       ├── auth.ts
-│       └── template.ts
-├── .env.local                # Supabase credentials
-├── prisma/
-│   └── schema.prisma         # DB 스키마 (미사용)
-└── package.json
-```
+### 수정된 파일 (staged 아님):
+- `SESSION-HANDOFF.md`
+- `src/app/(main)/dashboard/page.tsx`
+- `src/app/(main)/templates/page.tsx`
+- `src/hooks/use-session.ts`
+
+### 신규 파일 (untracked):
+- `src/app/(main)/settings/page.tsx`
+- `src/app/api/profile/route.ts`
+- `src/app/(main)/admin/page.tsx`
+- `src/app/api/admin/users/route.ts`
+- `src/app/api/admin/templates/route.ts`
+
+### CONTINUE.md (untracked — 다음 세션을 위한 가이드)
+- `CONTINUE.md`
+
+> **중요**: 모든 변경사항이 아직 git commit되지 않았습니다.
 
 ---
 
-## 진행 중인 상황
+## 알려진 제한사항 & TODO
 
-### 현재 상태
-- ✅ 빌드 오류 모두 수정 완료
-- ✅ 모든 페이지 접근 정상 (200 OK)
-- ✅ API 인증 처리 정상 (401 반환)
+### 1. 어드민 권한 검증 미구현 (중요)
+- 현재 모든 인증된 사용자가 어드민 API에 접근 가능
+- 실제 운영 시 `user_metadata.role === 'admin'` 체크 필요
+- `/admin` 페이지 진입 시 권한 체크 추가 필요
+- API 라우트에서도 어드민 권한 검증 추가 필요
 
-### 확인이 필요한 구간
+### 2. 프로필 설정 페이지
+- 프로필 이미지 업로드 미구현 (Supabase Storage 연동 필요)
+- 비밀번호 변경 기능 미구현
+- 계정 삭제 기능 미구현
 
-1. **Supabase 데이터베이스 테이블**
-   - `templates` 테이블이 Supabase에 생성되어 있는지 확인 필요
-   - 현재 API routes는 직접 Supabase SQL 쿼리 사용
+### 3. 어드민 페이지
+- 회원 목록은 전체 조회 (100명 제한) — 페이지네이션 미구현
+- 템플릿 페이지네이션 구현됨 (20개/페이지)
+- 회원 상세 페이지 미구현
+- 회원 활동 이력 미구현
 
-2. **환경 변수 누락**
-   - `.env.local`에 `SUPABASE_SERVICE_ROLE_KEY`가 없음
-   - API routes에서 필요로 함
+### 4. OAuth 리다이렉트
+- `GoogleLoginButton.tsx`에서 `redirectTo: /dashboard` 설정
+- Supabase 대시보드에서 OAuth 리다이렉트 URL에 `https://<your-domain>/dashboard` 추가 필요
 
-3. **Prisma 불일치**
-   - `prisma/schema.prisma` 파일 존재하지만 실제 사용 안 함
-   - Supabase 직접 쿼리 방식 사용 중
-
-4. **실제 인증 흐름 테스트**
-   - Supabase에 사용자 등록 후 로그인 → 대시보드 이동 테스트
-   - API 호출 시 토큰 전달 확인
+### 5. GSD 로드맵과 실제 구현 상태 불일치
+- ROADMAP.md에서 Phase 03은 "템플릿 관리"로 표시됨
+- 하지만 실제로 템플릿 CRUD API는 이미 구현되어 있음 (Phase 02 때)
+- Phase 03의 계획 파일들이 아직 생성되지 않음 (03-CONTEXT.md, 03-DISCUSSION-PROMPT.md만 존재)
+- **다음 세션에서 ROADMAP.md 업데이트 필요**
 
 ---
 
-## 남은 작업
+## 다음 세션에서 진행할 작업
 
-### 우선순위 높음
+### 1순위: 커밋 & 푸시
+```bash
+git add -A
+git commit -m "feat: OAuth 세션 버그 수정, 프로필 설정 및 어드민 페이지 구현"
+git push
+```
 
-1. **Supabase 데이터베이스 설정**
-   - `templates` 테이블 생성 SQL 실행
-   - RLS (Row Level Security) 정책 설정
+### 2순위: GSD 워크플로우로 진행
+```bash
+/gsd-discuss-phase    # 다음 작업 논의 (어드민 권한 검증 vs 프로필 이미지 vs ROADMAP 정렬)
+/gsd-plan-phase       # 계획 수립
+/gsd-execute-phase    # 계획 실행
+```
 
-2. **환경 변수 추가**
-   - `.env.local`에 `SUPABASE_SERVICE_ROLE_KEY` 추가
+### 3순위: 작업 우선순위 제안
+1. **어드민 페이지 권한 검증 추가** (보안상 중요)
+2. **ROADMAP.md 업데이트** — 실제 구현 상태와 일치시킴
+3. **프로필 이미지 업로드** (Supabase Storage)
+4. **회원 목록 페이지네이션**
+5. **Vercel 배포 & E2E 테스트**
 
-3. **실제 인증 테스트**
-   - Supabase 대시보드에서 이메일 인증 활성화 확인
-   - 회원가입 → 로그인 → 대시보드 전체 흐름 테스트
+---
 
-### 우선순위 중간
+## 기술 참고
 
-4. **템플릿 CRUD 완전 구현**
-   - 템플릿 생성/편집/삭제 API 연동
-   - 템플릿 라이브러리 UI와 연결
+### Supabase
+- URL: https://jiesomglvobttxujsakz.supabase.co
+- OAuth: Google, GitHub 활성화됨
+- RLS: templates 테이블 활성화됨
 
-5. **템플릿 에디터**
-   - 필드 편집 UI 완성
-   - 템플릿 저장/미리보기
+### 환경 변수
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (서버 사이드 전용)
 
-### 우선순위 낮음
-
-6. **결제 시스템 연동** (MVP 후)
-7. **프리미엄 템플릿** (V2)
-8. **동영상 초대장** (V3)
+### 빌드/실행
+```bash
+npm run dev      # 개발 서버
+npm run build    # 빌드
+npm run lint     # 린트
+```
 
 ---
 
 ## 세션 이어서 진행 프롬프트
 
-새 세션에서 다음 명령으로 작업을 시작하세요:
-
 ```
-/media/jay/D/cursor/todayis 프로젝트에서 작업을 이어서 진행합니다.
+/media/jay/D/cursor/todayis 프로젝트에서 GSD 워크플로우를 따라 작업을 진행합니다.
+
+중요: /go 또는 /gsd-* 명령어를 사용하여 철저한 계획 관리 후 체계적이고 단계적으로 진행하세요.
+즉각적인 코드 작성은 금지됩니다.
 
 현재 상태:
-- 빌드 오류 모두 수정 완료 (template-utils.tsx, auth types, template types 등)
-- 모든 페이지 접근 정상 (login, signup, dashboard, templates)
-- API 인증 처리 정상 (401 반환 확인)
+- ✅ 빌드 성공 (17 페이지)
+- ✅ OAuth 세션 버그 수정 완료 (use-session.ts, templates/page.tsx, dashboard/page.tsx)
+- ✅ /settings 프로필 설정 페이지 구현 완료
+- ✅ /admin 어드민 페이지 구현 완료 (회원/템플릿 관리)
+- ❌ 모든 변경사항 git commit되지 않음 (uncommitted)
+- ❌ ROADMAP.md가 실제 구현 상태와 불일치
 
-다음 작업:
-1. Supabase 데이터베이스에 templates 테이블 생성
-2. .env.local에 SUPABASE_SERVICE_ROLE_KEY 추가
-3. 실제 인증 흐름 테스트 (회원가입 → 로그인 → 대시보드)
+파일 상태:
+수정됨: SESSION-HANDOFF.md, dashboard/page.tsx, templates/page.tsx, use-session.ts
+신규: settings/page.tsx, api/profile/route.ts, admin/page.tsx, api/admin/users/route.ts, api/admin/templates/route.ts, CONTINUE.md
+
+알려진 제한사항:
+1. 어드민 페이지에 권한 검증 없음 (모든 인증 사용자가 접근 가능) — 보안상 중요
+2. 프로필 이미지 업로드 미구현
+3. 비밀번호 변경/계정 삭제 미구현
+4. 회원 목록 페이지네이션 미구현
+5. OAuth 리다이렉트 URL Supabase 대시보드에 등록 필요
+6. ROADMAP.md가 실제 구현 상태와 불일치
+
+다음 우선순위:
+1. git commit & push (가장 우선)
+2. /gsd-discuss-phase로 다음 작업 논의
+3. 어드민 페이지 권한 검증 추가 (보안)
+4. ROADMAP.md 업데이트 (실제 구현 상태와 일치)
+5. 프로필 이미지 업로드
+6. 회원 목록 페이지네이션
+7. Vercel 배포 & E2E 테스트
 
 참고 파일:
-- src/app/api/templates/route.ts
-- src/app/api/templates/[id]/route.ts
-- src/lib/supabase/client.ts
-- .env.local
-
-먼저 무엇을 진행할까요?
+- SESSION-HANDOFF.md — 전체 세션 기록
+- CONTINUE.md — 계속하기 가이드
+- .planning/ROADMAP.md — 현재 단계 로드맵
+- .planning/STATE.md — GSD 상태
 ```
-
----
-
-## 참고 자료
-
-- **AGENTS.md**: 프로젝트 기술 스택, 구조, 환경 변수 정의
-- **SUMMARY.md**: 프로젝트 세션 연속성 문서
-- **PLAN-03-CONTINUATION.md**: Phase 03 진행 중인 계획
-- **GSD.md**: GSD 프레임워크 사용 가이드

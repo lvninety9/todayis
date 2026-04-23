@@ -14,18 +14,22 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchTemplates = useCallback(async () => {
+    if (!session.session?.access_token) {
+      setLoading(false);
+      return;
+    }
+
     try {
-      const token = session.session?.access_token;
-      const headers: Record<string, string> = {};
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+      const token = session.session.access_token;
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${token}`,
+      };
 
       const response = await fetch('/api/templates', { headers });
 
       if (!response.ok) {
         if (response.status === 401) {
-          router.push('/login');
+          setLoading(false);
           return;
         }
         return;
@@ -38,17 +42,19 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [router, session.session]);
+  }, [session.session?.access_token]);
 
   useEffect(() => {
-    if (!session.loading && !session.user) {
+    if (session.loading) {
+      return;
+    }
+
+    if (!session.user) {
       router.push('/login');
       return;
     }
 
-    if (!session.loading && session.user) {
-      fetchTemplates();
-    }
+    fetchTemplates();
   }, [session.loading, session.user, fetchTemplates]);
 
   if (session.loading || loading) {
