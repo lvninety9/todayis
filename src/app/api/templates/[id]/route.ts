@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { Template, TemplateUpdate, TemplateField } from '@/lib/supabase/database.types';
+import { TemplateUpdate, TemplateField } from '@/lib/supabase/database.types';
+import { Template } from '@/types/template';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -8,7 +9,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 /**
  * 인증 헤더에서 사용자 정보 추출
  */
-function getUserFromRequest(request: NextRequest) {
+async function getUserFromRequest(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
   
   if (!authHeader?.startsWith('Bearer ')) {
@@ -39,7 +40,7 @@ function getUserFromRequest(request: NextRequest) {
  */
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = getUserFromRequest(request);
+    const user = await getUserFromRequest(request);
     
     if (!user) {
       return NextResponse.json(
@@ -118,7 +119,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
  */
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = getUserFromRequest(request);
+    const user = await getUserFromRequest(request);
     
     if (!user) {
       return NextResponse.json(
@@ -164,14 +165,14 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
     
     // 업데이트할 필드만 포함
-    const updateData: TemplateUpdate = {};
-    const allowedFields = ['name', 'category', 'thumbnail', 'fields', 'layout', 'is_published', 'download_count'];
-    
-    for (const field of allowedFields) {
-      if (field in body) {
-        updateData[field] = body[field];
-      }
-    }
+    const updateData: Partial<TemplateUpdate> = {};
+    if ('name' in body) updateData.name = body.name;
+    if ('category' in body) updateData.category = body.category;
+    if ('thumbnail' in body) updateData.thumbnail = body.thumbnail;
+    if ('fields' in body) updateData.fields = body.fields;
+    if ('layout' in body) updateData.layout = body.layout;
+    if ('is_published' in body) updateData.is_published = body.is_published;
+    if ('download_count' in body) updateData.download_count = body.download_count;
     
     // updated_at 자동 업데이트
     updateData.updated_at = new Date().toISOString();
@@ -224,7 +225,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
  */
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = getUserFromRequest(request);
+    const user = await getUserFromRequest(request);
     
     if (!user) {
       return NextResponse.json(

@@ -81,6 +81,34 @@ export function TemplateUploadDialog({
     setFields(updatedFields);
   };
 
+  // 필드 유효성 검사
+  const validateFields = (): boolean => {
+    for (let i = 0; i < fields.length; i++) {
+      const field = fields[i];
+
+      if (!field.name.trim()) {
+        setError(`필드 ${i + 1}의 이름은 필수입니다`);
+        return false;
+      }
+
+      if (!field.label.trim()) {
+        setError(`필드 ${i + 1}의 표시 라벨은 필수입니다`);
+        return false;
+      }
+
+      if (field.name.length > 100) {
+        setError(`필드 ${i + 1}의 이름은 100자를 초과할 수 없습니다`);
+        return false;
+      }
+
+      if (field.label.length > 100) {
+        setError(`필드 ${i + 1}의 표시 라벨은 100자를 초과할 수 없습니다`);
+        return false;
+      }
+    }
+    return true;
+  };
+
   // 유효성 검사
   const validateForm = (): boolean => {
     setError(null);
@@ -110,6 +138,11 @@ export function TemplateUploadDialog({
       new URL(thumbnail);
     } catch {
       setError('유효한 URL 형식을 입력해주세요');
+      return false;
+    }
+
+    // fields가 있을 경우 각 필드 유효성 검사
+    if (fields.length > 0 && !validateFields()) {
       return false;
     }
 

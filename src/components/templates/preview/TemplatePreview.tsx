@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { Template, TemplateData } from '@/types/template';
 import { TemplateEngine } from '../engine/TemplateEngine';
-import { TemplateEditor } from './editor/TemplateEditor';
+import { TemplateEditor } from '../editor/TemplateEditor';
 
 interface TemplatePreviewProps {
   template: Template;

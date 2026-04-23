@@ -25,7 +25,7 @@ export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
     try {
       await signIn(email, password);
       onSuccess?.();
-      router.push('/');
+      router.push('/dashboard');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '로그인에 실패했습니다.';
       setError(errorMessage);

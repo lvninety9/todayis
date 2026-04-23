@@ -7,14 +7,9 @@
 import { User as SupabaseUser, Session as SupabaseSession } from '@supabase/supabase-js';
 
 /**
- * 사용자 정보
+ * 사용자 정보 (Supabase User 타입 사용)
  */
-export interface User extends SupabaseUser {
-  id: string;
-  email: string;
-  phone?: string;
-  created_at?: string;
-}
+export type User = SupabaseUser;
 
 /**
  * 인증 세션

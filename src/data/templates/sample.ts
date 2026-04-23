@@ -16,6 +16,11 @@ export const WEDDING_TEMPLATE: Template = {
   name: '웨딩 초대장',
   category: 'wedding',
   thumbnail: '/templates/wedding-thumbnail.png',
+  userId: 'sample-user',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  isPublished: true,
+  downloadCount: 0,
   fields: [
     {
       name: 'groomName',
@@ -71,6 +76,11 @@ export const BIRTHDAY_TEMPLATE: Template = {
   name: '생일 초대장',
   category: 'birthday',
   thumbnail: '/templates/birthday-thumbnail.png',
+  userId: 'sample-user',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  isPublished: true,
+  downloadCount: 0,
   fields: [
     {
       name: 'hostName',

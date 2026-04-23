@@ -31,7 +31,13 @@ export default function TemplatesPage() {
   // 템플릿 목록 조회
   const fetchTemplates = useCallback(async () => {
     try {
-      const response = await fetch('/api/templates');
+      const token = session.session?.access_token;
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const response = await fetch('/api/templates', { headers });
       
       if (!response.ok) {
         if (response.status === 401) {
@@ -47,7 +53,7 @@ export default function TemplatesPage() {
         throw new Error(data.error);
       }
 
-      setTemplates(data);
+      setTemplates(data.templates || []);
       setError(null);
     } catch (err) {
       const message = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다';
@@ -56,7 +62,7 @@ export default function TemplatesPage() {
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, [router, session.session]);
 
   // 마운트 시 템플릿 조회
   useEffect(() => {
@@ -76,11 +82,17 @@ export default function TemplatesPage() {
     fields: any[];
     layout: string;
   }) => {
+    const token = session.session?.access_token;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch('/api/templates', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(data),
     });
 
@@ -100,8 +112,15 @@ export default function TemplatesPage() {
 
   // 템플릿 삭제
   const handleDelete = async (template: Template) => {
+    const token = session.session?.access_token;
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`/api/templates/${template.id}`, {
       method: 'DELETE',
+      headers,
     });
 
     if (!response.ok) {

@@ -74,7 +74,12 @@ Plans:
 - PAYMENT-02: 결제 프로세스 구현
 - PAYMENT-03: 웹훅 핸들러 구현
 
-**Plans**: To be planned
+**Plans**: 3 plans
+
+Plans:
+- [ ] 04-payment-system-01-PLAN.md — Toss Payments SDK 설정 및 기본 구조
+- [ ] 04-payment-system-02-PLAN.md — 결제 요청/확인 API 및 UI 구현
+- [ ] 04-payment-system-03-PLAN.md — 웹훅 핸들러, 취소 API, 내역 조회 구현
 
 **Status**: Not Started
 

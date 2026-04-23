@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { Template, TemplateInsert, TemplateField } from '@/lib/supabase/database.types';
+import { TemplateInsert, TemplateField } from '@/lib/supabase/database.types';
+import { Template } from '@/types/template';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -8,7 +9,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 /**
  * 인증 헤더에서 사용자 정보 추출
  */
-function getUserFromRequest(request: NextRequest) {
+async function getUserFromRequest(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
   
   if (!authHeader?.startsWith('Bearer ')) {
@@ -39,7 +40,7 @@ function getUserFromRequest(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    const user = getUserFromRequest(request);
+    const user = await getUserFromRequest(request);
     
     if (!user) {
       return NextResponse.json(
@@ -109,7 +110,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const user = getUserFromRequest(request);
+    const user = await getUserFromRequest(request);
     
     if (!user) {
       return NextResponse.json(

@@ -1,19 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import SignupForm from '@/components/forms/SignupForm';
 
 export default function SignupPage() {
-  const searchParams = useSearchParams();
   const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
-    if (searchParams.get('signup') === 'success') {
-      setShowSuccess(true);
-    }
-  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
