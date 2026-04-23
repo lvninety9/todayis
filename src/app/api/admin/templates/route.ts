@@ -1,48 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Template } from '@/types/template';
+import { requireAdmin } from '@/lib/auth';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-async function getUserFromRequest(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-  
-  const token = authHeader.substring(7);
-  
-  try {
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    
-    if (error || !user) {
-      return null;
-    }
-    
-    return user;
-  } catch {
-    return null;
-  }
-}
-
 /**
  * GET /api/admin/templates
- * 전체 템플릿 목록 조회
+ * 전체 템플릿 목록 조회 (admin 권한 필요)
  */
 export async function GET(request: NextRequest) {
+  const { response: authResponse } = await requireAdmin(request);
+  if (authResponse) return authResponse;
+  
   try {
-    const user = await getUserFromRequest(request);
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: '인증이 필요합니다.' },
-        { status: 401 }
-      );
-    }
-    
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
@@ -93,19 +65,13 @@ export async function GET(request: NextRequest) {
 
 /**
  * PATCH /api/admin/templates/[id]
- * 템플릿 공개/비공개 설정
+ * 템플릿 공개/비공개 설정 (admin 권한 필요)
  */
 export async function PATCH(request: NextRequest) {
+  const { response: authResponse } = await requireAdmin(request);
+  if (authResponse) return authResponse;
+  
   try {
-    const user = await getUserFromRequest(request);
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: '인증이 필요합니다.' },
-        { status: 401 }
-      );
-    }
-    
     const url = new URL(request.url);
     const templateId = url.pathname.split('/').pop();
     
@@ -166,19 +132,13 @@ export async function PATCH(request: NextRequest) {
 
 /**
  * DELETE /api/admin/templates/[id]
- * 템플릿 삭제
+ * 템플릿 삭제 (admin 권한 필요)
  */
 export async function DELETE(request: NextRequest) {
+  const { response: authResponse } = await requireAdmin(request);
+  if (authResponse) return authResponse;
+  
   try {
-    const user = await getUserFromRequest(request);
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: '인증이 필요합니다.' },
-        { status: 401 }
-      );
-    }
-    
     const url = new URL(request.url);
     const templateId = url.pathname.split('/').pop();
     

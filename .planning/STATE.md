@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-04-18T04:36:53.881Z"
+last_updated: "2026-04-23T00:00:00.000Z"
 progress:
-  total_phases: 6
-  completed_phases: 3
-  total_plans: 10
-  completed_plans: 11
+  total_phases: 7
+  completed_phases: 4
+  total_plans: 14
+  completed_plans: 14
 ---
 
 # State
@@ -19,15 +19,17 @@ progress:
 |-------|------|--------|-------|
 | 01 | template-engine | complete | 3/3 |
 | 02 | auth-system | complete | 4/4 |
+| 03 | template-management | complete | 4/4 |
+| 04 | profile-and-settings | complete | 4/4 |
 
 ## Current Position
 
-Phase: 4
+Phase: 5
 Plan: Not started
 
-- **Phase**: 02-auth-system
-- **Focus**: 인증 시스템 gap closure
-- **Position**: All gaps closed
+- **Phase**: 04-profile-and-settings
+- **Focus**: 프로필 및 설정, 어드민 페이지
+- **Position**: All phases 1-4 complete, ready for Phase 5 (payment)
 
 ## Decisions
 
@@ -40,29 +42,17 @@ Plan: Not started
 - [Phase 03-template-management]: Fields configuration uses dynamic array with add/remove/update functions
 - [Phase 03-template-management]: Layout configuration uses predefined options (simple/classic/modern)
 - [Phase 03-template-management]: Template data includes fields array and layout string in POST request
+- [Phase 04-profile-and-settings]: Admin role stored in user_metadata.role
+- [Phase 04-profile-and-settings]: requireAdmin helper enforces admin role on all admin API routes
+- [Phase 04-profile-and-settings]: Client-side admin check shows access denied page for non-admin users
 
 ## Blockers
 
 None.
 
-## Gap Closure Notes
+## Recent Changes
 
-All 3 gaps from VERIFICATION.md have been closed:
-
-1. ✅ OAuth buttons wired to login page
-2. ✅ Root layout.tsx created with AuthProvider
-3. ✅ useSession hook wired to dashboard page
-
----
-
-_Session: 2026-04-17T00:00:00Z - Phase 03 context ready for discussion_
-
-## Session Notes
-
-### Phase 03: 템플릿 관리
-
-- **Status**: Context created, ready for discussion
-- **Files created**:
-  - `.planning/phases/03-template-management/03-CONTEXT.md`
-  - `.planning/phases/03-template-management/03-DISCUSSION-PROMPT.md`
-- **Next step**: Discuss gray areas (Storage, API, UI, Upload)
+- 2026-04-23: Admin permission validation added (security fix)
+- 2026-04-23: OAuth session bug fixed
+- 2026-04-23: /settings profile settings page implemented
+- 2026-04-23: /admin admin page implemented

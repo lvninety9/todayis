@@ -1,47 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '@/lib/auth';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-async function getUserFromRequest(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-  
-  const token = authHeader.substring(7);
-  
-  try {
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    
-    if (error || !user) {
-      return null;
-    }
-    
-    return user;
-  } catch {
-    return null;
-  }
-}
-
 /**
  * GET /api/admin/users
- * 전체 사용자 목록 조회
+ * 전체 사용자 목록 조회 (admin 권한 필요)
  */
 export async function GET(request: NextRequest) {
+  const { response: authResponse, user } = await requireAdmin(request);
+  if (authResponse) return authResponse;
+  
   try {
-    const user = await getUserFromRequest(request);
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: '인증이 필요합니다.' },
-        { status: 401 }
-      );
-    }
-    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     const { data: users, error } = await supabase.auth.admin.listUsers({
@@ -63,7 +35,7 @@ export async function GET(request: NextRequest) {
       createdAt: u.created_at,
       updatedAt: u.updated_at,
       lastSignIn: u.last_sign_in_at,
-      role: u.role || 'user',
+      role: (u.user_metadata as Record<string, unknown>)?.role || 'user',
     }));
     
     return NextResponse.json({
@@ -80,19 +52,13 @@ export async function GET(request: NextRequest) {
 
 /**
  * PATCH /api/admin/users/[id]
- * 사용자 역할 업데이트 (admin/user)
+ * 사용자 역할 업데이트 (admin/user) — admin 권한 필요
  */
 export async function PATCH(request: NextRequest) {
+  const { response: authResponse, user } = await requireAdmin(request);
+  if (authResponse) return authResponse;
+  
   try {
-    const user = await getUserFromRequest(request);
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: '인증이 필요합니다.' },
-        { status: 401 }
-      );
-    }
-    
     const url = new URL(request.url);
     const userId = url.pathname.split('/').pop();
     
@@ -150,19 +116,13 @@ export async function PATCH(request: NextRequest) {
 
 /**
  * DELETE /api/admin/users/[id]
- * 사용자 삭제
+ * 사용자 삭제 — admin 권한 필요
  */
 export async function DELETE(request: NextRequest) {
+  const { response: authResponse } = await requireAdmin(request);
+  if (authResponse) return authResponse;
+  
   try {
-    const user = await getUserFromRequest(request);
-    
-    if (!user) {
-      return NextResponse.json(
-        { error: '인증이 필요합니다.' },
-        { status: 401 }
-      );
-    }
-    
     const url = new URL(request.url);
     const userId = url.pathname.split('/').pop();
     

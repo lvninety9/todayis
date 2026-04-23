@@ -108,6 +108,8 @@ export default function AdminPage() {
     }
   }, [session.session?.access_token, templatePage, router]);
 
+  const isAdmin = (session.user?.user_metadata as Record<string, unknown>)?.role === 'admin';
+
   useEffect(() => {
     if (session.loading) {
       return;
@@ -118,13 +120,17 @@ export default function AdminPage() {
       return;
     }
 
+    if (!isAdmin) {
+      return;
+    }
+
     setLoading(true);
     if (activeTab === 'users') {
       fetchUsers();
     } else {
       fetchTemplates();
     }
-  }, [session.loading, session.user, activeTab, fetchUsers, fetchTemplates, router]);
+  }, [session.loading, session.user, activeTab, fetchUsers, fetchTemplates, router, isAdmin]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     if (!session.session?.access_token) return;
@@ -233,6 +239,20 @@ export default function AdminPage() {
 
   if (!session.user) {
     return null;
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">접근 거부</h1>
+          <p className="text-gray-600 mb-4">관리자 권한이 필요한 페이지입니다.</p>
+          <Link href="/dashboard">
+            <Button>대시보드로 돌아가기</Button>
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
