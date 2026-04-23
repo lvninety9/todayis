@@ -2,13 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-last_updated: "2026-04-23T00:00:00.000Z"
+status: In progress
+last_updated: "2026-04-24T12:00:00.000Z"
 progress:
   total_phases: 7
-  completed_phases: 4
-  total_plans: 14
-  completed_plans: 14
+  completed_phases: 6
+  total_plans: 18
+  completed_plans: 18
+  current_phase: 06-publish-system
+current_plan: 03
+current_plan_status: complete
 ---
 
 # State
@@ -21,15 +24,17 @@ progress:
 | 02 | auth-system | complete | 4/4 |
 | 03 | template-management | complete | 4/4 |
 | 04 | profile-and-settings | complete | 4/4 |
+| 05 | payment-system | complete | 3/3 |
+| 06 | publish-system | complete | 3/3 |
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
+Phase: 6
+Plan: 03 (complete)
 
-- **Phase**: 04-profile-and-settings
-- **Focus**: 프로필 및 설정, 어드민 페이지
-- **Position**: All phases 1-4 complete, ready for Phase 5 (payment)
+- **Phase**: 06-publish-system
+- **Focus**: 초대장 생성 API, 생성 페이지, 공개 토글
+- **Position**: Phase 6 Plan 03 완료 — Phase 6 완료
 
 ## Decisions
 
@@ -52,7 +57,15 @@ None.
 
 ## Recent Changes
 
+- 2026-04-24: Phase 6 Plan 03 완료 — 초대장 생성 API, 생성 페이지, InvitationEditor 컴포넌트 구현
+- 2026-04-24: Phase 6 Plan 02 완료 — 공개 초대장 페이지, 공유 컴포넌트 구현
+- 2026-04-24: Phase 6 Plan 01 완료 — invitations 테이블 SQL, 공개 조회 API, 토글 API
 - 2026-04-23: Admin permission validation added (security fix)
 - 2026-04-23: OAuth session bug fixed
 - 2026-04-23: /settings profile settings page implemented
 - 2026-04-23: /admin admin page implemented
+- 2026-04-23: Supabase Storage bucket `profile-images` created via `setup-storage-bucket.js`
+- 2026-04-23: Storage RLS policies corrected (removed `extension` column reference, fixed INSERT policy syntax)
+- 2026-04-23: Profile avatar upload API (`POST /api/profile/avatar`) implemented and verified
+- 2026-04-23: Profile avatar delete API (`DELETE /api/profile/avatar`) implemented and verified
+- 2026-04-23: Phase 5 Plan 02 completed — 결제 요청/확인 API, Easy Checkout 컴포넌트, usePayment 훅 구현

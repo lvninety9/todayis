@@ -2,7 +2,7 @@
 
 import { useSession } from '@/hooks/use-session';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,8 +13,62 @@ import { toast } from 'sonner';
 interface ProfileData {
   nickname: string;
   bio: string;
+  avatar: string;
   email: string;
   createdAt: string;
+}
+
+const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
+const MAX_AVATAR_DIMENSION = 1024;
+
+function compressImage(file: File, maxWidth: number, maxHeight: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = Math.floor(width * ratio);
+          height = Math.floor(height * ratio);
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Canvas context not available'));
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error('Compression failed'));
+              return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          },
+          'image/jpeg',
+          0.85
+        );
+      };
+      img.onerror = () => reject(new Error('Image load failed'));
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 export default function SettingsPage() {
@@ -24,11 +78,15 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState<ProfileData>({
     nickname: '',
     bio: '',
+    avatar: '',
     email: '',
     createdAt: '',
   });
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchProfile = useCallback(async () => {
     if (!session.session?.access_token) {
@@ -53,6 +111,7 @@ export default function SettingsPage() {
 
       const data = await response.json();
       setProfile(data);
+      setAvatarPreview(data.avatar || null);
     } catch (err) {
       const message = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다';
       toast.error(message);
@@ -107,6 +166,85 @@ export default function SettingsPage() {
     }
   };
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('이미지 파일만 업로드할 수 있습니다.');
+      return;
+    }
+
+    if (file.size > MAX_AVATAR_SIZE) {
+      toast.error('파일 크기는 5MB 이하여야 합니다.');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const compressedBase64 = await compressImage(file, MAX_AVATAR_DIMENSION, MAX_AVATAR_DIMENSION);
+      setAvatarPreview(compressedBase64);
+
+      const response = await fetch('/api/profile/avatar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.session?.access_token}`,
+        },
+        body: JSON.stringify({
+          base64: compressedBase64,
+          mimeType: 'image/jpeg',
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '아바타 업로드에 실패했습니다');
+      }
+
+      const data = await response.json();
+      setProfile({ ...profile, avatar: data.avatar });
+      toast.success('아바타가 업데이트되었습니다');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다';
+      toast.error(message);
+      setAvatarPreview(profile.avatar || null);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    if (!session.session?.access_token) return;
+
+    setUploading(true);
+    try {
+      const response = await fetch('/api/profile/avatar', {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${session.session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '아바타 삭제에 실패했습니다');
+      }
+
+      setProfile({ ...profile, avatar: '' });
+      setAvatarPreview(null);
+      toast.success('아바타가 삭제되었습니다');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다';
+      toast.error(message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (session.loading || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -139,6 +277,66 @@ export default function SettingsPage() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">프로필 정보</h2>
 
           <div className="space-y-6">
+            {/* 아바타 */}
+            <div className="flex items-center gap-6">
+              <div className="relative flex-shrink-0">
+                {avatarPreview ? (
+                  <img
+                    src={avatarPreview}
+                    alt="아바타"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-300">
+                    <svg className="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+                {uploading && (
+                  <div className="absolute inset-0 rounded-full bg-black bg-opacity-30 flex items-center justify-center">
+                    <Spinner size="sm" />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <div>
+                  <Label className="text-gray-700 font-medium">아바타</Label>
+                  <p className="mt-1 text-sm text-gray-500">JPEG, PNG, WebP, GIF (최대 5MB)</p>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    onChange={handleAvatarChange}
+                    disabled={uploading}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    variant="outline"
+                    className="text-sm"
+                  >
+                    {uploading ? '업로드 중...' : '이미지 선택'}
+                  </Button>
+                  {profile.avatar && (
+                    <Button
+                      type="button"
+                      onClick={handleDeleteAvatar}
+                      disabled={uploading}
+                      variant="outline"
+                      className="text-sm text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                    >
+                      삭제
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+
             {/* 이메일 */}
             <div>
               <Label htmlFor="email" className="text-gray-700 font-medium">이메일</Label>

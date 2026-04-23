@@ -75,6 +75,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({
       nickname: updatedUser?.user_metadata?.nickname || '',
       bio: updatedUser?.user_metadata?.bio || '',
+      avatar: updatedUser?.user_metadata?.avatar || '',
       email: updatedUser?.email || user.email || '',
     });
   } catch (error) {
@@ -102,6 +103,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       nickname: userData?.user_metadata?.nickname || '',
       bio: userData?.user_metadata?.bio || '',
+      avatar: userData?.user_metadata?.avatar || '',
       email: userData?.email || user.email || '',
       createdAt: userData?.created_at,
     });

@@ -39,6 +39,8 @@ export interface Template {
   is_published: boolean;
   /** 다운로드 카운트 */
   download_count: number;
+  /** 가격 (원화, 무료면 0) */
+  price: number;
   /** 생성일시 */
   created_at: string;
   /** 수정일시 */
@@ -67,6 +69,8 @@ export interface TemplateInsert {
   is_published?: boolean;
   /** 다운로드 카운트 (기본값: 0) */
   download_count?: number;
+  /** 가격 (원화, 무료면 0, 기본값: 0) */
+  price?: number;
   /** 생성일시 (생략 시 자동 설정) */
   created_at?: string;
   /** 수정일시 (생략 시 자동 설정) */
@@ -91,6 +95,8 @@ export interface TemplateUpdate {
   is_published?: boolean;
   /** 다운로드 카운트 */
   download_count?: number;
+  /** 가격 (원화) */
+  price?: number;
   /** 수정일시 (생략 시 자동 업데이트) */
   updated_at?: string;
 }

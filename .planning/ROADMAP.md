@@ -80,21 +80,28 @@ Implementation:
 
 ---
 
-## Phase 5: 결제 시스템 (Next)
+## Phase 5: 결제 시스템
 
-**Goal**: Toss Payments 연동을 통한 유료 템플릿 구매
+**Goal**: Toss Payments Easy Checkout 연동을 통한 유료 템플릿 구매
 
 **Requirements**: 
-- PAYMENT-01: Toss Payments SDK 설정
-- PAYMENT-02: 결제 프로세스 구현
-- PAYMENT-03: 웹훅 핸들러 구현
+- PAYMENT-01: payments 테이블 생성, templates 가격 컬럼 추가, Toss Payments SDK 설정
+- PAYMENT-02: 결제 요청 API, 구매 상태 확인 API, Easy Checkout 모달 구현
+- PAYMENT-03: 웹훅 핸들러, 취소 API, 템플릿 상세 페이지 통합
 
-**Status**: Not Started
+**Status**: Complete
 
-Plans:
-- [ ] 04-payment-system-01-PLAN.md — Toss Payments SDK 설정 및 기본 구조
-- [ ] 04-payment-system-02-PLAN.md — 결제 요청/확인 API 및 UI 구현
-- [ ] 04-payment-system-03-PLAN.md — 웹훅 핸들러, 취소 API, 내역 조회 구현
+Implementation:
+- [x] supabase-payment-setup.sql — payments 테이블 생성 + templates 확장 + 인덱스 + RLS
+- [x] src/types/payment.ts — PaymentStatus, Payment, PaymentInsert, PaymentUpdate 정의
+- [x] src/lib/payment/toss.ts — TossPaymentsClient 구현 (confirmPayment, cancelPayment, getPayment)
+- [x] src/app/api/payment/request/route.ts — 결제 요청 API
+- [x] src/app/api/payment/verify/route.ts — 결제 검증 API
+- [x] src/app/api/payment/webhook/route.ts — Toss 웹훅 핸들러
+- [x] src/app/api/payment/[paymentId]/cancel/route.ts — 결제 취소 API
+- [x] src/components/payment/EasyCheckout.tsx — Easy Checkout 모달 컴포넌트
+- [x] src/hooks/use-payment.ts — 결제 훅
+- [x] src/app/(main)/templates/[id]/page.tsx — 템플릿 상세 페이지 (구매 버튼 통합)
 
 ---
 
@@ -107,7 +114,24 @@ Plans:
 - PUBLISH-02: Subpath routing 구현
 - PUBLISH-03: 공유 기능 구현
 
-**Status**: Not Started
+**Status**: Complete
+
+Implementation:
+- [x] supabase SQL — invitations 테이블 생성
+- [x] src/app/api/invitations/[slug]/route.ts — 공개 조회 API (GET)
+- [x] src/app/api/invitations/[slug]/publish/route.ts — 공개 토글 API (POST)
+- [x] src/app/(main)/[username]/page.tsx — subpath routing 공개 초대장 페이지
+- [x] src/components/publish/InvitationViewer.tsx — 초대장 뷰어 컴포넌트
+- [x] src/components/publish/ShareButton.tsx — 공유 버튼 컴포넌트
+- [x] src/components/publish/ShareDialog.tsx — 공유 다이얼로그 컴포넌트
+- [x] src/app/api/invitations/route.ts — 초대장 생성 API (POST)
+- [x] src/app/(main)/create/[templateId]/page.tsx — 초대장 생성 페이지
+- [x] src/components/publish/InvitationEditor.tsx — 초대장 편집기 컴포넌트 (공개 토글 포함)
+
+Plans:
+- [x] 06-publish-system-01-PLAN.md — invitations 테이블 생성, 공개 조회 API, 토글 API
+- [x] 06-publish-system-02-PLAN.md — subpath routing (`/[username]`) 공개 초대장 페이지, 공유 컴포넌트
+- [x] 06-publish-system-03-PLAN.md — editor에 공개 토글 통합, 초대장 생성 API
 
 ---
 
@@ -126,7 +150,6 @@ Plans:
 
 ## 미정 (Backlog)
 
-- 프로필 이미지 업로드
 - 회원 목록 페이지네이션
 - 프리미엄 템플릿 (구매)
 - 커스텀 폰트
