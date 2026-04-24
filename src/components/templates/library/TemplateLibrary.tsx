@@ -146,47 +146,47 @@ export function TemplateLibrary({
     );
   }
 
-  return (
-    <div className="space-y-6">
-      {/* 컨트롤 영역 */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        {/* 검색 입력 */}
-        <div className="flex-1">
-          <Input
-            type="text"
-            placeholder="템플릿 이름으로 검색..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-full"
-          />
+return (
+      <div className="space-y-6">
+        {/* 컨트롤 영역 */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* 검색 입력 */}
+          <div className="flex-1">
+            <Input
+              type="text"
+              placeholder="템플릿 이름으로 검색..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full"
+            />
+          </div>
+
+          {/* 카테고리 필터 */}
+          <Select value={filterCategory} onValueChange={handleFilterChange}>
+            <SelectTrigger className="w-full sm:w-[180px] bg-white/50 dark:bg-black/30 backdrop-blur-sm">
+              <SelectValue placeholder="카테고리" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map(cat => (
+                <SelectItem key={cat} value={cat}>
+                  {cat === 'all' ? '전체' : cat}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* 정렬 */}
+          <Select value={sortBy} onValueChange={handleSortChange}>
+            <SelectTrigger className="w-full sm:w-[150px] bg-white/50 dark:bg-black/30 backdrop-blur-sm">
+              <SelectValue placeholder="정렬" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name">이름</SelectItem>
+              <SelectItem value="date">날짜</SelectItem>
+              <SelectItem value="downloads">다운로드</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-
-        {/* 카테고리 필터 */}
-        <Select value={filterCategory} onValueChange={handleFilterChange}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="카테고리" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map(cat => (
-              <SelectItem key={cat} value={cat}>
-                {cat === 'all' ? '전체' : cat}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* 정렬 */}
-        <Select value={sortBy} onValueChange={handleSortChange}>
-          <SelectTrigger className="w-full sm:w-[150px]">
-            <SelectValue placeholder="정렬" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="name">이름</SelectItem>
-            <SelectItem value="date">날짜</SelectItem>
-            <SelectItem value="downloads">다운로드</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
 
       {/* 그리드 레이아웃 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

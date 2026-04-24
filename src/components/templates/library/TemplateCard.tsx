@@ -35,9 +35,9 @@ export function TemplateCard({
   };
 
   return (
-    <Card className="group hover:shadow-lg transition-shadow cursor-pointer">
+    <Card className="group hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer bg-white/50 dark:bg-black/30 backdrop-blur-sm border-white/20 dark:border-white/10">
       <CardHeader className="p-0 overflow-hidden">
-        <div className="relative aspect-video bg-gray-100">
+        <div className="relative aspect-video bg-gray-100 dark:bg-gray-800">
           {template.thumbnail ? (
             <img
               src={template.thumbnail}

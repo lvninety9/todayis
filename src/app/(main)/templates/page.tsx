@@ -30,18 +30,25 @@ export default function TemplatesPage() {
 
   // 템플릿 목록 조회
   const fetchTemplates = useCallback(async () => {
-    if (!session.session?.access_token) {
+    // Dev mode: session 없이도 진행
+    const isDev = typeof window !== 'undefined' && localStorage.getItem('__DEV_MODE__') === 'true';
+    if (!session.session?.access_token && !isDev) {
       setLoading(false);
       return;
     }
 
     try {
-      const token = session.session.access_token;
-      const headers: Record<string, string> = {
-        Authorization: `Bearer ${token}`,
-      };
+      const headers: Record<string, string> = {};
+      let url = '/api/templates';
       
-      const response = await fetch('/api/templates', { headers });
+      // 로그인한 사용자는 토큰 사용, 비로그인时만 dev=true
+      if (isDev && !session.session?.access_token) {
+        url += '?dev=true';
+      } else if (session.session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.session.access_token}`;
+      }
+      
+      const response = await fetch(url, { headers });
       
       if (!response.ok) {
         if (response.status === 401) {
@@ -91,14 +98,20 @@ export default function TemplatesPage() {
     layout: string;
   }) => {
     const token = session.session?.access_token;
+    const isDev = typeof window !== 'undefined' && localStorage.getItem('__DEV_MODE__') === 'true';
+    
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
-    if (token) {
+    let url = '/api/templates';
+    
+    if (isDev && !token) {
+      url += '?dev=true';
+    } else if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch('/api/templates', {
+    const response = await fetch(url, {
       method: 'POST',
       headers,
       body: JSON.stringify(data),
@@ -121,12 +134,18 @@ export default function TemplatesPage() {
   // 템플릿 삭제
   const handleDelete = async (template: Template) => {
     const token = session.session?.access_token;
+    const isDev = typeof window !== 'undefined' && localStorage.getItem('__DEV_MODE__') === 'true';
+    
     const headers: Record<string, string> = {};
-    if (token) {
+    let url = `/api/templates/${template.id}`;
+    
+    if (isDev && !token) {
+      url += '?dev=true';
+    } else if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`/api/templates/${template.id}`, {
+    const response = await fetch(url, {
       method: 'DELETE',
       headers,
     });
@@ -153,10 +172,10 @@ export default function TemplatesPage() {
   // 로딩 상태
   if (session.loading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 dark:via-background dark:to-purple-950">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">템플릿 라이브러리</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">템플릿 라이브러리</h1>
             <Button onClick={() => setDialogOpen(true)}>
               + 새 템플릿 만들기
             </Button>
@@ -175,11 +194,11 @@ export default function TemplatesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 dark:via-background dark:to-purple-950">
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* 헤더 */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">템플릿 라이브러리</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">템플릿 라이브러리</h1>
           <Button onClick={() => setDialogOpen(true)} size="lg">
             + 새 템플릿 만들기
           </Button>
@@ -187,8 +206,8 @@ export default function TemplatesPage() {
 
         {/* 에러 메시지 */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-red-700">{error}</p>
+          <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+            <p className="text-red-700 dark:text-red-400">{error}</p>
             <Button
               onClick={fetchTemplates}
               variant="outline"

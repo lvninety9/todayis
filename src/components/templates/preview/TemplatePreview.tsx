@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Template, TemplateData } from '@/types/template';
 import { TemplateEngine } from '../engine/TemplateEngine';
 import { TemplateEditor } from '../editor/TemplateEditor';
+import { GlassCard } from '@/components/ui/card';
 
 interface TemplatePreviewProps {
   template: Template;
@@ -19,6 +20,7 @@ interface TemplatePreviewProps {
  * - 실시간 미리보기 영역
  * - Split view: Editor (left) + Preview (right)
  * - 반응형: Mobile 은 stack, Desktop 은 split
+ * - 애니메이션 및 glassmorphism 적용
  */
 export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewProps) {
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
@@ -58,21 +60,29 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
   };
 
   return (
-    <div className="template-preview">
+    <div className="template-preview space-y-4">
       {/* 미리보기 컨트롤 */}
-      <div className="preview-controls">
-        <div className="view-mode-toggle">
+      <GlassCard className="flex items-center justify-between p-4">
+        <div className="flex gap-2">
           <button
             type="button"
-            className={viewMode === 'desktop' ? 'active' : ''}
             onClick={() => setViewMode('desktop')}
+            className={`px-4 py-2 rounded-md transition-all ${
+              viewMode === 'desktop'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+            }`}
           >
             Desktop
           </button>
           <button
             type="button"
-            className={viewMode === 'mobile' ? 'active' : ''}
             onClick={() => setViewMode('mobile')}
+            className={`px-4 py-2 rounded-md transition-all ${
+              viewMode === 'mobile'
+                ? 'bg-indigo-600 text-white'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+            }`}
           >
             Mobile
           </button>
@@ -81,11 +91,11 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
         <button
           type="button"
           onClick={() => setIsEditing(!isEditing)}
-          className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-all"
         >
           {isEditing ? '미리보기 모드' : '편집 모드'}
         </button>
-      </div>
+      </GlassCard>
 
       {/* 메인 콘텐츠 영역 */}
       <div className={`preview-area ${viewMode} ${isEditing ? 'editing' : ''}`}>
@@ -102,16 +112,20 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
             
             {/* Right: Preview */}
             <div className="preview-panel">
-              <div className="preview-header">
-                <h3 className="text-lg font-semibold">실시간 미리보기</h3>
-              </div>
-              <div className="preview-content">
-                <TemplateEngine template={template} data={data} />
-              </div>
+              <GlassCard className="h-full overflow-hidden">
+                <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">실시간 미리보기</h3>
+                </div>
+                <div className="preview-content">
+                  <TemplateEngine template={template} data={data} />
+                </div>
+              </GlassCard>
             </div>
           </div>
         ) : (
-          <TemplateEngine template={template} data={data} />
+          <div className="transition-all duration-300 ease-in-out">
+            <TemplateEngine template={template} data={data} />
+          </div>
         )}
       </div>
 
@@ -121,42 +135,15 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
           width: 100%;
         }
         
-        .preview-controls {
-          display: flex;
-          align-items: center;
-          padding: 1rem;
-          background: #f9fafb;
-          border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .view-mode-toggle {
-          display: flex;
-          gap: 0.5rem;
-        }
-        
-        .view-mode-toggle button {
-          padding: 0.5rem 1rem;
-          border: 1px solid #d1d5db;
-          background: white;
-          border-radius: 0.375rem;
-          cursor: pointer;
-        }
-        
-        .view-mode-toggle button.active {
-          background: #3b82f6;
-          color: white;
-          border-color: #3b82f6;
-        }
-        
         .preview-area {
           min-height: 500px;
+          transition: all 0.3s ease-in-out;
         }
         
         .preview-area.desktop.editing {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 1rem;
-          padding: 1rem;
         }
         
         .preview-area.mobile.editing {
@@ -168,13 +155,15 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
           display: flex;
           gap: 1rem;
           height: 500px;
+          animation: fadeIn 0.3s ease-out;
         }
         
         .editor-panel {
           flex: 1;
           overflow-y: auto;
           padding: 1rem;
-          background: #f9fafb;
+          background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+          backdrop-filter: blur(10px);
           border-radius: 0.5rem;
         }
         
@@ -184,19 +173,31 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
           flex-direction: column;
         }
         
-        .preview-header {
-          padding: 0.5rem 1rem;
-          background: #e5e7eb;
-          border-radius: 0.5rem 0.5rem 0 0;
-        }
-        
         .preview-content {
           flex: 1;
           padding: 1rem;
-          background: white;
-          border: 1px solid #e5e7eb;
-          border-radius: 0 0 0.5rem 0.5rem;
           overflow-y: auto;
+          animation: slideUp 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         
         @media (max-width: 768px) {
@@ -211,7 +212,7 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
           
           .editor-panel,
           .preview-panel {
-            height: 50vh;
+            min-height: 50vh;
           }
         }
       `}</style>
