@@ -1,4 +1,4 @@
-# Phase 10: 네이버 판매 페이지 연동 + 버그 수정 + UI 개선 - Context
+# Phase 10: UI/UX 전면 개편 + 네이버 연동 - Context
 
 **Gathered:** 2026-04-25
 **Status:** Ready for planning
@@ -6,99 +6,133 @@
 <domain>
 ## Phase Boundary
 
- Toss Payments에서 Naver Selling Page로 결제 시스템 변경 + 신규 웹사이트 페이지들 추가 + 버그 수정 + UI 개선
+**전체적인 디자인 Redesign + 네이버 판매 페이지 연동 + 신규 페이지**
 
-**변경 사항:**
-1. Phase 5 결제 시스템을 Toss Payments에서 네이버 판매 페이지로 변경
-2. 템플릿 상세 페이지 "구매하기" 버튼 → 네이버 판매 페이지 리다이렉트
-3. 신규 페이지: 랜딩 페이지, 상세 페이지, 회원관리, 주문제작 안내, 가격 안내
-4. **버그 수정**: next/image hostname, 뒤로가기 버튼 에러
-5. **UI 개선**: 로그인 페이지 가독성, 버튼 스타일 현대화
-6. **편집기 재설계**: 자유 배치, 직관적 UI, 섹션별 음악/애니메이션/폰트
+사용자의 핵심 피드백: "프로젝트 전체적인 디자인이 너무 구립니다"
+
+### 수정할 범위 (전체)
+1. 로그인/회원가입 페이지
+2. 대시보드 페이지  
+3. 템플릿 라이브러리 페이지
+4. 템플릿 상세 페이지
+5. 템플릿 편집기 (완전히 재설계)
+6. 공개 초대장 페이지
+7. 네비게이션/헤더/푸터
+8. 버튼, 입력폼, 카드 등 모든 UI 컴포넌트
+
+### 기존 범위 (유지)
+- Naver Selling Page 연동
+- 신규 페이지 (/landing, /templates/detail, /member, /order-guide, /pricing)
+- 버그 수정 (next/image hostname, 뒤로가기 버튼)
 
 </domain>
 
 <decisions>
 ## Implementation Decisions
 
-### NP-01: 결제 연동 방식
-- **D-01:** Naver Selling Page API 연동 — redirect 방식으로 네이버 판매 페이지로直接 이동
-- 기존 Toss Payments 코드는 유지하되 결제 수단으로 네이버 우선 사용
+### DESIGN-01: 2026 트렌드 디자인 시스템
+- **D-01:** Glassmorphism 2.0 (Liquid Glass 스타일) 적용
+- **D-02:** Modern gradient backgrounds — 부드러운 그라데이션 배경
+- **D-03:** 모던 버튼 스타일 — gradient + glow + animation
 
-### NP-02: 구매하기 버튼 동작
-- **D-02:** 템플릿 상세 페이지에서 "구매하기" 클릭 시 네이버 판매 페이지로 redirect
-- popup이 아닌 새 탭 또는 현재 탭에서 이동
+### DESIGN-02: 애니메이션/전환
+- **D-04:** @formkit/auto-animate 로 부드러운 전환 효과 적용
+- 모든 리스트, 카드, 모달, 패널에 적용
 
-### NP-03: 신규 페이지 구조
-- **D-03:** (main) 그룹下에 새路由 추가:
-  - `/landing` — 랜딩 페이지 (메인)
-  - `/templates/detail/[id]` — 상세 페이지 (템플릿 소개)
-  - `/member` — 회원관리 페이지
-  - `/order-guide` — 주문제작 안내 페이지
-  - `/pricing` — 가격 안내 페이지
+### DESIGN-03: 로그인/회원가입 페이지
+- **D-05:** 소셜 로그인 텍스트 가독성 개선 — 투명 또는 어두운 배경
+- **D-06:** Glassmorphism 카드 적용
+- **D-07:** gradient 버튼 + hover glow 효과
 
-### NP-04: 구매 완료 복귀 처리
-- **D-04:** callback URL 방식 — 구매 완료 후 지정된 복귀 URL로 이동
-- 복구 URL: `/templates/[id]?purchased=true`
+### DESIGN-04: 대시보드 페이지
+- **D-08:** 구조/짜임새 개선 — 카드 그리드, 통계 대시보드
+- **D-09:** modern card 스타일 + subtle animation
+- **D-10:** 빠른 작업 버튼에 gradient + glow
 
-### BUG-01: next/image hostname 에러
-- **D-05:** `next.config.js`에 `images.pexels.com` hostname 추가
-- 기존: `jiesomglvobttxujsakz.supabase.co`, `*.supabase.co`
-- 추가: `images.pexels.com`
+### DESIGN-05: 템플릿 라이브러리 페이지
+- **D-11:** 템플릿 카드 modern design — rounded corners, shadow, hover lift
+- **D-12:** 필터/정렬 UI 개선 — glassmorphism 패널
 
-### BUG-02: 뒤로가기 버튼 에러
-- **D-06:** 템플릿 페이지 뒤로가기 버튼 클릭 시 에러 해결
-- `useRouter` 또는 `Link` 컴포넌트로 적절히 처리
+### DESIGN-06: 템플릿 상세 페이지
+- **D-13:** 템플릿 미리보기 — 큰 프리뷰 + smooth zoom
+- **D-14:** 구매 버튼 — gradient + glow + pulse animation
+- **D-15:** 정보 레이아웃 — 섹션별 glassmorphism 카드
 
-### UI-01: 로그인 페이지 가독성
-- **D-07:** "또는 소셜 계정으로 로그인" 텍스트 배경 수정
-- 현재: 흰색 배경 (어두운 테마에서 가독성 문제)
-- 수정: 투명 또는 어두운 배경으로 변경
+### DESIGN-07: 템플릿 편집기 (완전히 재설계)
+- **D-16:** 직관적인 드래그 앤 드롭 — 섹션 위치 자유 배치
+- **D-17:** 실시간 미리보기 강화 — split view 또는 toggle
+- **D-18:** 섹션별 설정 패널 — 음악, 애니메이션, 폰트 개별 설정
+- **D-19:** 도구 모음 단순화 — 필요할 때만 표시
+- **D-20:** 모바일/데스크톱 프리뷰 통합 — 한 화면에서 전환
 
-### UI-02: 버튼 스타일 현대화
-- **D-08:** 취소, 삭제, 저장하기, 데스크탑, 모바일, 편집 모드 버튼 스타일 개선
-- 현재: 구식 느낌
-- 목표: 모던한 디자인 (rounded, shadow, hover effects)
-- shadcn/ui Button 컴포넌트 기준으로 재설계
+### DESIGN-08: 공개 초대장 페이지
+- **D-21:** wedding特有的 romantic design — soft gradients, elegant fonts
+- **D-22:** 모바일 최적화 — 터치 인터랙션
+- **D-23:** 공유按钮 — modern floating action button
 
-### EDITOR-01: 편집기 유연성 개선
-- **D-09:** 템플릿 편집기自由度 향상
-- 섹션별 위치 이동 (드래그 앤 드롭)
-- 음악, 애니메이션 효과, 폰트 각 섹션별로 설정 가능
-- 직관적인 UI (패널-based rather than form-based)
+### DESIGN-09: 네비게이션/헤더/푸터
+- **D-24:** 헤더 — glassmorphism + sticky
+- **D-25:** 모바일 네비게이션 — bottom tab bar
+- **D-26:** 푸터 — minimal with gradient accent
 
-### EDITOR-02: 편집기 UX 개선
-- **D-10:** 편집 모드 intuitiveness 향상
-- 실시간 미리보기 강화
-- 도구 모음 단순화
-- 모바일/데스크톱 프리뷰 통합
+### DESIGN-10: UI 컴포넌트 공통
+- **D-27:** 버튼 — gradient background, glow on hover, subtle scale animation
+- **D-28:** 입력폼 — glassmorphism 배경, focus glow
+- **D-29:** 카드 — rounded-xl, subtle shadow, hover lift animation
+- **D-30:** 모달/다이얼로그 — glassmorphism + backdrop blur
+
+### PAYMENT-01: 네이버 판매 페이지 연동
+- **D-31:** Naver Selling Page redirect 방식으로 연동
+- **D-32:** 템플릿 상세 페이지 구매 버튼 → 네이버로 redirect
+
+### PAGES-01: 신규 페이지
+- **D-33:** /landing — 메인 랜딩 페이지 (modern gradient + glassmorphism)
+- **D-34:** /templates/detail/[id] — 템플릿 상세 소개 페이지
+- **D-35:** /member — 회원관리 페이지
+- **D-36:** /order-guide — 주문제작 안내 페이지
+- **D-37:** /pricing — 가격 안내 페이지
+
+### BUG-01: 버그 수정
+- **D-38:** next.config.js — images.pexels.com hostname 추가
+- **D-39:** 템플릿 페이지 뒤로가기 버튼 에러 해결
 
 </decisions>
 
 <canonical_refs>
 ## Canonical References
 
-### 기존 Payment 코드
-- `src/lib/payment/toss.ts` — TossPaymentsClient (參考作爲 연동 패턴)
-- `src/components/payment/EasyCheckout.tsx` — Easy Checkout 컴포넌트
-- `src/hooks/use-payment.ts` — 결제 훅
-- `src/types/payment.ts` — Payment 타입 정의
+### 디자인 시스템
+- shadcn/ui 컴포넌트: `src/components/ui/` — Button, Card, Input, Dialog 등
+- Tailwind CSS: `tailwind.config.js` — 커스텀 그라데이션, 애니메이션
 
-### 기존 페이지 구조
-- `src/app/(main)/templates/[id]/page.tsx` — 템플릿 상세 페이지
-- `src/app/(main)/page.tsx` — 메인 대시보드
+### 페이지
 - `src/app/(auth)/login/page.tsx` — 로그인 페이지
+- `src/app/(auth)/signup/page.tsx` — 회원가입 페이지
+- `src/app/(main)/page.tsx` — 대시보드 (메인)
+- `src/app/(main)/templates/page.tsx` — 템플릿 라이브러리
+- `src/app/(main)/templates/[id]/page.tsx` — 템플릿 상세
+- `src/app/(main)/templates/[id]/edit/page.tsx` — 편집기
+- `src/app/(main)/[username]/page.tsx` — 공개 초대장
 
-### 编辑器 관련
-- `src/components/templates/editor/TemplateEditor.tsx` — 현재 편집기
+### 컴포넌트
+- `src/components/templates/editor/TemplateEditor.tsx` — 편집기
 - `src/components/templates/editor/FieldEditor.tsx` — 필드 편집기
 - `src/components/templates/editor/StyleEditor.tsx` — 스타일 편집기
+- `src/components/templates/library/TemplateLibrary.tsx` — 템플릿 라이브러리
+- `src/components/templates/library/TemplateCard.tsx` — 템플릿 카드
+- `src/components/ui/button.tsx` — 버튼 컴포넌트
+- `src/components/ui/card.tsx` — 카드 컴포넌트
+- `src/components/ui/input.tsx` — 입력폼 컴포넌트
+- `src/components/publish/InvitationViewer.tsx` — 초대장 뷰어
 
-### 설정 파일
-- `next.config.js` — next/image hostname 설정
+### 라이브러리
+- @formkit/auto-animate — 부드러운 전환 효과
+- @dnd-kit/core 或 react-beautiful-dnd — 드래그 앤 드롭 (편집기)
+- next.config.js — 이미지 hostname 설정
 
-### 데이터베이스
-- `supabase-payment-setup.sql` — payments 테이블 스키마
+### 결제
+- `src/lib/payment/toss.ts` — TossPaymentsClient (참고 패턴)
+- `src/components/payment/EasyCheckout.tsx` — 결제 컴포넌트
 
 </canonical_refs>
 
@@ -106,42 +140,69 @@
 ## Existing Code Insights
 
 ### Reusable Assets
-- TossPaymentsClient: `src/lib/payment/toss.ts` — API 클라이언트 패턴 참고
-- Payment 타입: `src/types/payment.ts` — 타입 정의 재사용 가능
-- usePayment hook: `src/hooks/use-payment.ts` — 훅 패턴 참고
-- shadcn/ui Button: `src/components/ui/button.tsx` — 버튼 컴포넌트
+- shadcn/ui Button: `src/components/ui/button.tsx` — 버튼 컴포넌트 재사용
+- shadcn/ui Card: `src/components/ui/card.tsx` — 카드 컴포넌트 재사용  
+- shadcn/ui Input: `src/components/ui/input.tsx` — 입력폼 재사용
+- GlassCard 컴포넌트: `src/components/ui/card.tsx` — 기존 glassmorphism 지원
 
 ### Established Patterns
-- Next.js App Router: `(main)` 그룹下的路由 구조
-- shadcn/ui: Button, Card 등의 컴포넌트 사용
+- Next.js App Router: `(main)`, `(auth)` 그룹路由 구조
+- Tailwind CSS: utility-first 스타일링
+- CSS Variables: dark mode 지원 위한 색상 변수
 
 ### Integration Points
 - `/templates/[id]` 페이지: 구매 버튼 위치
-- payment API routes: `/api/payment/` 下
-- 편집기: `src/components/templates/editor/`
+- 编辑器: `src/components/templates/editor/` — 드래그 앤 드롭 통합
+- 네비게이션: 레이아웃 공통 컴포넌트
 
 </code_context>
 
 <specifics>
 ## Specific Ideas
 
-- 네이버 판매 페이지 연동 가이드参照하여 redirect URL 구성
-- 신규 페이지는 기존 디자인 시스템 (shadcn/ui + Tailwind CSS) 유지
-- 모바일/데스크톱 모두 지원
-- 편집기: React DnD 또는 @dnd-kit untuk 드래그 앤 드롭
-- 버튼 스타일: modern button variants (ghost, outline, secondary 등)
+### 2026 트렌드 적용 상세
+1. **Glassmorphism 2.0 (Liquid Glass)**
+   - backdrop-filter: blur(20px)
+   - Semi-transparent backgrounds with subtle white overlay
+   - Soft shadows and borders
+
+2. **Modern Gradient Backgrounds**
+   - Primary: gradient-to-br from-indigo-50 via-white to-purple-50
+   - Dark mode: gradient-to-br from-indigo-950 via-background to-purple-950
+
+3. **모던 버튼**
+   - background: linear-gradient with brand colors
+   - box-shadow: 0 0 20px rgba(primary, 0.4) on hover
+   - transform: scale(1.02) on hover
+   - transition: all 0.2s ease
+
+4. **@formkit/auto-animate**
+   - 리스트 아이템 추가/제거 시 부드러운 애니메이션
+   - 카드 그리드 리플로우 효과
+   - 모달/패널 열기/닫기 효과
+
+5. **편집기 드래그 앤 드롭**
+   - @dnd-kit/core 사용 (轻盈, 접근성良好)
+   - 섹션 드래그로 위치 이동
+   - 드롭 zones 시각적 피드백
 
 </specifics>
 
 <deferred>
 ## Deferred Ideas
 
-None — discussion stayed within phase scope
+### Phase 11 이상으로 연기
+- 동영상 초대장 — 별도 Phase
+- Kakao 로그인 — 별도 Phase
+- Naver Pay 연동 — 별도 Phase (현재: 네이버 판매 페이지 redirect)
+- AI 추천 템플릿 — 별도 Phase
+- 커스텀 폰트 업로드 — 별도 Phase
+- 회원 목록 페이지네이션 — 별도 Phase
 
 </deferred>
 
 ---
 
-*Phase: 10-naver-selling*
+*Phase: 10-ui-ux-redesign*
 *Context gathered: 2026-04-25*
-*Auto-updated with bug fixes, UI improvements, and editor redesign*
+*Full redesign with 2026 trends: Glassmorphism 2.0, modern gradients, drag-drop editor*
