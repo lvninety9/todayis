@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: In progress
-last_updated: "2026-04-25T15:21:00.000Z"
+last_updated: "2026-04-25T15:55:00.000Z"
 progress:
-  total_phases: 8
-  completed_phases: 7
-  total_plans: 22
-  completed_plans: 21
-  current_phase: 07-tests-e2e
-current_plan: 01
-current_plan_status: complete
+  total_phases: 9
+  completed_phases: 8
+  total_plans: 23
+  completed_plans: 22
+  current_phase: 07-optimization
+  current_plan: 01
+  current_plan_status: complete
 ---
 
 # State
@@ -28,23 +28,28 @@ current_plan_status: complete
 | 06 | publish-system | complete | 3/3 |
 | 07 | tests-unit | complete | 7/7 |
 | 08 | tests-e2e | complete | 1/1 |
-| 09 | frontend-redesign | in-progress | 0/8 |
+| 09 | frontend-redesign | complete | 8/8 |
+| 10 | optimization | complete | 1/1 |
 
 ## Current Position
 
-Phase: 08-tests-e2e
+Phase: 10-optimization
 Plan: 01 (complete)
 
-- **Phase**: 08-tests-e2e (E2E 테스트)
-- **Focus**: Playwright E2E 테스트 실행
+- **Phase**: 10-optimization (성능 최적화)
+- **Focus**: Bundle analysis, Image optimization, API caching, Font optimization
 - **Position**: Phase 완료
-- **Tasks**: 1/1 completed
-- **Result**: 40 tests passed
+- **Tasks**: 5/6 completed (partial)
+- **Result**: bundle analyzer + next/image + caching + font optimization applied
 
 ## Decisions
 
 - [Phase 08-tests-e2e]: Mock 기반 E2E 테스트 채택 (실제 DB/API 연동 없이 테스트 실행)
 - [Phase 08-tests-e2e]: 결제 E2E 테스트 건너뛰기 (별도 플랜에서 구현 권장)
+
+- [Phase 10-optimization]: Using next/image in TemplateCard instead of img tag
+- [Phase 10-optimization]: Noto Serif KR font from next/font/google
+- [Phase 10-optimization]: Cache-Control: public, s-maxage=60, stale-while-revalidate=300
 
 - [Phase 08-frontend-redesign]: Motion library chosen over Framer Motion (actively maintained)
 - [Phase 08-frontend-redesign]: Glass effect via Tailwind classes (no external deps)
