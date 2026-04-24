@@ -124,7 +124,12 @@ export async function GET(request: NextRequest) {
         templates: formattedTemplates,
         count: count || 0,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      }
     );
   } catch (error) {
     return NextResponse.json(
