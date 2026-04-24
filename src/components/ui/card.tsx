@@ -3,12 +3,13 @@ import { cn } from '@/lib/utils';
 
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement> & { glass?: boolean }
+>(({ className, glass = false, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      'rounded-lg border bg-card text-card-foreground shadow-sm',
+      'rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200',
+      glass && 'bg-white/30 dark:bg-black/30 backdrop-blur-md border-white/20 dark:border-white/10 hover:scale-[1.02] hover:shadow-lg',
       className
     )}
     {...props}
@@ -78,8 +79,25 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = 'CardFooter';
 
+// Glass card component with backdrop blur
+const GlassCard = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'rounded-xl border border-white/20 bg-white/30 dark:bg-black/30 backdrop-blur-md shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl',
+      className
+    )}
+    {...props}
+  />
+));
+GlassCard.displayName = 'GlassCard';
+
 export {
   Card,
+  GlassCard,
   CardHeader,
   CardFooter,
   CardTitle,
