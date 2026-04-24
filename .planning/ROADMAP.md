@@ -144,7 +144,7 @@ Plans:
 - TEST-02: E2E 테스트 작성
 - TEST-03: 성능 최적화
 
-**Status**: In progress (Phase 7-01: 7/7 tasks done)
+**Status**: Complete (7-01 단위 테스트 120개, 7-02 E2E 테스트 40개, 7-03 최적화 완료)
 
 Implementation:
 - [x] vitest.config.ts — Vitest 설정 (jsdom, coverage, path alias)
@@ -183,18 +183,34 @@ Plans:
 - UI-03: 템플릿 편집기 고급 기능 (animation, music, font styles)
 - UI-04: 트렌디한 애니메이션/모션 효과 통합
 
-**Status**: Ready for discuss
+**Status**: Complete (8-01~8-07 완료, 8-08 테스트 생략)
+
+---
+
+## Phase 9: Backlog Features Selection
+
+**Goal**: Select and implement V2/V3 features from backlog - premium templates, background music, emoji/GIF support, V2 enhanced features
+
+**Requirements**: 
+- BACKLOG-01: 프리미엄 템플릿 (templates.price 필드, 구매 시스템)
+- BACKLOG-02: 사용자 구매 기록 관리 (is_purchased 필드)
+- BACKLOG-03: 배경 음악 (MP3 업로드/재생)
+- BACKLOG-04: 음악 재생 컨트롤 (mute, volume)
+- BACKLOG-05: 이모지 지원 (텍스트 필드에 직접 입력)
+- BACKLOG-06: GIF 지원 (이미지 업로드 방식으로)
+- BACKLOG-07: V2 Enhanced Features (동적 배경, 애니메이션, 페이지 넘기기, 줌인/줌아웃, 필터, 실시간 프리뷰, 포토샵 기능, 꽃 효과)
+
+**Status**: In Progress
+
+Plans:
+- [ ] 09-backlog-features-01-PLAN.md — 프리미엄 템플릿 구매 시스템
+- [ ] 09-backlog-features-02-PLAN.md — 배경 음악 업로드/재생
+- [ ] 09-backlog-features-03-PLAN.md — 이모지/GIF 지원
+- [ ] 09-backlog-features-04-PLAN.md — V2 Enhanced Features
 
 ---
 
 ## 미정 (Backlog)
 
 - 회원 목록 페이지네이션
-- 프리미엄 템플릿 (구매)
 - 커스텀 폰트
-- 이모지, GIF 추가
-- 배경 음악
-- 동영상 초대장
-- Kakao 로그인
-- Naver Pay 연동
-- AI 추천 템플릿
