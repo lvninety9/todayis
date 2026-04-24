@@ -144,7 +144,46 @@ Plans:
 - TEST-02: E2E 테스트 작성
 - TEST-03: 성능 최적화
 
-**Status**: Not Started
+**Status**: In progress (Phase 7-01: 7/7 tasks done)
+
+Implementation:
+- [x] vitest.config.ts — Vitest 설정 (jsdom, coverage, path alias)
+- [x] src/test/setup.ts — 테스트 설정 (Supabase mock, next/navigation mock)
+- [x] package.json — test, test:run, test:coverage 스크립트
+- [x] src/lib/template-utils.test.tsx — 13 tests (validateTemplateData, getDefaultValue, renderField)
+- [x] src/types/payment.test.ts — 6 tests (PaymentStatus, PaymentInsert, PaymentUpdate)
+- [x] src/lib/payment/toss.test.ts — 6 tests (TossPaymentsClient, getTossClient)
+- [x] src/lib/auth.test.ts — 7 tests (getUserFromRequest, requireAdmin)
+- [x] src/components/ui/button.test.tsx — 8 tests (buttonVariants)
+- [x] src/types/template-data.test.ts — 9 tests (TemplateData, TemplateField, Template interface 구조 검증)
+- [x] src/components/ui/badge.test.tsx — 6 tests (badgeVariants)
+- [x] src/components/ui/card.test.tsx — 18 tests (Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter)
+- [x] src/components/ui/skeleton.test.tsx — 3 tests (Skeleton)
+- [x] src/hooks/use-template-editor.test.tsx — 19 tests (useTemplateEditor hook)
+- [x] src/hooks/use-payment.test.tsx — 16 tests (usePayment hook)
+
+**Test Summary**: 120 tests across 11 test files — all passing
+**TypeScript**: `npx tsc --noEmit` — pass
+**Build**: `npm run build` — pass
+
+Plans:
+- [x] 07-tests-unit-PLAN.md — Vitest + RTL 설정, 유틸리티/컴포넌트/훅 단위 테스트 (7/7 tasks)
+- [x] 07-tests-e2e-PLAN.md — Playwright 설정, 핵심 사용자 플로우 E2E 테스트 (40 tests passed)
+- [ ] 07-optimization-PLAN.md — 번들 분석, 코드 스플리팅, API 캐싱, 이미지 최적화
+
+---
+
+## Phase 8: Frontend Design Modernization
+
+**Goal**: Frontend 전체 개편 - UI 현대화, 텍스트 렌더링 효과, 템플릿 편집기 고급화
+
+**Requirements**: 
+- UI-01: shadcn/ui 기반 최신 UI 컴포넌트 redesign
+- UI-02: Pretext 기반 텍스트 렌더링 효과
+- UI-03: 템플릿 편집기 고급 기능 (animation, music, font styles)
+- UI-04: 트렌디한 애니메이션/모션 효과 통합
+
+**Status**: Ready for discuss
 
 ---
 

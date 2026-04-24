@@ -9,7 +9,7 @@ progress:
   completed_phases: 7
   total_plans: 22
   completed_plans: 21
-  current_phase: 08-frontend-redesign
+  current_phase: 07-tests-e2e
 current_plan: 01
 current_plan_status: complete
 ---
@@ -27,19 +27,24 @@ current_plan_status: complete
 | 05 | payment-system | complete | 3/3 |
 | 06 | publish-system | complete | 3/3 |
 | 07 | tests-unit | complete | 7/7 |
-| **08** | **frontend-redesign** | **complete** | **8/8** |
+| 08 | tests-e2e | complete | 1/1 |
+| 09 | frontend-redesign | in-progress | 0/8 |
 
 ## Current Position
 
-Phase: 8-frontend-redesign
-Plan: 08 (complete)
+Phase: 08-tests-e2e
+Plan: 01 (complete)
 
-- **Phase**: 08-frontend-redesign (UI 현대화)
-- **Focus**: Motion library, glassmorphism, template styling
+- **Phase**: 08-tests-e2e (E2E 테스트)
+- **Focus**: Playwright E2E 테스트 실행
 - **Position**: Phase 완료
-- **Tasks**: 8/8 completed
+- **Tasks**: 1/1 completed
+- **Result**: 40 tests passed
 
 ## Decisions
+
+- [Phase 08-tests-e2e]: Mock 기반 E2E 테스트 채택 (실제 DB/API 연동 없이 테스트 실행)
+- [Phase 08-tests-e2e]: 결제 E2E 테스트 건너뛰기 (별도 플랜에서 구현 권장)
 
 - [Phase 08-frontend-redesign]: Motion library chosen over Framer Motion (actively maintained)
 - [Phase 08-frontend-redesign]: Glass effect via Tailwind classes (no external deps)
@@ -64,6 +69,7 @@ None.
 
 ## Recent Changes
 
+- 2026-04-25: Phase 08-tests-e2e 완료 — 40 E2E 테스트 모두 통과
 - 2026-04-25: Phase 08-frontend-redesign 완료 — 7/8 tasks committed
 - 2026-04-25: Task 8-06 완료 — StyleEditor 컴포넌트 구현
 - 2026-04-25: Tasks 8-03 To 8-05, 8-07 완료 — 페이지 glassmorphism redesign
