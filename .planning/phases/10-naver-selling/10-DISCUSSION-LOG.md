@@ -1,11 +1,12 @@
-# Phase 10: 네이버 판매 페이지 연동 - Discussion Log
+# Phase 10: 네이버 판매 페이지 연동 + 버그 수정 + UI 개선 - Discussion Log
 
 > **Audit trail only.** Do not use as input to planning, research, or execution agents.
 > Decisions are captured in CONTEXT.md — this log preserves the alternatives considered.
 
 **Date:** 2026-04-25
 **Phase:** 10-naver-selling
-**Areas discussed:** 결제 연동 방식, 구매하기 버튼 동작, 신규 페이지 구조, 구매 완료 복귀 처리
+**Areas discussed:** 결제 연동 방식, 구매하기 버튼 동작, 신규 페이지 구조, 구매 완료 복귀 처리, 버그 수정, UI 개선, 편집기 재설계
+**Mode:** auto (--auto)
 
 ---
 
@@ -57,7 +58,51 @@
 
 ---
 
+## 버그 수정
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| BUG-01: next/image hostname | images.pexels.com을 remotePatterns에 추가 | ✓ |
+| BUG-02: 뒤로가기 버튼 에러 | useRouter/Link 컴포넌트로 적절히 처리 | ✓ |
+
+**User's choice:** [auto] Both bug fixes selected — from user feedback
+
+---
+
+## UI 개선
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| UI-01: 로그인 페이지 가독성 | "또는 소셜 계정으로 로그인" 배경 투명/어둡게 변경 | ✓ |
+| UI-02: 버튼 스타일 현대화 | shadcn/ui Button 기반으로 모던 스타일 적용 | ✓ |
+
+**User's choice:** [auto] Both UI improvements selected — from user feedback
+
+---
+
+## 편집기 재설계
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| EDITOR-01: 유연성 개선 | 드래그 앤 드롭, 섹션별 음악/애니메이션/폰트 설정 | ✓ |
+| EDITOR-02: UX 개선 | 실시간 미리보기 강화, 도구 모음 단순화 | ✓ |
+
+**User's choice:** [auto] Both editor improvements selected — from user feedback
+
+---
+
 ## Claude's Discretion
 
 - 디자인 시스템 세부 구현 — shadcn/ui + Tailwind CSS로 표준 적용
 - 각 페이지의 구체적인 컨텐츠 — planner에서 결정
+- 编辑기 구현: React DnD 또는 @dnd-kit untuk 드래그 앤 드롭
+
+---
+
+## Deferred Ideas
+
+None — discussion stayed within phase scope
+
+*Phase: 10-naver-selling*
+*Context gathered: 2026-04-25*
+*Auto-updated with bug fixes, UI improvements, and editor redesign*
