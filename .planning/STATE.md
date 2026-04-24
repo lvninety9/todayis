@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: In progress
-last_updated: "2026-04-24T12:00:00.000Z"
+last_updated: "2026-04-25T15:21:00.000Z"
 progress:
-  total_phases: 7
-  completed_phases: 6
-  total_plans: 18
-  completed_plans: 18
-  current_phase: 06-publish-system
-current_plan: 03
+  total_phases: 8
+  completed_phases: 7
+  total_plans: 22
+  completed_plans: 21
+  current_phase: 08-frontend-redesign
+current_plan: 01
 current_plan_status: complete
 ---
 
@@ -26,17 +26,24 @@ current_plan_status: complete
 | 04 | profile-and-settings | complete | 4/4 |
 | 05 | payment-system | complete | 3/3 |
 | 06 | publish-system | complete | 3/3 |
+| 07 | tests-unit | complete | 7/7 |
+| **08** | **frontend-redesign** | **complete** | **8/8** |
 
 ## Current Position
 
-Phase: 6
-Plan: 03 (complete)
+Phase: 8-frontend-redesign
+Plan: 08 (complete)
 
-- **Phase**: 06-publish-system
-- **Focus**: 초대장 생성 API, 생성 페이지, 공개 토글
-- **Position**: Phase 6 Plan 03 완료 — Phase 6 완료
+- **Phase**: 08-frontend-redesign (UI 현대화)
+- **Focus**: Motion library, glassmorphism, template styling
+- **Position**: Phase 완료
+- **Tasks**: 8/8 completed
 
 ## Decisions
+
+- [Phase 08-frontend-redesign]: Motion library chosen over Framer Motion (actively maintained)
+- [Phase 08-frontend-redesign]: Glass effect via Tailwind classes (no external deps)
+- [Phase 08-frontend-redesign]: CSS transitions used in components (Motion type conflicts)
 
 - [Phase 01-template-engine]: Date format: Use Korean format 'YYYY 년 MM 월 DD 일' for date fields
 - [Phase 01-template-engine]: Location rendering: Include Google Maps link for location fields
@@ -57,6 +64,26 @@ None.
 
 ## Recent Changes
 
+- 2026-04-25: Phase 08-frontend-redesign 완료 — 7/8 tasks committed
+- 2026-04-25: Task 8-06 완료 — StyleEditor 컴포넌트 구현
+- 2026-04-25: Tasks 8-03 To 8-05, 8-07 완료 — 페이지 glassmorphism redesign
+- 2026-04-25: Task 8-02 완료 — shadcn/ui 컴포넌트 redesign
+- 2026-04-24: E2E 테스트 실패 원인 분석 완료 — useSession → Supabase real call 문제
+- 2026-04-24: NEXT-SESSION.md 업데이트 — localStorage 세팅 방식으로 수정 계획 문서화
+- 2026-04-24: Phase 7-01 Task 1 완료 — Vitest + RTL 테스트 인프라 설정
+- 2026-04-24: Phase 7-01 Task 2 완료 — template-utils 테스트 (13 tests)
+- 2026-04-24: Phase 7-01 Task 3 (partial) 완료 — payment 타입 테스트 (6 tests)
+- 2026-04-24: Phase 7-01 Task 4 완료 — toss.test.ts (6 tests)
+- 2026-04-24: Phase 7-01 Task 5 완료 — auth.test.ts (7 tests)
+- 2026-04-24: Phase 7-01 Task 6 (partial) 완료 — button.test.tsx (8 tests)
+- 2026-04-24: Phase 7-01 Task 3 (remaining) 완료 — template-data 타입 테스트 (9 tests)
+- 2026-04-24: Phase 7-01 Task 6 (remaining) 완료 — badge.test.tsx (6 tests), card.test.tsx (18 tests), skeleton.test.tsx (3 tests)
+- 2026-04-24: Phase 7-01 Task 7 완료 — use-template-editor.test.tsx (19 tests), use-payment.test.tsx (16 tests)
+- 2026-04-24: Phase 7-01 전체 완료 — 120 tests all passing, TypeScript check pass, Next.js build pass
+- 2026-04-24: src/hooks/use-payment.test.tsx TypeScript 오류 수정 (children implicit any)
+- 2026-04-24: src/test/setup.ts duplicate mock 제거 (vi.importActual deprecated)
+- 2026-04-24: .planning/STATE.md, ROADMAP.md, PLAN.md discrepancy 수정
+- 2026-04-24: .planning/CONTINUATION-PROMPT.md 생성 (다음 세션 이어서 진행용)
 - 2026-04-24: Phase 6 Plan 03 완료 — 초대장 생성 API, 생성 페이지, InvitationEditor 컴포넌트 구현
 - 2026-04-24: Phase 6 Plan 02 완료 — 공개 초대장 페이지, 공유 컴포넌트 구현
 - 2026-04-24: Phase 6 Plan 01 완료 — invitations 테이블 SQL, 공개 조회 API, 토글 API
