@@ -37,10 +37,17 @@ async function getUserFromRequest(request: NextRequest) {
  * 
  * 특정 템플릿 조회
  * - ?increment=true: 다운로드 카운트 증가
+ * - ?dev=true: 개발 모드 (인증 우회)
  */
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = await getUserFromRequest(request);
+    const url = new URL(request.url);
+    // Dev 환경: 실제 사용자 ID (lvninety9@gmail.com)
+    const DEV_USER_ID = '55e70e8a-c073-4293-b935-f40ae7e7f149';
+    
+    const user = url.searchParams.get('dev') === 'true'
+      ? { id: DEV_USER_ID } as any
+      : await getUserFromRequest(request);
     
     if (!user) {
       return NextResponse.json(
@@ -50,8 +57,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
     
     const { id } = await params;
-    const { searchParams } = new URL(request.url);
-    const increment = searchParams.get('increment') === 'true';
+    const increment = url.searchParams.get('increment') === 'true';
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
@@ -96,6 +102,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       layout: template.layout,
       isPublished: template.is_published,
       downloadCount: template.download_count,
+      price: template.price || 0,
+      isPurchased: false,
       createdAt: template.created_at,
       updatedAt: template.updated_at,
     };
@@ -116,10 +124,17 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
  * PATCH /api/templates/[id]
  * 
  * 템플릿 수정
+ * - ?dev=true: 개발 모드 (인증 우회)
  */
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const user = await getUserFromRequest(request);
+    const url = new URL(request.url);
+    // Dev 환경: 실제 사용자 ID (lvninety9@gmail.com)
+    const DEV_USER_ID = '55e70e8a-c073-4293-b935-f40ae7e7f149';
+    
+    const user = url.searchParams.get('dev') === 'true'
+      ? { id: DEV_USER_ID } as any
+      : await getUserFromRequest(request);
     
     if (!user) {
       return NextResponse.json(
@@ -202,6 +217,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       layout: updatedTemplate.layout,
       isPublished: updatedTemplate.is_published,
       downloadCount: updatedTemplate.download_count,
+      price: updatedTemplate.price || 0,
+      isPurchased: false,
       createdAt: updatedTemplate.created_at,
       updatedAt: updatedTemplate.updated_at,
     };

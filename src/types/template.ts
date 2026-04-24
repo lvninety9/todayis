@@ -54,6 +54,10 @@ export interface Template {
   isPublished: boolean;
   /** 다운로드 카운트 */
   downloadCount: number;
+  /** 가격 (원화, 무료면 0) */
+  price: number;
+  /** 구매 여부 */
+  isPurchased: boolean;
 }
 
 /**

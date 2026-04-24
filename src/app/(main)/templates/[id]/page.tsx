@@ -65,12 +65,19 @@ export default function TemplateDetailPage() {
   const fetchTemplate = useCallback(async () => {
     try {
       const token = session.session?.access_token;
+      const isDev = typeof window !== 'undefined' && localStorage.getItem('__DEV_MODE__') === 'true';
+      
       const headers: Record<string, string> = {};
-      if (token) {
+      let url = `/api/templates/${templateId}`;
+      
+      // 로그인한 사용자는 토큰 사용, 비로그인时만 dev=true
+      if (isDev && !token) {
+        url += '?dev=true';
+      } else if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`/api/templates/${templateId}`, { headers });
+      const response = await fetch(url, { headers });
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -108,7 +115,9 @@ export default function TemplateDetailPage() {
 
   // 마운트 시 템플릿 + 구매 상태 조회
   useEffect(() => {
-    if (!session.loading && !session.user) {
+    const isDev = typeof window !== 'undefined' && localStorage.getItem('__DEV_MODE__') === 'true';
+    
+    if (!session.loading && !session.user && !isDev) {
       router.push('/login');
       return;
     }

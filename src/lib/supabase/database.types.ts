@@ -35,6 +35,8 @@ export interface Template {
   fields: TemplateField[];
   /** 레이아웃 설정 (JSONB) */
   layout: string;
+  /** 템플릿 설정 (JSONB) */
+  config: Record<string, any>;
   /** 공개 여부 */
   is_published: boolean;
   /** 다운로드 카운트 */
@@ -65,6 +67,8 @@ export interface TemplateInsert {
   fields: TemplateField[];
   /** 레이아웃 설정 (JSONB) */
   layout: string;
+  /** 템플릿 설정 (JSONB) */
+  config?: Record<string, any>;
   /** 공개 여부 (기본값: false) */
   is_published?: boolean;
   /** 다운로드 카운트 (기본값: 0) */
@@ -91,6 +95,8 @@ export interface TemplateUpdate {
   fields?: TemplateField[];
   /** 레이아웃 설정 (JSONB) */
   layout?: string;
+  /** 템플릿 설정 (JSONB) */
+  config?: Record<string, any>;
   /** 공개 여부 */
   is_published?: boolean;
   /** 다운로드 카운트 */

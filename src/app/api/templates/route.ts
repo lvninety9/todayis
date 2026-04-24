@@ -65,6 +65,8 @@ export async function GET(request: NextRequest) {
         layout: t.layout,
         isPublished: t.is_published,
         downloadCount: t.download_count,
+        price: t.price || 0,
+        isPurchased: false,
         createdAt: t.created_at,
         updatedAt: t.updated_at,
       }));
@@ -115,6 +117,8 @@ export async function GET(request: NextRequest) {
       layout: t.layout,
       isPublished: t.is_published,
       downloadCount: t.download_count,
+      price: t.price || 0,
+      isPurchased: false,
       createdAt: t.created_at,
       updatedAt: t.updated_at,
     }));
@@ -249,6 +253,8 @@ export async function POST(request: NextRequest) {
       layout: data.layout,
       isPublished: data.is_published,
       downloadCount: data.download_count,
+      price: data.price || 0,
+      isPurchased: false,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
     };

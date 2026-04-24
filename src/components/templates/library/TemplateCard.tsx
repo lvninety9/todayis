@@ -21,6 +21,7 @@ interface TemplateCardProps {
  * - Thumbnail 이미지 표시
  * - 템플릿 이름, 카테고리, 다운로드 카운트
  * - Published 상태 표시
+ * - 가격 표시 (유료/무료)
  * - Edit/Delete 버튼 (edit mode)
  */
 export function TemplateCard({
@@ -34,6 +35,18 @@ export function TemplateCard({
       onDelete(template);
     }
   };
+
+  // 가격 포맷팅
+  const formatPrice = (price: number) => {
+    if (price === 0) return '무료';
+    return new Intl.NumberFormat('ko-KR', {
+      style: 'currency',
+      currency: 'KRW',
+    }).format(price);
+  };
+
+  const isPremium = template.price > 0;
+  const isPurchased = template.isPurchased || !isPremium;
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer bg-white/50 dark:bg-black/30 backdrop-blur-sm border-white/20 dark:border-white/10">
@@ -61,6 +74,19 @@ export function TemplateCard({
               </Badge>
             </div>
           )}
+          
+          {/* Price badge */}
+          <div className="absolute top-2 left-2">
+            {isPremium ? (
+              <Badge className={isPurchased ? 'bg-green-500 text-white' : 'bg-amber-500 text-white'}>
+                {isPurchased ? '✓ 구매완료' : formatPrice(template.price)}
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="bg-white/80">
+                무료
+              </Badge>
+            )}
+          </div>
         </div>
       </CardHeader>
       

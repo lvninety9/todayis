@@ -85,15 +85,20 @@ export function FieldEditor({ field, value, onChange, error }: FieldEditorProps)
       
       case 'image':
         return (
-          <input
-            type="url"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="https://example.com/image.jpg"
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              error ? 'border-red-500' : 'border-gray-300'
-            }`}
-          />
+          <div className="space-y-2">
+            <input
+              type="url"
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder="https://example.com/image.jpg 또는 GIF"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                error ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            <p className="text-xs text-gray-500">
+              JPG, PNG, GIF (애니메이션) 지원
+            </p>
+          </div>
         );
       
       case 'location':
