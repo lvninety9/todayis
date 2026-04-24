@@ -7,6 +7,9 @@ import { InvitationViewer } from '@/components/publish/InvitationViewer';
 import { ShareButton } from '@/components/publish/ShareButton';
 import { ShareDialog } from '@/components/publish/ShareDialog';
 
+// ISR: revalidate every 60 seconds
+export const dynamicParams = true;
+
 interface PublicInvitationResponse {
   invitation: Invitation;
   template: {
