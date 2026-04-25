@@ -1,7 +1,156 @@
+'use client';
+
+import { useSession } from '@/hooks/use-session';
+import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  const { user, loading } = useSession();
+  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const supabase = createClient();
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/login';
+  };
+
+  const navItems = [
+    { href: '/dashboard', label: '대시보드' },
+    { href: '/templates', label: '템플릿' },
+    { href: '/pricing', label: '가격' },
+    { href: '/order-guide', label: '주문안내' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 dark:via-background dark:to-purple-950">
+      {/* Header - Glassmorphism */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-black/40 border-b border-white/20 dark:border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center">
+              <span className="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                Todayis
+              </span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-sm font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 ${
+                    pathname === item.href
+                      ? 'text-indigo-600 dark:text-indigo-400'
+                      : 'text-gray-600 dark:text-gray-400'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* User Menu */}
+            <div className="flex items-center gap-3">
+              {loading ? (
+                <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+              ) : user ? (
+                <div className="flex items-center gap-3">
+                  <Link href="/settings">
+                    <Button variant="ghost" size="sm">
+                      {user.email?.split('@')[0]}
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleSignOut}
+                  >
+                    로그아웃
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Link href="/login">
+                    <Button variant="ghost" size="sm">
+                      로그인
+                    </Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button variant="gradient" size="sm">
+                      회원가입
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700">
+            <div className="px-4 py-3 space-y-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block py-2 text-sm font-medium text-gray-600 dark:text-gray-400"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 py-6">
+        {children}
+      </main>
+
+      {/* Footer - Minimal with gradient accent */}
+      <footer className="border-t border-gray-200 dark:border-gray-800 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              © 2026 Todayis. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4">
+              <Link href="/landing" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                회사 소개
+              </Link>
+              <Link href="/order-guide" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                이용 안내
+              </Link>
+              <Link href="/pricing" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                가격
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 }

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Template } from '@/types/template';
 import { Spinner } from '@/components/ui/spinner';
 import { GlassCard } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
   const session = useSession();
@@ -93,13 +94,55 @@ export default function DashboardPage() {
           </p>
         </div>
 
+        {/* 통계 카드 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <GlassCard className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl p-3 shadow-lg">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h1a1 1 0 011 1v6a1 1 0 01-1 1h-1a1 1 0 01-1-1v-6z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">템플릿</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{templates.length}</p>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl p-3 shadow-lg">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-9-5.5v12a2 2 0 002 2h8a2 2 0 002-2V10.5a2 2 0 00-.5-1.28l-3.5-3.5A2 2 0 0013.5 4H7a2 2 0 00-2 2z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">초대장</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl p-3 shadow-lg">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.337 2.88.9M12 8V6m0 2a2 2 0 100 4 2 2 0 000-4z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">구매</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+
         {/* 빠른 액션 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Link
-            href="/templates"
-            className="block"
-          >
-            <GlassCard className="p-6 hover:scale-[1.02] transition-transform">
+          <Link href="/templates" className="block">
+            <GlassCard className="p-6 hover:-translate-y-1 transition-transform duration-300">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg p-3">
                   <svg className="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,11 +157,8 @@ export default function DashboardPage() {
             </GlassCard>
           </Link>
 
-          <Link
-            href="/templates?create=true"
-            className="block"
-          >
-            <GlassCard className="p-6 hover:scale-[1.02] transition-transform">
+          <Link href="/templates?create=true" className="block">
+            <GlassCard className="p-6 hover:-translate-y-1 transition-transform duration-300">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 bg-green-100 dark:bg-green-900/50 rounded-lg p-3">
                   <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,11 +173,8 @@ export default function DashboardPage() {
             </GlassCard>
           </Link>
 
-          <Link
-            href="/settings"
-            className="block"
-          >
-            <GlassCard className="p-6 hover:scale-[1.02] transition-transform">
+          <Link href="/settings" className="block">
+            <GlassCard className="p-6 hover:-translate-y-1 transition-transform duration-300">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 bg-gray-100 dark:bg-gray-800 rounded-lg p-3">
                   <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,12 +244,11 @@ export default function DashboardPage() {
               <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">아직 템플릿이 없습니다</h3>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">첫 번째 초대장을 만들어보세요!</p>
               <div className="mt-6">
-                <Link
-                  href="/templates"
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-all"
-                >
-                  템플릿 라이브러리 가기
-                </Link>
+                <Button asChild variant="gradient">
+                  <Link href="/templates">
+                    템플릿 라이브러리 가기
+                  </Link>
+                </Button>
               </div>
             </div>
           )}

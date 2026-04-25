@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 via-background to-purple-950 dark:via-background py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+      <GlassCard className="max-w-md w-full space-y-8 p-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
             Todayis
@@ -72,7 +72,7 @@ export default function LoginPage() {
                   <div className="w-full border-t border-gray-300 dark:border-gray-600" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white dark:bg-background text-gray-500 dark:text-gray-400 font-medium">
+                  <span className="px-4 bg-transparent dark:bg-transparent text-gray-500 dark:text-gray-400 font-medium backdrop-blur-sm">
                     또는 소셜 계정으로 로그인
                   </span>
                 </div>
@@ -85,7 +85,7 @@ export default function LoginPage() {
             </div>
           </>
         )}
-      </div>
+      </GlassCard>
     </div>
   );
 }

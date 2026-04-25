@@ -49,16 +49,16 @@ export function TemplateCard({
   const isPurchased = template.isPurchased || !isPremium;
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer bg-white/50 dark:bg-black/30 backdrop-blur-sm border-white/20 dark:border-white/10">
+    <Card className="group rounded-xl overflow-hidden hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 cursor-pointer bg-white/60 dark:bg-black/40 backdrop-blur-md border-white/20 dark:border-white/10">
       <CardHeader className="p-0 overflow-hidden">
-        <div className="relative aspect-video bg-gray-100 dark:bg-gray-800">
+        <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 group-hover:scale-105 transition-transform duration-300">
           {template.thumbnail ? (
             <Image
               src={template.thumbnail}
               alt={template.name}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover"
+              className="object-cover group-hover:scale-110 transition-transform duration-300"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -66,23 +66,26 @@ export function TemplateCard({
             </div>
           )}
           
+          {/* Gradient overlay on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
           {/* Published status indicator */}
           {template.isPublished && (
-            <div className="absolute top-2 right-2">
-              <Badge variant="secondary" className="bg-green-500 text-white">
+            <div className="absolute top-3 right-3">
+              <Badge variant="secondary" className="bg-green-500 text-white shadow-lg">
                 Published
               </Badge>
             </div>
           )}
           
           {/* Price badge */}
-          <div className="absolute top-2 left-2">
+          <div className="absolute top-3 left-3">
             {isPremium ? (
-              <Badge className={isPurchased ? 'bg-green-500 text-white' : 'bg-amber-500 text-white'}>
+              <Badge className={isPurchased ? 'bg-green-500 text-white shadow-lg' : 'bg-amber-500 text-white shadow-lg'}>
                 {isPurchased ? '✓ 구매완료' : formatPrice(template.price)}
               </Badge>
             ) : (
-              <Badge variant="outline" className="bg-white/80">
+              <Badge variant="outline" className="bg-white/90 backdrop-blur-sm shadow-lg">
                 무료
               </Badge>
             )}

@@ -106,27 +106,28 @@ export default function UsernamePage({ params }: { params: { username: string } 
   const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/${invitation.slug}`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-100 dark:from-rose-950 dark:via-pink-950 dark:to-purple-950 py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">{invitation.title}</h1>
+        {/* Header - Romantic Design */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-serif font-bold text-gray-900 dark:text-white drop-shadow-sm">
+            {invitation.title}
+          </h1>
           {template && (
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 font-light">
               {template.name} 템플릿
             </p>
           )}
         </div>
 
         {/* Invitation Viewer */}
-        <div className="mb-6">
+        <div className="mb-8">
           <InvitationViewer invitation={invitation} template={template || undefined} />
         </div>
 
-        {/* Share Button */}
-        <div className="text-center">
+        {/* Share Button - Modern FAB */}
+        <div className="fixed bottom-6 right-6 z-50">
           <ShareButton invitation={invitation} />
-          <ShareDialog invitation={invitation} />
         </div>
       </div>
     </div>

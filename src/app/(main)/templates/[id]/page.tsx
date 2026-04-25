@@ -1,13 +1,13 @@
 /**
  * 템플릿 상세 페이지
  * 
- * 템플릿 정보 조회 + 구매 상태 확인 + Easy Checkout 모달
+ * 템플릿 정보 조회 + 구매 상태 확인 + Naver Selling Page redirect
  * 
  * 흐름:
  * 1. 서버 컴포넌트: 템플릿 정보 조회 (name, thumbnail, price, is_premium)
- * 2. 클라이언트 컴포넌트: 구매 상태 확인 + Easy Checkout 모달
+ * 2. 클라이언트 컴포넌트: 구매 상태 확인
  * 3. is_purchased=true → "편집하기" 버튼
- * 4. is_purchased=false + price>0 → "구매하기" 버튼 → Easy Checkout
+ * 4. is_purchased=false + price>0 → "구매하기" 버튼 → Naver Selling Page redirect
  * 5. 무료 템플릿 → "편집하기" 버튼
  */
 
@@ -15,7 +15,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { EasyCheckout } from '@/components/payment/EasyCheckout';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -25,11 +24,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { GlassCard } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useSession } from '@/hooks/use-session';
 import { usePayment } from '@/hooks/use-payment';
+import { redirectToNaverSellingPage } from '@/lib/payment/naver';
 
 interface TemplateInfo {
   id: string;
@@ -48,7 +49,7 @@ export default function TemplateDetailPage() {
   const router = useRouter();
   const params = useParams();
   const session = useSession();
-  const { state: paymentState, requestPayment, checkPurchase, verifyPayment } = usePayment();
+  const { checkPurchase, verifyPayment } = usePayment();
 
   const templateId = params?.id as string;
 
@@ -56,9 +57,6 @@ export default function TemplateDetailPage() {
   const [loading, setLoading] = useState(true);
   const [checkingPurchase, setCheckingPurchase] = useState(false);
   const [isPurchased, setIsPurchased] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [clientKey, setClientKey] = useState('');
-  const [orderId, setOrderId] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   // 템플릿 정보 조회
@@ -133,58 +131,24 @@ export default function TemplateDetailPage() {
     }
   }, [template, templateId, checkIfPurchased]);
 
-  // 구매하기 버튼 클릭
-  const handleBuy = async () => {
+  // 구매하기 - Naver Selling Page로 redirect
+  const handleBuy = useCallback(async () => {
     if (!template) return;
-
+    
     try {
-      const token = session.session?.access_token;
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-
-      const response = await fetch('/api/payment/request', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
+      // Naver Selling Page로 redirect
+      redirectToNaverSellingPage(
+        {
+          templateName: template.name,
+          price: template.price,
           templateId: template.id,
-          amount: template.price,
-        }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || '결제 요청에 실패했습니다');
-      }
-
-      const data = await response.json();
-      setClientKey(data.clientKey || '');
-      setOrderId(data.orderId);
-      setCheckoutOpen(true);
+        },
+        `/templates/${template.id}`
+      );
     } catch (err) {
       toast.error(err instanceof Error ? err.message : '결제 요청에 실패했습니다');
     }
-  };
-
-  // 결제 성공 시 처리
-  const handlePaymentSuccess = useCallback(async (paymentKey: string) => {
-    try {
-      await verifyPayment(paymentKey);
-      
-      // 구매 상태 새로고침
-      if (templateId) {
-        await checkIfPurchased(templateId);
-      }
-
-      setCheckoutOpen(false);
-      toast.success('결제가 완료되었습니다');
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : '결제 검증에 실패했습니다');
-    }
-  }, [verifyPayment, templateId, checkIfPurchased]);
+  }, [template]);
 
   // 가격 포맷팅
   const formatPrice = (price: number) => {
@@ -230,7 +194,7 @@ export default function TemplateDetailPage() {
   const isFree = template.price === 0 || !template.is_premium;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 dark:via-background dark:to-purple-950">
       <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* 헤더 */}
         <div className="mb-6">
@@ -249,15 +213,15 @@ export default function TemplateDetailPage() {
           </div>
         )}
 
-        {/* 템플릿 정보 */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          {/* 썸네일 */}
+        {/* 템플릿 정보 - Modern GlassCard */}
+        <GlassCard className="overflow-hidden">
+          {/* 썸네일 - 큰 미리보기 */}
           {template.thumbnail && (
-            <div className="w-full h-64 bg-gray-100 flex items-center justify-center">
+            <div className="w-full h-80 bg-gray-100 flex items-center justify-center overflow-hidden">
               <img
                 src={template.thumbnail}
                 alt={template.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
@@ -266,26 +230,26 @@ export default function TemplateDetailPage() {
           )}
 
           {/* 정보 */}
-          <div className="p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <div className="p-8">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               {template.name}
             </h1>
 
-            <div className="flex items-center gap-3 mb-4">
-              <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="px-4 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium">
                 {template.category}
               </span>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+              <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${
                 isFree
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-blue-100 text-blue-700'
+                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                  : 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg'
               }`}>
                 {formatPrice(template.price)}
               </span>
             </div>
 
-            {/* 버튼 */}
-            <div className="flex gap-3 mt-6">
+            {/* 버튼 - Modern gradient + pulse */}
+            <div className="flex gap-3 mt-8">
               {checkingPurchase ? (
                 <div className="flex items-center gap-2 text-gray-500">
                   <Spinner size="sm" />
@@ -296,6 +260,7 @@ export default function TemplateDetailPage() {
                   onClick={() => router.push(`/templates/${template.id}/edit`)}
                   className="flex-1"
                   size="lg"
+                  variant="gradient"
                 >
                   편집하기
                 </Button>
@@ -304,34 +269,24 @@ export default function TemplateDetailPage() {
                   onClick={() => router.push(`/templates/${template.id}/edit`)}
                   className="flex-1"
                   size="lg"
+                  variant="gradient"
                 >
                   무료로 시작하기
                 </Button>
               ) : (
                 <Button
                   onClick={handleBuy}
-                  disabled={paymentState.loading}
                   className="flex-1"
                   size="lg"
+                  variant="gradient"
                 >
-                  {paymentState.loading ? '처리 중...' : `구매하기 (${formatPrice(template.price)})`}
+                  구매하기 ({formatPrice(template.price)})
                 </Button>
               )}
             </div>
           </div>
-        </div>
+        </GlassCard>
       </div>
-
-      {/* Easy Checkout 모달 */}
-      <EasyCheckout
-        isOpen={checkoutOpen}
-        onClose={() => setCheckoutOpen(false)}
-        templateName={template.name}
-        amount={template.price}
-        clientKey={clientKey}
-        orderId={orderId}
-        onSuccess={handlePaymentSuccess}
-      />
     </div>
   );
 }

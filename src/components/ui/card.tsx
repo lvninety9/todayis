@@ -79,7 +79,7 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = 'CardFooter';
 
-// Glass card component with backdrop blur
+// Glass card component with backdrop blur - Glassmorphism 2.0
 const GlassCard = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -87,7 +87,9 @@ const GlassCard = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'rounded-xl border border-white/20 bg-white/30 dark:bg-black/30 backdrop-blur-md shadow-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl',
+      'rounded-xl border border-white/20 bg-white/40 dark:bg-black/40 backdrop-blur-xl shadow-lg transition-all duration-300',
+      'hover:scale-[1.02] hover:shadow-xl hover:-translate-y-1',
+      'before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-br before:from-white/10 before:to-transparent before:opacity-0 before:transition-opacity hover:before:opacity-100',
       className
     )}
     {...props}
