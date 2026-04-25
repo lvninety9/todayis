@@ -202,6 +202,8 @@ export function TemplateUploadDialog({
     layout: '',
     isPublished: false,
     downloadCount: 0,
+    price: 0,
+    isPurchased: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };

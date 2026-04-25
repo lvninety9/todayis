@@ -21,6 +21,8 @@ export const WEDDING_TEMPLATE: Template = {
   updatedAt: new Date().toISOString(),
   isPublished: true,
   downloadCount: 0,
+  price: 0,
+  isPurchased: false,
   fields: [
     {
       name: 'groomName',
@@ -81,6 +83,8 @@ export const BIRTHDAY_TEMPLATE: Template = {
   updatedAt: new Date().toISOString(),
   isPublished: true,
   downloadCount: 0,
+  price: 0,
+  isPurchased: false,
   fields: [
     {
       name: 'hostName',

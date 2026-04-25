@@ -45,6 +45,8 @@ export async function GET(request: NextRequest) {
       layout: t.layout,
       isPublished: t.is_published,
       downloadCount: t.download_count,
+      price: t.price || 0,
+      isPurchased: false,
       createdAt: t.created_at,
       updatedAt: t.updated_at,
     }));
