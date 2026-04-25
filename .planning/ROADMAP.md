@@ -82,30 +82,55 @@ Implementation:
 
 ## Phase 5: 결제 시스템
 
-**Goal**: Toss Payments Easy Checkout 연동을 통한 유료 템플릿 구매
+**Goal**: Naver Selling Page (네이버 판매 페이지) 연동을 통한 유료 템플릿 구매
 
 **Requirements**: 
-- PAYMENT-01: payments 테이블 생성, templates 가격 컬럼 추가, Toss Payments SDK 설정
-- PAYMENT-02: 결제 요청 API, 구매 상태 확인 API, Easy Checkout 모달 구현
-- PAYMENT-03: 웹훅 핸들러, 취소 API, 템플릿 상세 페이지 통합
+- PAYMENT-01: Naver Selling Page 연동 설정, payments 테이블 확장
+- PAYMENT-02: 템플릿 상세 페이지에서 "구매하기" 클릭 시 네이버 판매 페이지로 리다이렉트
+- PAYMENT-03: 구매 완료 후 복귀 처리, 구매 상태 확인
 
-**Status**: Complete
-
-Implementation:
-- [x] supabase-payment-setup.sql — payments 테이블 생성 + templates 확장 + 인덱스 + RLS
-- [x] src/types/payment.ts — PaymentStatus, Payment, PaymentInsert, PaymentUpdate 정의
-- [x] src/lib/payment/toss.ts — TossPaymentsClient 구현 (confirmPayment, cancelPayment, getPayment)
-- [x] src/app/api/payment/request/route.ts — 결제 요청 API
-- [x] src/app/api/payment/verify/route.ts — 결제 검증 API
-- [x] src/app/api/payment/webhook/route.ts — Toss 웹훅 핸들러
-- [x] src/app/api/payment/[paymentId]/cancel/route.ts — 결제 취소 API
-- [x] src/components/payment/EasyCheckout.tsx — Easy Checkout 모달 컴포넌트
-- [x] src/hooks/use-payment.ts — 결제 훅
-- [x] src/app/(main)/templates/[id]/page.tsx — 템플릿 상세 페이지 (구매 버튼 통합)
+**Status**: Pending
 
 ---
 
-## Phase 6: 초대장 공개 (Next)
+## Phase 10: UI/UX 전면 개편 + 네이버 연동
+
+**Goal**: 2026 트렌드 디자인 시스템 적용 + Naver Selling Page 연동 + 신규 페이지
+
+**Requirements**:
+- NP-01: Naver Selling Page API 연동 설정
+- NP-02: 템플릿 상세 페이지 구매 버튼 → 네이버 리다이렉트
+- NP-03: 랜딩 페이지 (메인) 구현
+- NP-04: 상세 페이지 (템플릿 소개) 구현
+- NP-05: 회원관리 페이지 구현
+- NP-06: 주문제작 안내 페이지 구현
+- NP-07: 가격 안내 페이지 구현
+- UI-01: 로그인/회원가입 페이지 glassmorphism + 소셜 가독성
+- UI-02: 대시보드 카드 그리드 + 통계
+- UI-03: 템플릿 라이브러리 modern design
+- UI-04: 공개 초대장 wedding romantic design
+- UI-05: 네비게이션 glassmorphism + mobile bottom tab
+- EDITOR-01: 편집기 드래그 앤 드롭
+- EDITOR-02: 편집기 실시간 프리뷰
+
+**Status**: In Progress (Wave 1 완료, 편집기 재설계 미실행)
+
+Plans:
+- [x] 10-01-PLAN.md — UI 컴포넌트 현대화 (Button, Card, Input)
+- [x] 10-02-PLAN.md — 로그인/회원가입 Glassmorphism
+- [x] 10-03-PLAN.md — 대시보드 카드 그리드 + 통계
+- [x] 10-04-PLAN.md — 템플릿 라이브러리 modern design
+- [x] 10-05-PLAN.md — 템플릿 상세 + 구매버튼 (Naver)
+- [x] 10-06-PLAN.md — 편집기 재설계 (드래그 앤 드롭)
+- [x] 10-07-PLAN.md — 공개 초대장 wedding romantic
+- [x] 10-08-PLAN.md — Naver Selling Page 연동
+- [x] 10-09-PLAN.md — 네비게이션 glassmorphism
+- [x] 10-10-PLAN.md — 신규 페이지 5개 + 버그 수정
+- [x] 10-11-PLAN.md — 신규 의존성 설치
+
+---
+
+## Phase 6: 초대장 공개
 
 **Goal**: 생성된 초대장을 공개하고 공유할 수 있도록 구현
 
@@ -135,7 +160,7 @@ Plans:
 
 ---
 
-## Phase 7: 테스트 및 최적화 (Next)
+## Phase 7: 테스트 및 최적화
 
 **Goal**: 전체 시스템 테스트 및 성능 최적화
 
@@ -150,26 +175,24 @@ Implementation:
 - [x] vitest.config.ts — Vitest 설정 (jsdom, coverage, path alias)
 - [x] src/test/setup.ts — 테스트 설정 (Supabase mock, next/navigation mock)
 - [x] package.json — test, test:run, test:coverage 스크립트
-- [x] src/lib/template-utils.test.tsx — 13 tests (validateTemplateData, getDefaultValue, renderField)
-- [x] src/types/payment.test.ts — 6 tests (PaymentStatus, PaymentInsert, PaymentUpdate)
-- [x] src/lib/payment/toss.test.ts — 6 tests (TossPaymentsClient, getTossClient)
-- [x] src/lib/auth.test.ts — 7 tests (getUserFromRequest, requireAdmin)
-- [x] src/components/ui/button.test.tsx — 8 tests (buttonVariants)
-- [x] src/types/template-data.test.ts — 9 tests (TemplateData, TemplateField, Template interface 구조 검증)
-- [x] src/components/ui/badge.test.tsx — 6 tests (badgeVariants)
-- [x] src/components/ui/card.test.tsx — 18 tests (Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter)
-- [x] src/components/ui/skeleton.test.tsx — 3 tests (Skeleton)
-- [x] src/hooks/use-template-editor.test.tsx — 19 tests (useTemplateEditor hook)
-- [x] src/hooks/use-payment.test.tsx — 16 tests (usePayment hook)
+- [x] src/lib/template-utils.test.tsx — 13 tests
+- [x] src/types/payment.test.ts — 6 tests
+- [x] src/lib/payment/toss.test.ts — 6 tests
+- [x] src/lib/auth.test.ts — 7 tests
+- [x] src/components/ui/button.test.tsx — 8 tests
+- [x] src/types/template-data.test.ts — 9 tests
+- [x] src/components/ui/badge.test.tsx — 6 tests
+- [x] src/components/ui/card.test.tsx — 18 tests
+- [x] src/components/ui/skeleton.test.tsx — 3 tests
+- [x] src/hooks/use-template-editor.test.tsx — 19 tests
+- [x] src/hooks/use-payment.test.tsx — 16 tests
 
 **Test Summary**: 120 tests across 11 test files — all passing
-**TypeScript**: `npx tsc --noEmit` — pass
-**Build**: `npm run build` — pass
 
 Plans:
-- [x] 07-tests-unit-PLAN.md — Vitest + RTL 설정, 유틸리티/컴포넌트/훅 단위 테스트 (7/7 tasks)
-- [x] 07-tests-e2e-PLAN.md — Playwright 설정, 핵심 사용자 플로우 E2E 테스트 (40 tests passed)
-- [ ] 07-optimization-PLAN.md — 번들 분석, 코드 스플리팅, API 캐싱, 이미지 최적화
+- [x] 07-tests-unit-PLAN.md — Vitest + RTL 설정 (7/7 tasks)
+- [x] 07-tests-e2e-PLAN.md — Playwright 설정 (40 tests passed)
+- [x] 07-optimization-PLAN.md — 번들 분석, 코드 스플리팅, API 캐싱, 이미지 최적화
 
 ---
 
@@ -179,38 +202,70 @@ Plans:
 
 **Requirements**: 
 - UI-01: shadcn/ui 기반 최신 UI 컴포넌트 redesign
-- UI-02: Pretext 기반 텍스트 렌더링 효과
-- UI-03: 템플릿 편집기 고급 기능 (animation, music, font styles)
-- UI-04: 트렌디한 애니메이션/모션 효과 통합
+- UI-02: 텍스트 렌더링 효과
+- UI-03: 템플릿 편집기 고급 기능
+- UI-04: 애니메이션/모션 효과 통합
 
-**Status**: Complete (8-01~8-07 완료, 8-08 테스트 생략)
+**Status**: Complete (8-01~8-07 완료)
 
 ---
 
 ## Phase 9: Backlog Features Selection
 
-**Goal**: Select and implement V2/V3 features from backlog - premium templates, background music, emoji/GIF support, V2 enhanced features
+**Goal**: V2/V3 기능 - 프리미엄 템플릿, 배경 음악, 이모지/GIF, V2 Enhanced Features
 
 **Requirements**: 
-- BACKLOG-01: 프리미엄 템플릿 (templates.price 필드, 구매 시스템)
-- BACKLOG-02: 사용자 구매 기록 관리 (is_purchased 필드)
-- BACKLOG-03: 배경 음악 (MP3 업로드/재생)
-- BACKLOG-04: 음악 재생 컨트롤 (mute, volume)
-- BACKLOG-05: 이모지 지원 (텍스트 필드에 직접 입력)
-- BACKLOG-06: GIF 지원 (이미지 업로드 방식으로)
-- BACKLOG-07: V2 Enhanced Features (동적 배경, 애니메이션, 페이지 넘기기, 줌인/줌아웃, 필터, 실시간 프리뷰, 포토샵 기능, 꽃 효과)
+- BACKLOG-01: 프리미엄 템플릿
+- BACKLOG-02: 구매 기록 관리
+- BACKLOG-03: 배경 음악
+- BACKLOG-04: 음악 재생 컨트롤
+- BACKLOG-05: 이모지 지원
+- BACKLOG-06: GIF 지원
+- BACKLOG-07: V2 Enhanced Features
 
-**Status**: In Progress
+**Status**: Complete
 
 Plans:
-- [ ] 09-backlog-features-01-PLAN.md — 프리미엄 템플릿 구매 시스템
-- [ ] 09-backlog-features-02-PLAN.md — 배경 음악 업로드/재생
-- [ ] 09-backlog-features-03-PLAN.md — 이모지/GIF 지원
-- [ ] 09-backlog-features-04-PLAN.md — V2 Enhanced Features
+- [x] 09-backlog-features-01-PLAN.md — 프리미엄 템플릿 구매 시스템
+- [x] 09-backlog-features-02-PLAN.md — 배경 음악
+- [x] 09-backlog-features-03-PLAN.md — 이모지/GIF 지원
+- [x] 09-backlog-features-04-PLAN.md — V2 Enhanced Features
+
+---
+
+## Phase 10: UI/UX 전면 개편 + 네이버 연동
+
+**Goal**: 2026 트렌드 디자인 시스템 + Naver Selling Page + 신규 페이지
+
+**Requirements**: 
+- Naver Selling Page 연동
+- 구매 버튼 → 네이버 리다이렉트
+- 신규 페이지 5개
+- UI 전체 modern Redesign
+
+**Status**: Complete
+
+Plans:
+- [x] 10-01 — UI 컴포넌트 modern (Button, GlassCard, Input)
+- [x] 10-02 — 로그인/회원가입 glassmorphism
+- [x] 10-03 — 대시보드 통계 카드
+- [x] 10-04 — 템플릿 라이브러리 modern
+- [x] 10-05 — 템플릿 상세 + Naver 구매버튼
+- [x] 10-06 — 편집기 재설계 (드래그 앤 드롭, 스플릿 뷰, 섹션 설정)
+- [x] 10-07 — 공개 초대장 wedding romantic
+- [x] 10-08 — Naver Selling Page 연동
+- [x] 10-09 — 네비게이션 glassmorphism
+- [x] 10-10 — 신규 페이지 5개
+- [x] 10-11 — 의존성 설치 (@formkit/auto-animate, @dnd-kit)
 
 ---
 
 ## 미정 (Backlog)
 
+- 편집기 재설계 (드래그 앤 드롭, 섹션별 설정)
+- 동영상 초대장
+- Kakao 로그인
+- Naver Pay
+- AI 추천 템플릿
 - 회원 목록 페이지네이션
 - 커스텀 폰트
