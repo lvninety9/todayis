@@ -260,6 +260,23 @@ Plans:
 
 ---
 
+## Phase 11: 커스텀 폰트
+
+**Goal**: 템플릿 편집기(StyleEditor)에서 선택한 폰트가 공개 초대장(InvitationViewer)에 적용 + 커스텀 폰트 업로드
+
+**Requirements**: 
+- FONT-01: Google Fonts 로딩 및 InvitationViewer 적용
+- FONT-02: 커스텀 폰트 업로드 API
+- FONT-03: StyleEditor 폰트 선택 + 업로드 UI
+
+**Status**: In Progress
+
+Plans:
+- [ ] 11-01-PLAN.md — 폰트 유틸리티 + InvitationViewer 연동
+- [ ] 11-02-PLAN.md — 커스텀 폰트 업로드 + StyleEditor 연동
+
+---
+
 ## 미정 (Backlog)
 
 - 편집기 재설계 (드래그 앤 드롭, 섹션별 설정)
@@ -268,4 +285,3 @@ Plans:
 - Naver Pay
 - AI 추천 템플릿
 - 회원 목록 페이지네이션
-- 커스텀 폰트
