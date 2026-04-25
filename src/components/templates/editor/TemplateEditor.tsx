@@ -20,9 +20,18 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, CheckCircle, AlertCircle, Settings, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { GripVertical, CheckCircle, AlertCircle, Settings, Plus, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { StyleEditor } from './StyleEditor';
+
+interface SectionStyle {
+  animation?: string;
+  music?: string;
+  fontFamily?: string;
+  align?: string;
+}
 
 interface TemplateEditorProps {
   template: Template;
@@ -41,7 +50,7 @@ interface SortableFieldProps {
   onChange: (value: string) => void;
   error?: string;
   isActive: boolean;
-  onSettingsClick?: () => void;
+  onSettingsClick?: (fieldName: string) => void;
 }
 
 function SortableField({ field, value, onChange, error, isActive, onSettingsClick }: SortableFieldProps) {
@@ -94,7 +103,10 @@ function SortableField({ field, value, onChange, error, isActive, onSettingsClic
           {onSettingsClick && (
             <button
               type="button"
-              onClick={onSettingsClick}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSettingsClick(field.name);
+              }}
               className="p-1 rounded hover:bg-gray-200/50 dark:hover:bg-gray-700/50 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             >
               <Settings className="w-3 h-3" />
@@ -152,6 +164,10 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
   // UI state
   const [activeField, setActiveField] = useState<string | null>(null);
   const [showSecondaryToolbar, setShowSecondaryToolbar] = useState(false);
+  const [sectionSettingsOpen, setSectionSettingsOpen] = useState(false);
+
+  // Section-specific styles (per field)
+  const [sectionStyles, setSectionStyles] = useState<Record<string, SectionStyle>>({});
 
   // Drag handlers
   const handleDragEnd = (event: DragEndEvent) => {
@@ -270,7 +286,11 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
                     onChange={(value) => updateField(field.name, value)}
                     error={errors[field.name]}
                     isActive={activeField === field.name}
-                    onSettingsClick={() => setActiveField(activeField === field.name ? null : field.name)}
+                    onSettingsClick={() => {
+                  // Open section settings dialog
+                  setActiveField(field.name);
+                  setSectionSettingsOpen(true);
+                }}
                   />
                 ))}
               </div>
@@ -310,6 +330,26 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
             </div>
           )}
         </div>
+
+        {/* Section Settings Dialog */}
+        <Dialog open={sectionSettingsOpen} onOpenChange={setSectionSettingsOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>
+                {template.fields.find(f => f.name === activeField)?.label} 설정
+              </DialogTitle>
+            </DialogHeader>
+            <div className="max-h-[60vh] overflow-y-auto">
+              <StyleEditor
+                style={sectionStyles[activeField || ''] || {}}
+                onChange={(style) => setSectionStyles((prev) => ({
+                  ...prev,
+                  [activeField || '']: style,
+                }))}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
