@@ -30,12 +30,12 @@ progress:
 | 08 | tests-e2e | complete | 1/1 |
 | 09 | frontend-redesign | complete | 8/8 |
 | 10 | naver-selling | complete | 11/11 |
-| 11 | custom-fonts | complete | 1/2 |
+| 11 | custom-fonts | in progress | 1/2 |
 
 ## Current Position
 
-Milestone v1.0: Phase 11 Plan 01 완료, Plan 02 대기 중
-Milestone status: Plan 02 진행 예정 (커스텀 폰트 업로드 API)
+Milestone v1.0: Phase 11 Plan 01 완료, Plan 02 계획 완료 — 실행 대기
+Milestone status: Plan 02 실행 예정 (커스텀 폰트 업로드 API + StyleEditor 연동)
 
 ## Recent Changes
 
