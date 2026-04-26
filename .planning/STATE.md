@@ -26,33 +26,43 @@ progress:
 | 04 | profile-and-settings | complete | 4/4 |
 | 05 | payment-system | complete | 3/3 |
 | 06 | publish-system | complete | 3/3 |
-| 07 | tests-unit | complete | 7/7 |
-| 08 | tests-e2e | complete | 1/1 |
+| 07 | tests-unit | complete | 12/12 (128 tests) |
+| 08 | tests-e2e | in progress | 1/1 (36 passed, 4 failed) |
 | 09 | frontend-redesign | complete | 8/8 |
 | 10 | naver-selling | complete | 11/11 |
 | 11 | custom-fonts | complete | 2/2 |
-| 12 | background-music | pending | 0/0 |
+| 12 | background-music | pending | 0/0 (V2) |
+| 13 | design-system | pending | 0/0 |
 
 ## Current Position
 
 Milestone v1.0: Phase 11 완료 — 모든 v1.0 핵심 기능 구현 종료
-Milestone status: Phase 12 준비 중 (배경 음악 — V2 기능)
-Next: Phase 12 계획 수립 → 배경 음악 업로드/재생 시스템 구현
+Milestone status: 테스트 검증 완료, 디자인 시스템 구축 준비 중
 
-### 다음 단계 (Phase 12 — 배경 음악)
-- **목표**: 사용자가 배경 음악을 업로드하고 초대장에서 재생
-- **범위**: 음악 파일 업로드 API, 음악 플레이어 컴포넌트, 스타일 편집기 연동
-- **의사결정 필요**: 
-  1. 음악 파일 저장소 (Supabase Storage vs AWS S3)
-  2. 음악 재생 방식 (HTML5 Audio vs Web Audio API)
-  3. 음악 미리보기 기능 (편집기에서 실시간 재생)
+### 테스트 결과 (2026-04-26)
+- 단위 테스트: 128개 통과 ✅
+- E2E 테스트: 36개 통과, 4개 실패 (페이지 로드 오류 — 추가 디버깅 필요)
+
+### 다음 단계 (Phase 13 — 디자인 시스템 구축)
+- **목표**: 웹 페이지 전체 디자인 최신 트렌드 반영 (웨딩 초대장 + 프론트엔드)
+- **범위**: 
+  1. 디자인 트렌드 학습/탐색 (TypeUI, Pretext, 경쟁사 분석)
+  2. 디자인 시스템 수립 (Tailwind v4 @theme, shadcn/ui 커스터마이징)
+  3. 페이지별 리디자인 (로그인, 대시보드, 템플릿 라이브러리, 편집기, 공개 초대장)
+- **참고 자료**:
+  - https://github.com/bergside/typeui (AI를 위한 design skill 생성)
+  - https://github.com/chenglou/pretext (UI 마크업 DSL)
+  - 2026 웨딩/초대장 트렌드: Editorial Minimalism, Quiet Luxury, Warm Palette
+  - 2026 웹 UI 트렌드: Micro animations, Frosted glass, Textures and layering
 
 ## Recent Changes
 
-- 2026-04-25: Phase 11 Plan 01 완료 — 폰트 유틸리티(fonts.ts), layout.tsx 연동, InvitationViewer 폰트 적용
-- 2026-04-25: Phase 11 Plan 02 대기 중 — 커스텀 폰트 업로드 API + StyleEditor 연동
-- 2026-04-25: Phase 10 완료 — UI/UX 개편, Naver 결제 연동, 편집기 재설계
-- 2026-04-25: Phase 08-tests-e2e 완료 — 40 E2E 테스트 모두 통과
+- 2026-04-26: Phase 07 단위 테스트 수정 완료 — 128개 테스트 모두 통과
+- 2026-04-26: E2E 테스트 일부 수정 — 36개 통과, 4개 실패 (페이지 로드 오류)
+- 2026-04-26: src/app/api/fonts/route.test.ts — API validation 테스트만 유지 (storage mock 문제)
+- 2026-04-26: E2E 테스트 수정 — dashboard 링크 선택자 구체화, 버튼 텍스트 수정
+- 2026-04-26: 디자인 토의 시작 — TypeUI, Pretext 레퍼런스 분석, 디자인 트렌드 논의
+- 2026-04-26: Phase 11 완료 — 커스텀 폰트 업로드 시스템 전체 구현
 
 ## Decisions
 

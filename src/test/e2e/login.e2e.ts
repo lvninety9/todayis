@@ -346,12 +346,13 @@ test.describe('인증 후 대시보드 접근', () => {
   test('대시보드에 빠른 액션 카드가 표시되어야 함', async ({ page }) => {
     await page.goto('/dashboard');
     
-    // 링크 텍스트 확인 (전체 카드가 아니라 링크 내의 텍스트)
-    const templateLink = page.locator('a[href="/templates"]');
+    // 더 구체적인 선택자 사용 (dashboard 콘텐츠 내의 링크만 타겟팅)
+    // layout의 navbar 링크와 중복되지 않도록 main 영역만 선택
+    const templateLink = page.locator('main a[href="/templates"]').first();
     await expect(templateLink).toBeVisible();
     await expect(templateLink.locator('h3')).toContainText('템플릿 라이브러리');
     
-    const settingsLink = page.locator('a[href="/settings"]');
+    const settingsLink = page.locator('main a[href="/settings"]').first();
     await expect(settingsLink).toBeVisible();
     await expect(settingsLink.locator('h3')).toContainText('설정');
   });

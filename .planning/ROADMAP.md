@@ -276,11 +276,52 @@ Plans:
 
 ---
 
+## Phase 12: 배경 음악 (V2)
+
+**Goal**: 사용자가 배경 음악을 업로드하고 초대장에서 재생
+
+**Requirements**:
+- MUSIC-01: 음악 파일 업로드 API (mp3, wav, ogg)
+- MUSIC-02: 음악 플레이어 컴포넌트
+- MUSIC-03: StyleEditor 연동
+- MUSIC-04: InvitationViewer 연동
+
+**Status**: Pending
+
+**의사결정 사항**:
+- 음악 파일 저장소: Supabase Storage vs AWS S3
+- 음악 재생 방식: HTML5 Audio vs Web Audio API
+- 편집기 미리보기: 실시간 음악 재생 여부
+
+---
+
+## Phase 13: 디자인 시스템 구축
+
+**Goal**: 웹 페이지 전체 디자인 최신 트렌드 반영 (웨딩 초대장 + 프론트엔드)
+
+**Requirements**:
+- DESIGN-01: 디자인 트렌드 학습/탐색 (TypeUI, Pretext, 경쟁사 분석)
+- DESIGN-02: 디자인 시스템 수립 (Tailwind v4 @theme, shadcn/ui 커스터마이징)
+- DESIGN-03: 페이지별 리디자인 (로그인, 대시보드, 템플릿 라이브러리, 편집기, 공개 초대장)
+
+**Status**: Pending
+
+**참고 자료**:
+- https://github.com/bergside/typeui — AI를 위한 design skill 생성
+- https://github.com/chenglou/pretext — UI 마크업 DSL
+
+**2026 트렌드**:
+- 웨딩 초대장: Editorial Minimalism, Quiet Luxury, Warm Palette (terracotta, sage, off-white)
+- 웹 UI: Micro animations, Frosted glass panels + soft gradients, Textures and layering
+
+---
+
 ## 미정 (Backlog)
 
+- 프리미엄 템플릿 (V2)
+- 이모지/GIF 지원 (V2)
 - 동영상 초대장 (V3)
 - Kakao 로그인 (V3)
-- Naver Pay (V3)
 - AI 추천 템플릿 (V3)
 - 회원 목록 페이지네이션
 - 프리미엄 템플릿 (V2)

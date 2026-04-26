@@ -21,24 +21,27 @@
 ## 📊 현재 프로젝트 상태 (2026-04-26 기준)
 
 ### 완료된 페이즈
-| Phase | 이름 | 상태 |
-|-------|------|------|
-| 01 | template-engine | ✅ 완료 (3/3) |
-| 02 | auth-system | ✅ 완료 (4/4) |
-| 03 | template-management | ✅ 완료 (4/4) |
-| 04 | profile-and-settings | ✅ 완료 (4/4) |
-| 05 | payment-system | ✅ 완료 (3/3) |
-| 06 | publish-system | ✅ 완료 (3/3) |
-| 07 | tests-unit | ✅ 완료 (7/7, 120 tests) |
-| 08 | tests-e2e | ✅ 완료 (1/1, 40 tests) |
-| 09 | frontend-redesign | ✅ 완료 (8/8) |
-| 10 | naver-selling | ✅ 완료 (11/11) |
-| 11 | custom-fonts | ✅ 완료 (2/2) |
+| Phase | 이름 | 상태 | 비고 |
+|-------|------|------|------|
+| 01 | template-engine | ✅ 완료 (3/3) | |
+| 02 | auth-system | ✅ 완료 (4/4) | |
+| 03 | template-management | ✅ 완료 (4/4) | |
+| 04 | profile-and-settings | ✅ 완료 (4/4) | |
+| 05 | payment-system | ✅ 완료 (3/3) | Toss만 구현, Naver는 나중에 |
+| 06 | publish-system | ✅ 완료 (3/3) | |
+| 07 | tests-unit | ✅ 완료 | 128개 테스트 통과 |
+| 08 | tests-e2e | ⚠️ 부분 완료 | 36개 통과, 4개 실패 (페이지 로드 오류) |
+| 09 | frontend-redesign | ✅ 완료 (8/8) | |
+| 10 | naver-selling | ✅ 완료 (11/11) | |
+| 11 | custom-fonts | ✅ 완료 (2/2) | |
+| 12 | background-music | ⏳ 대기 중 | |
+| 13 | design-system | ⏳ 다음 작업 | |
 
-### 진행 중 / 대기 중
-| Phase | 이름 | 상태 |
-|-------|------|------|
-| 12 | background-music | ⏳ 계획 대기 |
+### 테스트 결과 요약 (2026-04-26)
+- **단위 테스트**: 128개 모두 통과 ✅
+- **E2E 테스트**: 36개 통과, 4개 실패
+  - 실패 원인: 페이지 로드 오류 (dashboard, templates 페이지)
+  - 해결 필요: 실제 페이지 디버깅
 
 ### 다음 작업: Phase 12 — 배경 음악 (V2)
 
@@ -63,17 +66,17 @@
 
 ---
 
-## 🎨 V2 기능 로드맵 (Phase 12 이후)
+## 🎨 V2/V3 기능 로드맵
 
-### V2 기능 목록
+### V2 기능 (Phase 12 이후)
 1. **Phase 12: 배경 음악** — 음악 업로드/재생 시스템
 2. **프리미엄 템플릿** — 유료 템플릿 구매 시스템
 3. **이모지/GIF 지원** — 초대장 내 이모지, GIF 삽입
 
-### V3 기능 목록 (예정)
+### V3 기능 (예정)
 - 동영상 초대장
 - Kakao 로그인
-- Naver Pay 연동
+- Naver Pay 연동 (상세페이지 필요)
 - AI 추천 템플릿
 
 ---
@@ -123,26 +126,46 @@ src/
 
 ---
 
-## 🎯 Phase 12 — 배경 음악 (다음 작업)
+## 🎯 다음 작업: Phase 13 — 디자인 시스템 구축
 
-Phase 12는 아직 계획 단계입니다. 다음 명령어로 시작:
+Phase 13은 아직 계획 단계입니다. 다음 명령어로 시작:
 
 ```bash
-/gsd-discuss-phase --auto   # 구현 방식 논의
+/gsd-discuss-phase --auto   # 디자인 트렌드, 방향성 논의
 /gsd-plan-phase             # 상세 계획 수립
 /gsd-execute-phase          # 구현 실행
 ```
 
-**예상 작업 범위**:
-1. `src/app/api/music/route.ts` — 음악 파일 업로드/삭제 API (POST/DELETE)
-2. `src/components/templates/editor/MusicEditor.tsx` — 음악 선택/미리보기 UI
-3. `src/components/publish/MusicPlayer.tsx` — 초대장 음악 플레이어
-4. `src/components/templates/editor/StyleEditor.tsx` — 음악 선택 탭 연동
+**목표**: 웹 페이지 전체 디자인 최신 트렌드 반영
+
+**범위**:
+1. 디자인 트렌드 학습/탐색
+   - TypeUI (https://github.com/bergside/typeui)
+   - Pretext (https://github.com/chenglou/pretext)
+   - 경쟁사 분석 (Zozomate, With, Canva Wedding)
+   - 2026 트렌드 조사
+
+2. 디자인 시스템 수립
+   - Tailwind v4 @theme 기반 디자인 토큰
+   - shadcn/ui 커스터마이징
+   - 공용 컴포넌트 재설계
+
+3. 페이지별 리디자인
+   - 공개 초대장 (고객-facing) — 가장 중요
+   - 템플릿 라이브러리 — 구매 전환 직결
+   - 로그인/회원가입 — 첫인상
+   - 대시보드 — 사용자 경험
+   - 편집기 — 기능 중요, 디자인은 차선
+
+**2026 트렌드 참고**:
+- 웨딩 초대장: Editorial Minimalism, Quiet Luxury, Warm Palette
+- 웹 UI: Micro animations, Frosted glass, Textures and layering
+- Color: terracotta, sage, off-white (#fffaf7), caramel
 
 **의사결정 사항** (토의 필요):
-- 음악 파일 저장소: Supabase Storage vs AWS S3
-- 음악 재생 방식: HTML5 Audio vs Web Audio API
-- 편집기 미리보기: 실시간 음악 재생 여부
+- 디자인 시스템 구축 방법 (Tailwind v4 @theme vs shadcn/ui 커스터마이징)
+- 리디자인 우선순위 (전체 동시 vs 페이지별 순차)
+- 기존 기능 유지 vs UX 개선 병행
 
 ---
 
