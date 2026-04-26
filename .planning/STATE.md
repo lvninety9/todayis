@@ -30,14 +30,17 @@ progress:
 | 08 | tests-e2e | complete | 1/1 |
 | 09 | frontend-redesign | complete | 8/8 |
 | 10 | naver-selling | complete | 11/11 |
+| 11 | custom-fonts | complete | 1/2 |
 
 ## Current Position
 
-Milestone v1.0: All phases complete
-Milestone status: Ready for completion
+Milestone v1.0: Phase 11 Plan 01 완료, Plan 02 대기 중
+Milestone status: Plan 02 진행 예정 (커스텀 폰트 업로드 API)
 
 ## Recent Changes
 
+- 2026-04-25: Phase 11 Plan 01 완료 — 폰트 유틸리티(fonts.ts), layout.tsx 연동, InvitationViewer 폰트 적용
+- 2026-04-25: Phase 11 Plan 02 대기 중 — 커스텀 폰트 업로드 API + StyleEditor 연동
 - 2026-04-25: Phase 10 완료 — UI/UX 개편, Naver 결제 연동, 편집기 재설계
 - 2026-04-25: Phase 08-tests-e2e 완료 — 40 E2E 테스트 모두 통과
 
