@@ -233,47 +233,20 @@ Plans:
 
 ---
 
-## Phase 10: UI/UX 전면 개편 + 네이버 연동
+## Phase 11: 커스텀 폰트 업로드
 
-**Goal**: 2026 트렌드 디자인 시스템 + Naver Selling Page + 신규 페이지
+**Goal**: 사용자가 .ttf/.otf/.woff/.woff2 폰트 파일을 업로드하고 템플릿에 적용
 
-**Requirements**: 
-- Naver Selling Page 연동
-- 구매 버튼 → 네이버 리다이렉트
-- 신규 페이지 5개
-- UI 전체 modern Redesign
+**Requirements**:
+- FONT-01: 폰트 유틸리티 (fonts.ts) — getFontFamily, getFontCSSVar, loadGoogleFont
+- FONT-02: InvitationViewer에서 fontFamily 적용
+- FONT-03: 커스텀 폰트 업로드 API + StyleEditor 연동
 
-**Status**: Complete
-
-Plans:
-- [x] 10-01 — UI 컴포넌트 modern (Button, GlassCard, Input)
-- [x] 10-02 — 로그인/회원가입 glassmorphism
-- [x] 10-03 — 대시보드 통계 카드
-- [x] 10-04 — 템플릿 라이브러리 modern
-- [x] 10-05 — 템플릿 상세 + Naver 구매버튼
-- [x] 10-06 — 편집기 재설계 (드래그 앤 드롭, 스플릿 뷰, 섹션 설정)
-- [x] 10-07 — 공개 초대장 wedding romantic
-- [x] 10-08 — Naver Selling Page 연동
-- [x] 10-09 — 네비게이션 glassmorphism
-- [x] 10-10 — 신규 페이지 5개
-- [x] 10-11 — 의존성 설치 (@formkit/auto-animate, @dnd-kit)
-
----
-
-## Phase 11: 커스텀 폰트
-
-**Goal**: 템플릿 편집기(StyleEditor)에서 선택한 폰트가 공개 초대장(InvitationViewer)에 적용 + 커스텀 폰트 업로드
-
-**Requirements**: 
-- FONT-01: Google Fonts 로딩 및 InvitationViewer 적용
-- FONT-02: 커스텀 폰트 업로드 API
-- FONT-03: StyleEditor 폰트 선택 + 업로드 UI
-
-**Status**: In Progress
+**Status**: In Progress (Plan 01 완료, Plan 02 계획 완료)
 
 Plans:
-- [ ] 11-01-PLAN.md — 폰트 유틸리티 + InvitationViewer 연동
-- [ ] 11-02-PLAN.md — 커스텀 폰트 업로드 + StyleEditor 연동
+- [x] 11-01-PLAN.md — 폰트 유틸리티, layout.tsx 연동, InvitationViewer 폰트 적용
+- [ ] 11-02-PLAN.md — 커스텀 폰트 업로드 API + StyleEditor 연동 + InvitationViewer 커스텀 폰트 적용
 
 ---
 
