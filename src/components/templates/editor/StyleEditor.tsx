@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CustomFont } from '@/lib/fonts';
 
 interface TemplateStyle {
   animation?: string;
@@ -12,6 +13,8 @@ interface TemplateStyle {
   textColor?: string;
   backgroundColor?: string;
   textDecoration?: string;
+  customFontName?: string;
+  customFonts?: CustomFont[];
   // V2 Enhanced Features
   backgroundEffect?: string;
   textAnimation?: string;
@@ -25,6 +28,8 @@ interface TemplateStyle {
 interface StyleEditorProps {
   style: TemplateStyle;
   onChange: (style: TemplateStyle) => void;
+  templateId?: string;
+  customFonts?: CustomFont[];
 }
 
 const animationOptions = [
@@ -78,6 +83,7 @@ const fontFamilyOptions = [
   { value: 'Nanum Gothic', label: 'Nanum Gothic' },
   { value: 'Open Sans', label: 'Open Sans' },
   { value: 'Playfair Display', label: 'Playfair Display' },
+  { value: 'custom', label: '커스텀 폰트' },
 ];
 
 const fontSizeOptions = [
@@ -102,9 +108,80 @@ const textDecorationOptions = [
  * - 애니메이션, 음악, 폰트, 색상 등의 스타일 설정
  * - V2 Enhanced Features (배경 효과, 필터, 페이지 넘기기)
  */
-export function StyleEditor({ style, onChange }: StyleEditorProps) {
+export function StyleEditor({ style, onChange, templateId, customFonts = [] }: StyleEditorProps) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const handleChange = (key: keyof TemplateStyle, value: string | number | undefined) => {
     onChange({ ...style, [key]: value });
+  };
+
+  const handleFontUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !templateId) return;
+
+    if (customFonts.length >= 5) {
+      setUploadError('템플릿당 최대 5개까지 업로드 가능합니다.');
+      return;
+    }
+
+    setUploading(true);
+    setUploadError(null);
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('templateId', templateId);
+    const customFontName = style.customFontName;
+    if (customFontName) {
+      formData.append('fontName', customFontName);
+    }
+
+    try {
+      const res = await fetch('/api/fonts', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setUploadError(data.error || '업로드에 실패했습니다.');
+        return;
+      }
+
+      const existingFonts = style.customFonts || [];
+      const newFont: CustomFont = {
+        id: data.fontId,
+        name: data.fontFamily,
+        url: data.fontUrl,
+        family: data.fontFamily,
+      };
+      onChange({
+        ...style,
+        customFonts: [...existingFonts, newFont],
+      });
+    } catch {
+      setUploadError('서버 오류가 발생했습니다.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveFont = async (font: CustomFont) => {
+    try {
+      const res = await fetch(`/api/fonts?url=${encodeURIComponent(font.url)}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        const existingFonts = style.customFonts || [];
+        onChange({
+          ...style,
+          customFonts: existingFonts.filter(f => f.id !== font.id),
+        });
+      }
+    } catch {
+      setUploadError('삭제에 실패했습니다.');
+    }
   };
 
   return (
@@ -308,6 +385,57 @@ export function StyleEditor({ style, onChange }: StyleEditorProps) {
           </SelectContent>
         </Select>
       </div>
+
+      {/* 커스텀 폰트 업로드 섹션 */}
+      {style.fontFamily === 'custom' && (
+        <div className="space-y-3 border-t pt-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            커스텀 폰트 업로드
+          </label>
+
+          <Input
+            type="text"
+            placeholder="폰트 이름 (선택사항)"
+            value={style.customFontName || ''}
+            onChange={(e) => handleChange('customFontName', e.target.value)}
+            className="text-sm"
+          />
+          <p className="text-xs text-gray-500">
+            미입력 시 파일명에서 자동 파생됩니다
+          </p>
+
+          <Input
+            type="file"
+            accept=".ttf,.otf,.woff,.woff2"
+            onChange={handleFontUpload}
+            disabled={uploading}
+            className="text-sm"
+          />
+          <p className="text-xs text-gray-500">
+            .ttf, .otf, .woff, .woff2 (최대 5MB)
+          </p>
+
+          {uploading && <p className="text-sm text-blue-600">업로드 중...</p>}
+          {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
+
+          {customFonts.length > 0 && (
+            <div className="space-y-2 mt-2">
+              <p className="text-xs font-medium text-gray-600">업로드된 폰트 ({customFonts.length}/5)</p>
+              {customFonts.map((font) => (
+                <div key={font.id} className="flex items-center justify-between p-2 bg-gray-50 rounded text-sm">
+                  <span className="truncate flex-1">{font.name}</span>
+                  <button
+                    onClick={() => handleRemoveFont(font)}
+                    className="ml-2 text-red-500 hover:text-red-700 text-xs"
+                  >
+                    제거
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 폰트 크기 */}
       <div className="space-y-2">

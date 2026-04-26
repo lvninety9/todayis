@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Invitation } from '@/types/publish';
+import { getFontFamily, loadCustomFontCSS, CustomFont } from '@/lib/fonts';
 
 interface InvitationViewerProps {
   /** 공개된 초대장 데이터 */
@@ -25,6 +26,33 @@ interface InvitationViewerProps {
 export function InvitationViewer({ invitation, template }: InvitationViewerProps) {
   const layout = invitation.layout as Record<string, unknown> || {};
   const dataEntries = Object.entries(invitation.data || {}).filter(([, value]) => value);
+  
+  // 폰트 관련 데이터
+  const fontFamily = (layout as Record<string, string>).fontFamily || 'inherit';
+  const customFonts = (layout as Record<string, CustomFont[]>).customFonts || [];
+  const [customFontCSS, setCustomFontCSS] = useState('');
+
+  useEffect(() => {
+    if (customFonts.length > 0) {
+      const css = loadCustomFontCSS(customFonts);
+      setCustomFontCSS(css);
+
+      const styleId = 'custom-font-injection';
+      let styleEl = document.getElementById(styleId);
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = styleId;
+        document.head.appendChild(styleEl);
+      }
+      styleEl.textContent = css;
+
+      return () => {
+        if (styleEl && styleEl.parentNode) {
+          styleEl.parentNode.removeChild(styleEl);
+        }
+      };
+    }
+  }, [customFonts]);
   
   // 음악 관련 데이터
   const musicUrl = (layout as Record<string, string>).musicUrl || (invitation.data as Record<string, string>).musicUrl;
@@ -58,8 +86,17 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
     );
   };
 
+  const effectiveFontFamily = fontFamily === 'custom' && customFonts.length > 0
+    ? `'${customFonts[0].family}', sans-serif`
+    : getFontFamily(fontFamily);
+
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      style={customFonts.length > 0 ? {
+        '--font-custom': `'${customFonts[0].family}', sans-serif`,
+      } as React.CSSProperties : undefined}
+    >
       {/* 음악 컨트롤 버튼 */}
       {musicUrl && (
         <div className="fixed top-4 right-4 z-50">
@@ -75,7 +112,7 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
         </div>
       )}
 
-      <Card className="shadow-lg border-0">
+      <Card className="shadow-lg border-0" style={{ fontFamily: effectiveFontFamily }}>
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold text-gray-900">
             {invitation.title}
