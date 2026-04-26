@@ -242,19 +242,46 @@ Plans:
 - FONT-02: InvitationViewer에서 fontFamily 적용
 - FONT-03: 커스텀 폰트 업로드 API + StyleEditor 연동
 
-**Status**: In Progress (Plan 01 완료, Plan 02 계획 완료)
+**Status**: Complete
+
+Implementation:
+- [x] src/lib/fonts.ts — 폰트 유틸리티 라이브러리 (getFontFamily, getFontCSSVar, loadGoogleFont)
+- [x] src/app/layout.tsx — HeadFonts 컴포넌트 (Google Fonts 동적 로드)
+- [x] src/app/api/fonts/route.ts — 커스텀 폰트 업로드/삭제 API (POST/DELETE)
+- [x] src/components/templates/editor/StyleEditor.tsx — 커스텀 폰트 업로드 UI (5개 제한)
+- [x] src/components/publish/InvitationViewer.tsx — @font-face CSS 주입, effectiveFontFamily 적용
 
 Plans:
 - [x] 11-01-PLAN.md — 폰트 유틸리티, layout.tsx 연동, InvitationViewer 폰트 적용
-- [ ] 11-02-PLAN.md — 커스텀 폰트 업로드 API + StyleEditor 연동 + InvitationViewer 커스텀 폰트 적용
+- [x] 11-02-PLAN.md — 커스텀 폰트 업로드 API + StyleEditor 연동 + InvitationViewer 커스텀 폰트 적용
+
+---
+
+## Phase 12: 배경 음악 (V2)
+
+**Goal**: 사용자가 배경 음악을 업로드하고 초대장에서 재생
+
+**Requirements**:
+- MUSIC-01: 음악 파일 업로드 API (mp3, wav, ogg)
+- MUSIC-02: 음악 플레이어 컴포넌트 (재생/일시정지/볼륨)
+- MUSIC-03: StyleEditor 연동 — 음악 선택/미리보기
+- MUSIC-04: InvitationViewer 연동 — 자동 재생 옵션
+
+**Status**: Pending (계획 단계)
+
+**Next Steps**:
+1. /gsd-discuss-phase --auto — 배경 음악 구현 방식 논의
+2. /gsd-plan-phase — 상세 계획 수립
+3. /gsd-execute-phase — 구현
 
 ---
 
 ## 미정 (Backlog)
 
-- 편집기 재설계 (드래그 앤 드롭, 섹션별 설정)
-- 동영상 초대장
-- Kakao 로그인
-- Naver Pay
-- AI 추천 템플릿
+- 동영상 초대장 (V3)
+- Kakao 로그인 (V3)
+- Naver Pay (V3)
+- AI 추천 템플릿 (V3)
 - 회원 목록 페이지네이션
+- 프리미엄 템플릿 (V2)
+- 이모지/GIF 지원 (V2)

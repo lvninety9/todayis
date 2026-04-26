@@ -18,53 +18,63 @@
 
 ---
 
-## 📊 현재 프로젝트 상태 (2026-04-25 기준)
+## 📊 현재 프로젝트 상태 (2026-04-26 기준)
 
 ### 완료된 페이즈
 | Phase | 이름 | 상태 |
 |-------|------|------|
-| 01 | template-engine | ✅ 완료 |
-| 02 | auth-system | ✅ 완료 |
-| 03 | template-management | ✅ 완료 |
-| 04 | profile-and-settings | ✅ 완료 |
-| 05 | payment-system | ✅ 완료 |
-| 06 | publish-system | ✅ 완료 |
-| 07 | tests-unit | ✅ 완료 (120 tests) |
-| 08 | tests-e2e | ✅ 완료 (40 tests) |
-| 09 | frontend-redesign | ✅ 완료 |
-| 10 | naver-selling | ✅ 완료 |
-| 11-01 | custom-fonts (Plan 01) | ✅ 완료 |
+| 01 | template-engine | ✅ 완료 (3/3) |
+| 02 | auth-system | ✅ 완료 (4/4) |
+| 03 | template-management | ✅ 완료 (4/4) |
+| 04 | profile-and-settings | ✅ 완료 (4/4) |
+| 05 | payment-system | ✅ 완료 (3/3) |
+| 06 | publish-system | ✅ 완료 (3/3) |
+| 07 | tests-unit | ✅ 완료 (7/7, 120 tests) |
+| 08 | tests-e2e | ✅ 완료 (1/1, 40 tests) |
+| 09 | frontend-redesign | ✅ 완료 (8/8) |
+| 10 | naver-selling | ✅ 완료 (11/11) |
+| 11 | custom-fonts | ✅ 완료 (2/2) |
 
 ### 진행 중 / 대기 중
 | Phase | 이름 | 상태 |
 |-------|------|------|
-| 11-02 | custom-fonts (Plan 02) | ⏳ 대기 중 |
+| 12 | background-music | ⏳ 계획 대기 |
 
-### 다음 작업: Phase 11 Plan 02 — 커스텀 폰트 업로드
+### 다음 작업: Phase 12 — 배경 음악 (V2)
 
-**목표**: 사용자가 직접 폰트 파일(.ttf, .otf, .woff, .woff2)을 업로드하여 템플릿에 적용
+**목표**: 사용자가 배경 음악을 업로드하고 초대장에서 재생
 
-**필요 파일**:
-1. `src/app/api/fonts/route.ts` — 업로드 API (POST/DELETE)
-2. `src/lib/fonts.ts` — 커스텀 폰트 로딩 함수 추가
-3. `src/components/templates/editor/StyleEditor.tsx` — 업로드 UI 추가
+**계획 방법**:
+```bash
+# 방법 1: GSD 워크플로우 자동 실행 (권장)
+/gsd-discuss-phase --auto
+/gsd-plan-phase
+/gsd-execute-phase
 
-**참고**: `src/app/api/templates/media/route.ts`를 참고하여 구현 (Supabase Storage 사용)
+# 방법 2: 수동 작업
+# .planning/STATE.md와 .planning/ROADMAP.md에서 Phase 12 섹션 확인
+```
+
+**예상 범위**:
+1. `src/app/api/music/route.ts` — 음악 파일 업로드/삭제 API
+2. `src/components/templates/editor/MusicEditor.tsx` — 음악 선택/미리보기 UI
+3. `src/components/publish/MusicPlayer.tsx` — 초대장 음악 플레이어
+4. `src/components/templates/editor/StyleEditor.tsx` — 음악 선택 탭 연동
 
 ---
 
-## 🎨 디자인 리디자인 계획 (Phase 11 이후)
+## 🎨 V2 기능 로드맵 (Phase 12 이후)
 
-### 디자인 방향성
-- **Soft Minimal**: 여백 중심, 세리프 폰트, 파스텔 톤
-- **Design Token**: Tailwind v4 `@theme` 기반 일관된 디자인 시스템
-- **Micro-interactions**: hover, focus, transition으로 생동감
+### V2 기능 목록
+1. **Phase 12: 배경 음악** — 음악 업로드/재생 시스템
+2. **프리미엄 템플릿** — 유료 템플릿 구매 시스템
+3. **이모지/GIF 지원** — 초대장 내 이모지, GIF 삽입
 
-### 리디자인 대상
-1. 로그인/회원가입 — Soft Minimal 웨딩 느낌
-2. 대시보드 — 통계 카드 + 그라데이션
-3. 템플릿 라이브러리 — 카드 그리드 + hover 효과
-4. StyleEditor — 탭 기반 UI + 프리뷰 통합
+### V3 기능 목록 (예정)
+- 동영상 초대장
+- Kakao 로그인
+- Naver Pay 연동
+- AI 추천 템플릿
 
 ---
 
@@ -84,21 +94,21 @@
 
 ```
 .planning/
-├── STATE.md              ← 전체 진행 상태
-├── ROADMAP.md            ← 페이즈 로드맵
-├── SESSION-CONTINUATION.md ← 이 파일
+├── STATE.md              ← 전체 진행 상태 (Phase 11 완료, Phase 12 대기)
+├── ROADMAP.md            ← 페이즈 로드맵 (Phase 12 방향성 포함)
+├── CONTINUATION-PROMPT.md ← 이 파일
 └── phases/
     ├── 11-custom-fonts/
     │   ├── 11-01-PLAN.md  ← Plan 01 (완료)
-    │   └── 11-02-PLAN.md  ← Plan 02 (다음 작업)
-    └── 08-frontend-redesign/
-        └── 08-frontend-redesign-SUMMARY.md ← 디자인 학습 결과
+    │   ├── 11-02-PLAN.md  ← Plan 02 (완료)
+    │   └── 11-02-SUMMARY.md ← Plan 02 완료 요약
 
 src/
-├── lib/fonts.ts          ← 폰트 유틸리티 (Plan 01에서 생성)
-├── components/layout/HeadFonts.tsx ← 동적 폰트 로딩
-├── components/templates/editor/StyleEditor.tsx ← Plan 02에서 수정
-└── components/publish/InvitationViewer.tsx ← Plan 01에서 수정
+├── lib/fonts.ts          ← 폰트 유틸리티 (완료)
+├── app/api/fonts/route.ts ← 커스텀 폰트 API (완료)
+├── components/layout/HeadFonts.tsx ← 동적 폰트 로딩 (완료)
+├── components/templates/editor/StyleEditor.tsx ← 커스텀 폰트 UI (완료)
+└── components/publish/InvitationViewer.tsx ← 폰트 적용 (완료)
 ```
 
 ---
@@ -113,13 +123,26 @@ src/
 
 ---
 
-## 🎯 Phase 11 Plan 02 상세
+## 🎯 Phase 12 — 배경 음악 (다음 작업)
 
-`.planning/phases/11-custom-fonts/11-02-PLAN.md` 파일에서 전체 계획 확인:
+Phase 12는 아직 계획 단계입니다. 다음 명령어로 시작:
 
-- **Task 1**: `/api/fonts/route.ts` 생성 (POST/DELETE)
-- **Task 2**: `src/lib/fonts.ts`에 커스텀 폰트 함수 추가
-- **Task 3**: `StyleEditor.tsx`에 업로드 UI 추가
+```bash
+/gsd-discuss-phase --auto   # 구현 방식 논의
+/gsd-plan-phase             # 상세 계획 수립
+/gsd-execute-phase          # 구현 실행
+```
+
+**예상 작업 범위**:
+1. `src/app/api/music/route.ts` — 음악 파일 업로드/삭제 API (POST/DELETE)
+2. `src/components/templates/editor/MusicEditor.tsx` — 음악 선택/미리보기 UI
+3. `src/components/publish/MusicPlayer.tsx` — 초대장 음악 플레이어
+4. `src/components/templates/editor/StyleEditor.tsx` — 음악 선택 탭 연동
+
+**의사결정 사항** (토의 필요):
+- 음악 파일 저장소: Supabase Storage vs AWS S3
+- 음악 재생 방식: HTML5 Audio vs Web Audio API
+- 편집기 미리보기: 실시간 음악 재생 여부
 
 ---
 
@@ -131,4 +154,4 @@ src/
 
 ---
 
-*마지막 업데이트: 2026-04-25*
+*마지막 업데이트: 2026-04-26*
