@@ -6,14 +6,14 @@ import LoginForm from '@/components/forms/LoginForm';
 import ForgotPasswordForm from '@/components/forms/ForgotPasswordForm';
 import GoogleLoginButton from '@/components/auth/GoogleLoginButton';
 import GitHubLoginButton from '@/components/auth/GitHubLoginButton';
-import { GlassCard } from '@/components/ui/card';
 
 export default function LoginPage() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 via-background to-purple-950 dark:via-background py-12 px-4 sm:px-6 lg:px-8">
-      <GlassCard className="max-w-md w-full space-y-8 p-8">
+      <div className="max-w-md w-full space-y-8 p-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+        {/* Header */}
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
             Todayis
@@ -38,9 +38,7 @@ export default function LoginPage() {
               ← 로그인으로 돌아가기
             </button>
             <ForgotPasswordForm
-              onSuccess={() => {
-                // Success handled by component
-              }}
+              onSuccess={() => {}}
               onError={(error) => {
                 console.error('Forgot password error:', error);
               }}
@@ -49,9 +47,7 @@ export default function LoginPage() {
         ) : (
           <>
             <LoginForm
-              onSuccess={() => {
-                // Success handled by component
-              }}
+              onSuccess={() => {}}
               onError={(error) => {
                 console.error('Login error:', error);
               }}
@@ -66,18 +62,20 @@ export default function LoginPage() {
               </button>
             </div>
 
+            {/* Divider */}
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300 dark:border-gray-600" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-transparent dark:bg-transparent text-gray-500 dark:text-gray-400 font-medium backdrop-blur-sm">
+                  <span className="px-4 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 font-medium">
                     또는 소셜 계정으로 로그인
                   </span>
                 </div>
               </div>
 
+              {/* Social Login Buttons */}
               <div className="mt-6 space-y-3">
                 <GoogleLoginButton />
                 <GitHubLoginButton />
@@ -85,7 +83,7 @@ export default function LoginPage() {
             </div>
           </>
         )}
-      </GlassCard>
+      </div>
     </div>
   );
 }

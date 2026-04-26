@@ -1,147 +1,134 @@
-# Todayis — 세션 이어서 진행하기
-
-## 현재 상태
-
-**Milestone**: v1.0
-**Phase**: 7 (테스트 및 최적화)
-**Position**: Phase 7-01 (단위 테스트) — ✅ **모든 7/7 tasks 완료, 120 tests passing**
-
-### 완료된 Phase
-| Phase | Name | Status |
-|-------|------|--------|
-| 01 | template-engine | ✅ 3/3 |
-| 02 | auth-system | ✅ 4/4 |
-| 03 | template-management | ✅ 4/4 |
-| 04 | profile-and-settings | ✅ 4/4 |
-| 05 | payment-system | ✅ 3/3 |
-| 06 | publish-system | ✅ 3/3 |
-| **07** | **tests-unit** | **✅ 7/7 (COMPLETE)** |
-| 07-02 | tests-e2e | ⏸️ 미시작 |
-| 07-03 | optimization | ⏸️ 미시작 |
-
-### Phase 7-01 완료 요약
-- [x] Task 1: 테스트 인프라 (vitest.config.ts, setup.ts, package.json scripts)
-- [x] Task 2: template-utils 테스트 (13 tests)
-- [x] Task 3 (partial): payment 타입 테스트 (6 tests)
-- [x] Task 3 (remaining): template-data 타입 테스트 (9 tests) — interface 구조 검증
-- [x] Task 4: toss.test.ts (6 tests)
-- [x] Task 5: auth.test.ts (7 tests)
-- [x] Task 6 (partial): button.test.tsx (8 tests)
-- [x] Task 6 (remaining): badge.test.tsx (6 tests), card.test.tsx (18 tests), skeleton.test.tsx (3 tests)
-- [x] Task 7: use-template-editor.test.tsx (19 tests), use-payment.test.tsx (16 tests)
-
-**총 120 tests across 11 test files — all passing**
-**TypeScript check: pass | Next.js build: pass**
+# Todayis - 다음 세션 이어서 작업하기
 
 ---
 
-## 이 세션에서 할 일 (권장 순서)
+## 🚀 시작 방법
 
-### 1. Phase 7-02: E2E 테스트 (Playwright)
-
-#### 1.1 Playwright 설치 및 설정
-```bash
-npx playwright install --with-deps
-```
-
-`playwright.config.ts` 생성:
-- baseURL: `http://localhost:3000`
-- testDir: `src/test/e2e/`
-- timeout 설정
-- 브라우저: Chromium, Firefox, WebKit
-
-#### 1.2 핵심 사용자 플로우 테스트 작성
-- `login.spec.ts` — Google/GitHub 로그인 플로우
-- `template-list.spec.ts` — 템플릿 목록 조회
-- `template-create.spec.ts` — 템플릿 생성
-- `invitation-publish.spec.ts` — 초대장 생성 및 공개
-- `payment-flow.spec.ts` — 결제 요청 플로우 (mock 사용)
-
-### 2. Phase 7-03: 성능 최적화
-
-#### 2.1 번들 분석
-```bash
-npm run build -- --analyze
-```
-
-#### 2.2 코드 스플리팅
-- EasyCheckout 컴포넌트 `next/dynamic` lazy loading
-- 무거운 컴포넌트 lazy import
-
-#### 2.3 이미지 최적화
-- `<Image>` 컴포넌트 적용
-- 적절한 `priority` 설정
-
-#### 2.4 API 응답 캐싱
-- `Cache-Control` 헤더 적용
-- SWR/React Query 활용 (필요시)
-
----
-
-## 검증 명령어
+새로운 세션에서 다음 명령어 중 하나를 입력하세요:
 
 ```bash
-# 단위 테스트 실행
-npx vitest run
+# 방법 1: GSD 워크플로우 자동 실행 (권장)
+/gsd-discuss-phase --auto
+/gsd-plan-phase
+/gsd-execute-phase
 
-# TypeScript 타입 체크
-npx tsc --noEmit
-
-# Next.js 빌드
-npm run build
-
-# (선택) 커버리지
-npx vitest run --coverage
+# 방법 2: 수동 작업
+# .planning/STATE.md와 .planning/ROADMAP.md를 확인하고 다음 작업 선택
 ```
 
 ---
 
-## 중요: 계획 vs 실제 괴리 (해결 완료)
+## 📊 현재 프로젝트 상태 (2026-04-25 기준)
 
-### 1. TemplateData 구현체 없음 → 해결
-- **계획**: `TemplateData` 클래스의 메서드 테스트
-- **실제**: `src/types/template.ts`에서 `TemplateData`는 **interface**로만 정의됨
-- **해결**: `src/types/template-data.test.ts`에서 interface의 타입 구조만 테스트 (9 tests)
+### 완료된 페이즈
+| Phase | 이름 | 상태 |
+|-------|------|------|
+| 01 | template-engine | ✅ 완료 |
+| 02 | auth-system | ✅ 완료 |
+| 03 | template-management | ✅ 완료 |
+| 04 | profile-and-settings | ✅ 완료 |
+| 05 | payment-system | ✅ 완료 |
+| 06 | publish-system | ✅ 완료 |
+| 07 | tests-unit | ✅ 완료 (120 tests) |
+| 08 | tests-e2e | ✅ 완료 (40 tests) |
+| 09 | frontend-redesign | ✅ 완료 |
+| 10 | naver-selling | ✅ 완료 |
+| 11-01 | custom-fonts (Plan 01) | ✅ 완료 |
 
-### 2. `@types/jest-dom` 불필요 → 해결
-- jest-dom v6+부터 타입이 패키지에 번들됨
+### 진행 중 / 대기 중
+| Phase | 이름 | 상태 |
+|-------|------|------|
+| 11-02 | custom-fonts (Plan 02) | ⏳ 대기 중 |
 
-### 3. `vi.importActual` deprecated → 해결
-- `src/test/setup.ts`에서 `vi.importActual('next/navigation')` 사용 중
-- 테스트는 통과하지만, 향후 `vi.mock('next/navigation')`으로 변경 권장
+### 다음 작업: Phase 11 Plan 02 — 커스텀 폰트 업로드
 
----
+**목표**: 사용자가 직접 폰트 파일(.ttf, .otf, .woff, .woff2)을 업로드하여 템플릿에 적용
 
-## 주요 파일
+**필요 파일**:
+1. `src/app/api/fonts/route.ts` — 업로드 API (POST/DELETE)
+2. `src/lib/fonts.ts` — 커스텀 폰트 로딩 함수 추가
+3. `src/components/templates/editor/StyleEditor.tsx` — 업로드 UI 추가
 
-### 테스트 파일 (11 files, 120 tests)
-- `vitest.config.ts` — Vitest 설정
-- `src/test/setup.ts` — 테스트 설정 (mock)
-- `src/lib/template-utils.test.tsx` — 13 tests
-- `src/types/payment.test.ts` — 6 tests
-- `src/types/template-data.test.ts` — 9 tests
-- `src/lib/payment/toss.test.ts` — 6 tests
-- `src/lib/auth.test.ts` — 7 tests
-- `src/components/ui/button.test.tsx` — 8 tests
-- `src/components/ui/badge.test.tsx` — 6 tests
-- `src/components/ui/card.test.tsx` — 18 tests
-- `src/components/ui/skeleton.test.tsx` — 3 tests
-- `src/hooks/use-template-editor.test.tsx` — 19 tests
-- `src/hooks/use-payment.test.tsx` — 16 tests
-
-### 계획 파일
-- `.planning/phases/07-tests-unit/07-tests-unit-PLAN.md` — 단위 테스트 계획 (✅ 완료)
-- `.planning/phases/07-tests-e2e/07-tests-e2e-PLAN.md` — E2E 테스트 계획
-- `.planning/phases/07-optimization/07-optimization-PLAN.md` — 최적화 계획
-
-### 상태 파일
-- `.planning/STATE.md` — 프로젝트 상태
-- `.planning/ROADMAP.md` — 로드맵
+**참고**: `src/app/api/templates/media/route.ts`를 참고하여 구현 (Supabase Storage 사용)
 
 ---
 
-## 실행 권장
+## 🎨 디자인 리디자인 계획 (Phase 11 이후)
 
-1. Phase 7-02 (E2E 테스트) 시작 — Playwright 설치 및 핵심 플로우 테스트
-2. Phase 7-03 (성능 최적화) — 번들 분석, 코드 스플리팅, 이미지 최적화
-3. 각 Phase 완료 후 `npx vitest run`, `npx tsc --noEmit`, `npm run build`로 검증
+### 디자인 방향성
+- **Soft Minimal**: 여백 중심, 세리프 폰트, 파스텔 톤
+- **Design Token**: Tailwind v4 `@theme` 기반 일관된 디자인 시스템
+- **Micro-interactions**: hover, focus, transition으로 생동감
+
+### 리디자인 대상
+1. 로그인/회원가입 — Soft Minimal 웨딩 느낌
+2. 대시보드 — 통계 카드 + 그라데이션
+3. 템플릿 라이브러리 — 카드 그리드 + hover 효과
+4. StyleEditor — 탭 기반 UI + 프리뷰 통합
+
+---
+
+## 🔧 기술 스택
+
+- **Framework**: Next.js 14 (App Router)
+- **UI**: shadcn/ui + Tailwind CSS v4
+- **Database**: Supabase (PostgreSQL)
+- **Auth**: Supabase Auth
+- **Storage**: Supabase Storage (MVP)
+- **Animation**: Motion (formerly Framer Motion)
+- **Testing**: Vitest + Playwright
+
+---
+
+## 📁 중요 파일 위치
+
+```
+.planning/
+├── STATE.md              ← 전체 진행 상태
+├── ROADMAP.md            ← 페이즈 로드맵
+├── SESSION-CONTINUATION.md ← 이 파일
+└── phases/
+    ├── 11-custom-fonts/
+    │   ├── 11-01-PLAN.md  ← Plan 01 (완료)
+    │   └── 11-02-PLAN.md  ← Plan 02 (다음 작업)
+    └── 08-frontend-redesign/
+        └── 08-frontend-redesign-SUMMARY.md ← 디자인 학습 결과
+
+src/
+├── lib/fonts.ts          ← 폰트 유틸리티 (Plan 01에서 생성)
+├── components/layout/HeadFonts.tsx ← 동적 폰트 로딩
+├── components/templates/editor/StyleEditor.tsx ← Plan 02에서 수정
+└── components/publish/InvitationViewer.tsx ← Plan 01에서 수정
+```
+
+---
+
+## ⚠️ 주의사항
+
+1. **GSD 워크플로우 필수 준수**: discuss → plan → execute 순서
+2. **문서 업데이트**: 모든 변경사항은 STATE.md, ROADMAP.md에 반영
+3. **빌드 테스트**: 코드 변경 후 반드시 `npm run build` 실행
+4. **테스트 실행**: `npm test`로 단위 테스트 통과 확인
+5. **커밋 메시지**: Conventional Commits 형식 사용 (feat:, fix:, refactor:, etc.)
+
+---
+
+## 🎯 Phase 11 Plan 02 상세
+
+`.planning/phases/11-custom-fonts/11-02-PLAN.md` 파일에서 전체 계획 확인:
+
+- **Task 1**: `/api/fonts/route.ts` 생성 (POST/DELETE)
+- **Task 2**: `src/lib/fonts.ts`에 커스텀 폰트 함수 추가
+- **Task 3**: `StyleEditor.tsx`에 업로드 UI 추가
+
+---
+
+## 📞 문제 발생 시
+
+1. `.planning/STATE.md`에서 현재 상태 확인
+2. `.planning/ROADMAP.md`에서 페이즈 목표 확인
+3. 해당 phase의 `*-PLAN.md`에서 상세 작업 확인
+
+---
+
+*마지막 업데이트: 2026-04-25*

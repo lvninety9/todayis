@@ -3,14 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import SignupForm from '@/components/forms/SignupForm';
-import { GlassCard } from '@/components/ui/card';
 
 export default function SignupPage() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 via-background to-purple-950 dark:via-background py-12 px-4 sm:px-6 lg:px-8">
-      <GlassCard className="max-w-md w-full space-y-8 p-8">
+      <div className="max-w-md w-full space-y-8 p-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
             Todayis
@@ -42,7 +41,7 @@ export default function SignupPage() {
             console.error('Signup error:', error);
           }}
         />
-      </GlassCard>
+      </div>
     </div>
   );
 }
