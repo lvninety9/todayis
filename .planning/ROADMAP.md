@@ -342,8 +342,8 @@ Plans:
 
 **Plans**:
 - [x] 14-01-PLAN.md — Bug fixes (로고 redirect)
-- [ ] 14-02-PLAN.md — Bento Grid Layout (Dashboard + Landing)
-- [ ] 14-03-PLAN.md — CSS Scroll-Driven Animations
+- [x] 14-02-PLAN.md — Bento Grid Layout (Dashboard + Landing)
+- [x] 14-03-PLAN.md — CSS Scroll-Driven Animations
 
 **결정된 사항** (14-CONTEXT.md):
 - 로고/root 클릭 → `/landing`으로 이동

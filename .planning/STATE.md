@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-last_updated: "2026-04-27T11:54:54.209Z"
+status: Ready to verify
+last_updated: "2026-04-27T14:00:00.000Z"
 progress:
   total_phases: 17
-  completed_phases: 11
-  total_plans: 45
-  completed_plans: 40
+  completed_phases: 13
+  total_plans: 47
+  completed_plans: 43
 ---
 
 # State
@@ -30,14 +30,34 @@ progress:
 | 11 | custom-fonts | complete | 2/2 |
 | 12 | background-music | pending | 0/0 (V2) |
 | 13 | design-system | complete | 5/5 |
-| 14 | ux | complete | 4/4 |
+| 14 | ux | complete | 3/3 |
 | 15 | field-extension | complete | 2/2 (V2) |
 
 ## Current Position
 
-Phase: 11
-Plan: Not started
-Milestone v1.0: Phase 15 field-extension 완료 (15-01 + 15-02 완료)
+Phase: 14 (ux) — COMPLETE
+Plan: 3 of 3
+Milestone v1.0: Phase 14 UX 개선 완료 (버그 수정 + Bento Grid + Scroll Animations)
+
+### Phase 14 실행 결과 (2026-04-27)
+
+- 14-01: 버그 수정 (logo + root redirect → /landing) — 완료
+- 14-02: Bento Grid Layout (dashboard + landing) — 완료  
+- 14-03: CSS Scroll-Driven Animations — 완료
+- 빌드: 성공 ✅
+
+### 최근 변경 사항
+
+- 2026-04-27: Phase 14-03 완료 — CSS Scroll-Driven Animations (animation-timeline: view())
+  - globals.css에 scroll-reveal, scroll-reveal-up, scroll-reveal-stagger 클래스 추가
+  - dashboard, landing, template-library에 scroll-triggered reveal 애니메이션 적용
+- 2026-04-27: Phase 14-02 완료 — Bento Grid Layout
+  - dashboard: 통계 카드 Templatecol-span-2, Quick Actions asymmetric grid
+  - landing: Hero 피처 2x2 block (col-span-2 row-span-2)
+- 2026-04-27: Phase 14-01 완료 — 버그 수정
+  - 로고 클릭 /landing 이동, Root /landing redirect
+  - TemplateCard 클릭 → 미리보기 페이지 이동 (이미 구현됨)
+  - TemplateEngine 빈 상태 placeholder (이미 구현됨)
 
 ### 테스트 결과 (2026-04-27)
 
