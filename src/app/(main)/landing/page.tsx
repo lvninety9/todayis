@@ -70,14 +70,14 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             Todayis만의 특별함
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((feature, index) => (
-              <GlassCard key={index} className="p-6 text-center">
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <GlassCard key={index} className={`p-6 text-center hover:scale-[1.02] hover:shadow-xl transition-all duration-300 ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
+                <div className={`text-4xl mb-4 ${index === 0 ? 'lg:text-5xl' : ''}`}>{feature.icon}</div>
+                <h3 className={`font-semibold text-gray-900 dark:text-white mb-2 ${index === 0 ? 'lg:text-xl' : 'text-lg'}`}>
                   {feature.title}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className={`text-gray-600 dark:text-gray-400 ${index === 0 ? 'lg:text-base' : 'text-sm'}`}>
                   {feature.description}
                 </p>
               </GlassCard>
