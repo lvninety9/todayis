@@ -300,19 +300,24 @@ Plans:
 **Goal**: 웹 페이지 전체 디자인 최신 트렌드 반영 (웨딩 초대장 + 프론트엔드)
 
 **Requirements**:
-- DESIGN-01: 디자인 트렌드 학습/탐색 (TypeUI, Pretext, 경쟁사 분석)
-- DESIGN-02: 디자인 시스템 수립 (Tailwind v4 @theme, shadcn/ui 커스터마이징)
-- DESIGN-03: 페이지별 리디자인 (로그인, 대시보드, 템플릿 라이브러리, 편집기, 공개 초대장)
+- DESIGN-01: 디자인 트렌드 학습/탐색 (TypeUI, Pretext, Zola, TheKnot, shadcn/ui, Tailwind, Motion, Stripe, Linear, Airbnb) ✅ 완료
+- DESIGN-02: 디자인 시스템 수립 (CSS variables, Tailwind tokens, typography) ✅ 완료 (3/5 plans)
+- DESIGN-03: 페이지별 리디자인 (로그인, 대시보드, 템플릿 라이브러리, 편집기, 공개 초대장) ✅ 완료
 
-**Status**: Pending
+**Status**: In Progress (3/5 Plans 완료 - Plan 01, 02, 04 완료)
 
-**참고 자료**:
-- https://github.com/bergside/typeui — AI를 위한 design skill 생성
-- https://github.com/chenglou/pretext — UI 마크업 DSL
+**분석 완료한 레퍼런스**:
+- Wedding: Zola (navy/coral), TheKnot (pink/peach)
+- Design System: TypeUI, Pretext, shadcn/ui (oklab), Tailwind v4
+- Modern UI: Motion (CSS), Stripe (purple), Linear (dark), Airbnb (red)
 
 **2026 트렌드**:
-- 웨딩 초대장: Editorial Minimalism, Quiet Luxury, Warm Palette (terracotta, sage, off-white)
-- 웹 UI: Micro animations, Frosted glass panels + soft gradients, Textures and layering
+- 웨딩 초대장: Editorial Minimalism, Quiet Luxury, Warm Palette (terracotta #E07A5F, sage #81B29A, blush #F4A0B5)
+- 웹 UI: Micro animations, Solid cards + subtle shadows, Clean typography system
+
+**다음 작업**: Plan 03 (Component Updates), Plan 05 (Polish & Animation)
+
+**새 세션에서**: `/gsd` 또는 `/gsd-execute-phase` 로 계속 진행
 
 ---
 

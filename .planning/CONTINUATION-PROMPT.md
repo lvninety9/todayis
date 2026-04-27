@@ -7,12 +7,15 @@
 새로운 세션에서 다음 명령어 중 하나를 입력하세요:
 
 ```bash
-# 방법 1: GSD 워크플로우 자동 실행 (권장)
+# 방법 1: GSD 워크플로우 자동 실행 (권장) -Phase 13 계속 진행
+/gsd
+
+# 방법 2: phases 단위로 실행
 /gsd-discuss-phase --auto
 /gsd-plan-phase
 /gsd-execute-phase
 
-# 방법 2: 수동 작업
+# 방법 3: 수동 작업
 # .planning/STATE.md와 .planning/ROADMAP.md를 확인하고 다음 작업 선택
 ```
 
@@ -126,9 +129,9 @@ src/
 
 ## 🎯 현재 작업: Phase 13 — 디자인 시스템 구축
 
-Phase 13이 진행 중입니다.
+Phase 13이 진행 중입니다. 새 세션에서 `/gsd` 명령어로 계속 진행할 수 있습니다.
 
-### 완료된 작업
+### 완료된 작업 (3/5 Plans)
 1. **Plan 01: Design Tokens** ✅
    - Warm palette (terracotta #E07A5F, sage #81B29A, blush #F4A0B5) 적용
    - CSS variables 업데이트
@@ -144,18 +147,18 @@ Phase 13이 진행 중입니다.
    - 빌드 성공, 128개 테스트 통과
 
 ### DESIGN-01 완료: 디자인 트렌드 학습/탐색
-Playwright로，以下デザイン 레퍼런스 분석 완료:
+Playwright로 10개 디자인 레퍼런스 분석 완료:
 - **웨딩 플랫폼**: Zola (navy/coral), TheKnot (pink/peach)
-- **Design System**: TypeUI (AI design), Pretext (text layout), shadcn/ui (oklab colors)
-- **Modern UI**: Motion (CSS animations), Stripe (purple accent), Linear (dark theme), Airbnb (red accent)
+- **Design System**: TypeUI, Pretext, shadcn/ui (oklab colors), Tailwind v4
+- **Modern UI**: Motion (CSS animations), Stripe, Linear, Airbnb
 
 ### 남은 작업
-1. **Plan 03: Component Updates** (input, badge 스타일 업데이트)
-2. **Plan 05: Polish & Animation** (micro-interactions 추가)
+1. **Plan 03: Component Updates** - input, badge 스타일 업데이트
+2. **Plan 05: Polish & Animation** - micro-interactions 추가
 
-### 다음 명령어
+### 새 세션에서 다음 명령어
 ```bash
-/gsd-execute-phase  # Phase 13 계속 진행
+/gsd  # Phase 13 계속 진행 (Plan 03, Plan 05 실행)
 ```
 
 ---
