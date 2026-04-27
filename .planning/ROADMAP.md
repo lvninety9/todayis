@@ -338,7 +338,12 @@ Plans:
 - UX-02: dashboard, login, TemplatePreview의 indigo hard-coded 색상을 warm palette로 교체 ✅
 - UX-03: 전체 디자인 퀄리티 개선 (트렌디한 UX) ✅
 
-**Status**: Complete (discuss-phase 완료, 4/4 Plans 완료, 빌드 검증 PASS)
+**Status**: Pending (Phase 14 expanded with Bento Grid + Scroll Animations)
+
+**Plans**:
+- [x] 14-01-PLAN.md — Bug fixes (로고 redirect)
+- [ ] 14-02-PLAN.md — Bento Grid Layout (Dashboard + Landing)
+- [ ] 14-03-PLAN.md — CSS Scroll-Driven Animations
 
 **결정된 사항** (14-CONTEXT.md):
 - 로고/root 클릭 → `/landing`으로 이동
