@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 via-background to-purple-950 dark:via-background py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[hsl(30,20%,98%)] via-[hsl(30,20%,95%)] to-[hsl(12,80%,90%)] dark:from-[hsl(30,15%,10%)] dark:via-[hsl(30,12%,14%)] dark:to-[hsl(30,15%,10%)] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 p-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
         {/* Header */}
         <div className="text-center">

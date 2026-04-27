@@ -29,17 +29,17 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 dark:via-background dark:to-purple-950">
+    <div className="min-h-screen bg-gradient-to-br from-[hsl(30,20%,98%)] via-[hsl(30,20%,95%)] to-[hsl(12,80%,90%)] dark:from-[hsl(30,15%,10%)] dark:via-[hsl(30,12%,14%)] dark:to-[hsl(30,15%,10%)]">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-indigo-300 to-purple-300 opacity-30 blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-br from-pink-300 to-rose-300 opacity-30 blur-3xl" />
+          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-[hsl(12,75%,70%)] to-[hsl(350,70%,70%)] opacity-20 blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-br from-[hsl(160,35%,60%)] to-[hsl(12,75%,65%)] opacity-20 blur-3xl" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-6">
+          <h1 className="text-5xl lg:text-7xl font-bold bg-gradient-to-r from-[hsl(12,75%,55%)] via-[hsl(350,70%,60%)] to-[hsl(12,75%,50%)] bg-clip-text text-transparent mb-6">
             소중한 순간,
             <br />
             특별한 초대장

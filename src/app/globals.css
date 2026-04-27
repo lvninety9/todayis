@@ -4,48 +4,60 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 346.8 77.2% 49.8%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 346.8 77.2% 49.8%;
+    /* Warm Wedding Palette - Terracotta, Sage, Blush */
+    --background: 30 20% 98%;
+    --foreground: 30 10% 15%;
+    --card: 30 20% 98%;
+    --card-foreground: 30 10% 15%;
+    --popover: 30 20% 98%;
+    --popover-foreground: 30 10% 15%;
+    --primary: 12 75% 55%;
+    --primary-foreground: 12 75% 95%;
+    --secondary: 160 35% 45%;
+    --secondary-foreground: 160 35% 95%;
+    --muted: 30 10% 90%;
+    --muted-foreground: 30 5% 45%;
+    --accent: 350 70% 60%;
+    --accent-foreground: 350 70% 95%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 30 20% 98%;
+    --border: 30 10% 85%;
+    --input: 30 10% 85%;
+    --ring: 12 75% 55%;
     --radius: 0.5rem;
+    
+    /* Extended palette for special elements */
+    --terracotta-light: 12 80% 70%;
+    --terracotta-dark: 12 70% 40%;
+    --sage-light: 160 40% 60%;
+    --sage-dark: 160 30% 30%;
+    --blush-light: 350 80% 75%;
+    --blush-dark: 350 60% 45%;
+    --cream: 30 20% 95%;
+    --warm-gray: 30 5% 60%;
   }
 
   .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 0 0% 95%;
-    --card: 24 9.8% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 346.8 77.2% 49.8%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 12 6.5% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 346.8 77.2% 49.8%;
+    /* Warm dark tones */
+    --background: 30 15% 10%;
+    --foreground: 30 10% 95%;
+    --card: 30 12% 14%;
+    --card-foreground: 30 10% 95%;
+    --popover: 30 12% 14%;
+    --popover-foreground: 30 10% 95%;
+    --primary: 12 75% 60%;
+    --primary-foreground: 12 75% 95%;
+    --secondary: 160 35% 50%;
+    --secondary-foreground: 160 35% 95%;
+    --muted: 30 10% 20%;
+    --muted-foreground: 30 5% 70%;
+    --accent: 350 70% 65%;
+    --accent-foreground: 350 70% 95%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 30 20% 95%;
+    --border: 30 10% 25%;
+    --input: 30 10% 25%;
+    --ring: 12 75% 60%;
   }
 }
 
@@ -55,5 +67,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body), var(--font-sans), system-ui, sans-serif;
+  }
+  
+  /* Typography system */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), 'Noto Serif KR', serif;
+  }
+  
+  /* Serif display for English headings */
+  .font-display {
+    font-family: var(--font-display), 'Playfair Display', serif;
   }
 }

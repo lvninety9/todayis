@@ -1,13 +1,35 @@
 import type { Metadata } from 'next';
-import { Noto_Serif_KR } from 'next/font/google';
+import { Noto_Serif_KR, Noto_Sans_KR, Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { HeadFonts } from '@/components/layout/HeadFonts';
 
-const noto = Noto_Serif_KR({
+const notoSerif = Noto_Serif_KR({
   subsets: ['latin'],
   display: 'swap',
-  weight: ['400', '700'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-heading',
+});
+
+const notoSans = Noto_Sans_KR({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-body',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-display',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600'],
+  variable: '--font-sans',
 });
 
 export const metadata: Metadata = {
@@ -26,7 +48,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={noto.className}>
+      <body className={`${notoSerif.variable} ${notoSans.variable} ${playfair.variable} ${inter.variable} font-sans`}>
         {children}
         <Toaster position="top-right" />
         <HeadFonts />

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: In progress
-last_updated: "2026-04-26T13:45:00.000Z"
+last_updated: "2026-04-27T10:00:00.000Z"
 progress:
-  total_phases: 11
+  total_phases: 13
   completed_phases: 11
-  total_plans: 47
+  total_plans: 52
   completed_plans: 47
-  current_phase: 12
+  current_phase: 13
   current_plan: null
   current_plan_status: pending
 ---
@@ -32,7 +32,7 @@ progress:
 | 10 | naver-selling | complete | 11/11 |
 | 11 | custom-fonts | complete | 2/2 |
 | 12 | background-music | pending | 0/0 (V2) |
-| 13 | design-system | pending | 0/0 |
+| 13 | design-system | in progress | 3/5 (Plan 01, 02, 04 완료) |
 
 ## Current Position
 
@@ -46,9 +46,15 @@ Milestone status: 테스트 검증 완료, 디자인 시스템 구축 준비 중
 ### 다음 단계 (Phase 13 — 디자인 시스템 구축)
 - **목표**: 웹 페이지 전체 디자인 최신 트렌드 반영 (웨딩 초대장 + 프론트엔드)
 - **범위**: 
-  1. 디자인 트렌드 학습/탐색 (TypeUI, Pretext, 경쟁사 분석)
-  2. 디자인 시스템 수립 (Tailwind v4 @theme, shadcn/ui 커스터마이징)
-  3. 페이지별 리디자인 (로그인, 대시보드, 템플릿 라이브러리, 편집기, 공개 초대장)
+  1. 디자인 트렌드 학습/탐색 (TypeUI, Pretext, 경쟁사 분석) ✅ 완료
+  2. 디자인 시스템 수립 (CSS variables, Tailwind tokens, typography) ✅ 완료
+  3. 페이지별 리디자인 (로그인, 대시보드, 템플릿 라이브러리, 편집기, 공개 초대장) ✅ 완료
+- **진행사항**:
+  - Playwright로 Zola, TheKnot 분석하여 디자인 트렌드 파악
+  - Warm palette (terracotta #E07A5F, sage #81B29A, blush #F4A0B5) 적용
+  - Noto Serif KR + Noto Sans KR + Playfair Display + Inter 폰트 시스템 구축
+  - 13개 페이지의 background gradient를 warm palette로 변경
+  - 빌드 성공, 128개 테스트 모두 통과
 - **참고 자료**:
   - https://github.com/bergside/typeui (AI를 위한 design skill 생성)
   - https://github.com/chenglou/pretext (UI 마크업 DSL)
@@ -57,12 +63,12 @@ Milestone status: 테스트 검증 완료, 디자인 시스템 구축 준비 중
 
 ## Recent Changes
 
+- 2026-04-27: Phase 13 디자인 시스템 구축 시작 — Playwright로 Zola, TheKnot 분석
+- 2026-04-27: Phase 13 Plan 01 완료 — warm palette CSS variables 적용
+- 2026-04-27: Phase 13 Plan 02 완료 — typography 시스템 구축 (Noto Serif/Sans KR, Playfair, Inter)
+- 2026-04-27: Phase 13 Plan 04 완료 — 13개 페이지 리디자인 (background gradient 변경)
+- 2026-04-27: 빌드 성공, 128개 테스트 모두 통과
 - 2026-04-26: Phase 07 단위 테스트 수정 완료 — 128개 테스트 모두 통과
-- 2026-04-26: E2E 테스트 일부 수정 — 36개 통과, 4개 실패 (페이지 로드 오류)
-- 2026-04-26: src/app/api/fonts/route.test.ts — API validation 테스트만 유지 (storage mock 문제)
-- 2026-04-26: E2E 테스트 수정 — dashboard 링크 선택자 구체화, 버튼 텍스트 수정
-- 2026-04-26: 디자인 토의 시작 — TypeUI, Pretext 레퍼런스 분석, 디자인 트렌드 논의
-- 2026-04-26: Phase 11 완료 — 커스텀 폰트 업로드 시스템 전체 구현
 
 ## Decisions
 

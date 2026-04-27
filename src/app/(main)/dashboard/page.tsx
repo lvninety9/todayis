@@ -68,7 +68,7 @@ export default function DashboardPage() {
 
   if (session.loading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 dark:via-background dark:to-purple-950">
+      <div className="min-h-screen flex items-center justify-center bg-[hsl(30,20%,98%)] dark:bg-[hsl(30,15%,10%)]">
         <div className="text-center">
           <Spinner size="lg" />
           <p className="mt-4 text-gray-600 dark:text-gray-400">로딩 중...</p>
@@ -84,7 +84,7 @@ export default function DashboardPage() {
   const recentTemplates = templates.slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-indigo-950 dark:via-background dark:to-purple-950">
+    <div className="min-h-screen bg-[hsl(30,20%,98%)] dark:bg-[hsl(30,15%,10%)]">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {/* 헤더 */}
         <div className="mb-8">
