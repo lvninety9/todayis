@@ -189,15 +189,16 @@ return (
         </div>
 
       {/* 그리드 레이아웃 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredAndSortedTemplates.map(template => (
-          <TemplateCard
-            key={template.id}
-            template={template}
-            mode={mode}
-            onSelect={onSelect}
-            onDelete={onDelete}
-          />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 scroll-reveal-stagger">
+        {filteredAndSortedTemplates.map((template, index) => (
+          <div key={template.id} className="scroll-reveal-up" style={{ animationDelay: `${index * 50}ms` }}>
+            <TemplateCard
+              template={template}
+              mode={mode}
+              onSelect={onSelect}
+              onDelete={onDelete}
+            />
+          </div>
         ))}
       </div>
 

@@ -87,7 +87,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[hsl(30,20%,98%)] dark:bg-[hsl(30,15%,10%)]">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {/* 헤더 */}
-        <div className="mb-8">
+        <div className="mb-8 scroll-reveal">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">대시보드</h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
             환영합니다, {session.user.email}님!
@@ -95,8 +95,8 @@ export default function DashboardPage() {
         </div>
 
         {/* 통계 카드 — Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          <GlassCard className="p-6 lg:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 scroll-reveal-stagger">
+          <GlassCard className="p-6 lg:col-span-2 scroll-reveal-up">
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0 bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--terracotta-light))] rounded-xl p-3 shadow-lg">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@ export default function DashboardPage() {
             </div>
           </GlassCard>
 
-          <GlassCard className="p-6">
+          <GlassCard className="p-6 scroll-reveal-up">
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0 bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--blush-light))] rounded-xl p-3 shadow-lg">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,7 +124,7 @@ export default function DashboardPage() {
             </div>
           </GlassCard>
 
-          <GlassCard className="p-6">
+          <GlassCard className="p-6 scroll-reveal-up">
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0 bg-gradient-to-br from-[hsl(var(--secondary))] to-[hsl(var(--sage-light))] rounded-xl p-3 shadow-lg">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,8 +140,8 @@ export default function DashboardPage() {
         </div>
 
         {/* 빠른 액션 — Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Link href="/templates" className="block lg:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 scroll-reveal-stagger">
+          <Link href="/templates" className="block lg:col-span-2 scroll-reveal-up">
             <GlassCard className="p-6 hover:-translate-y-1 transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 bg-[hsl(var(--primary))/0.1] dark:bg-[hsl(var(--primary))/0.2] rounded-lg p-3">
@@ -157,7 +157,7 @@ export default function DashboardPage() {
             </GlassCard>
           </Link>
 
-          <Link href="/templates?create=true" className="block">
+          <Link href="/templates?create=true" className="block scroll-reveal-up">
             <GlassCard className="p-6 hover:-translate-y-1 transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 bg-[hsl(var(--accent))/0.15] dark:bg-[hsl(var(--accent))/0.2] rounded-lg p-3">
@@ -173,7 +173,7 @@ export default function DashboardPage() {
             </GlassCard>
           </Link>
 
-          <Link href="/settings" className="block md:col-span-1">
+          <Link href="/settings" className="block md:col-span-1 scroll-reveal-up">
             <GlassCard className="p-6 hover:-translate-y-1 transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 bg-[hsl(var(--secondary))/0.15] dark:bg-[hsl(var(--secondary))/0.2] rounded-lg p-3">
@@ -192,7 +192,7 @@ export default function DashboardPage() {
         </div>
 
         {/* 최근 템플릿 */}
-        <GlassCard>
+        <GlassCard className="scroll-reveal">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">최근 템플릿</h2>
           </div>

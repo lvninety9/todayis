@@ -31,7 +31,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[hsl(30,20%,98%)] via-[hsl(30,20%,95%)] to-[hsl(12,80%,90%)] dark:from-[hsl(30,15%,10%)] dark:via-[hsl(30,12%,14%)] dark:to-[hsl(30,15%,10%)]">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32">
+      <section className="relative overflow-hidden py-20 lg:py-32 scroll-reveal">
         {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-[hsl(12,75%,70%)] to-[hsl(350,70%,70%)] opacity-20 blur-3xl" />
@@ -70,9 +70,9 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             Todayis만의 특별함
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 scroll-reveal-stagger">
             {features.map((feature, index) => (
-              <GlassCard key={index} className={`p-6 text-center hover:scale-[1.02] hover:shadow-xl transition-all duration-300 ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
+              <GlassCard key={index} className={`p-6 text-center hover:scale-[1.02] hover:shadow-xl transition-all duration-300 scroll-reveal-up ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
                 <div className={`text-4xl mb-4 ${index === 0 ? 'lg:text-5xl' : ''}`}>{feature.icon}</div>
                 <h3 className={`font-semibold text-gray-900 dark:text-white mb-2 ${index === 0 ? 'lg:text-xl' : 'text-lg'}`}>
                   {feature.title}
@@ -87,7 +87,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-20 scroll-reveal">
         <GlassCard className="max-w-3xl mx-auto px-8 py-16 text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
             지금 바로 시작해보세요
