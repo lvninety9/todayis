@@ -79,4 +79,61 @@
   .font-display {
     font-family: var(--font-display), 'Playfair Display', serif;
   }
+  
+  /* Micro-interactions */
+  .card-hover {
+    @apply transition-all duration-200;
+  }
+  .card-hover:hover {
+    @apply -translate-y-0.5 shadow-lg;
+  }
+  
+  .button-lift {
+    @apply transition-all duration-200;
+  }
+  .button-lift:hover {
+    @apply -translate-y-0.5 shadow-md;
+  }
+  .button-lift:active {
+    @apply translate-y-0 scale-[0.98];
+  }
+  
+  /* Page transition animations */
+  .page-enter {
+    animation: fadeSlideIn 0.3s ease-out forwards;
+  }
+  
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Staggered animation delays for lists */
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 250ms; }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Selection color */
+  ::selection {
+    background: hsl(12 75% 55% / 0.2);
+    color: hsl(30 10% 15%);
+  }
+  
+  .dark ::selection {
+    background: hsl(12 75% 55% / 0.3);
+    color: hsl(30 10% 95%);
+  }
 }

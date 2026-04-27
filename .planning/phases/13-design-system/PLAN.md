@@ -84,7 +84,7 @@ Warm palette (terracotta, sage, blush), Noto Serif KR 타이포그래피, clean 
 
 ---
 
-## Plan 03: Component Updates
+## Plan 03: Component Updates ✅ 완료
 
 **Goal**: shadcn/ui 컴포넌트 새 디자인 시스템에 맞게 업데이트
 
@@ -100,10 +100,13 @@ Warm palette (terracotta, sage, blush), Noto Serif KR 타이포그래피, clean 
 
 ### 13-03-03: input.tsx 업데이트
 - Warm border colors
-- Focus ring: terracotta tint
+- Focus ring: terracotta tint ✅
+
+### 13-03-04: badge.tsx 업데이트
+- 새 warm variants: terracotta, sage, blush ✅
 
 **검증 기준**:
-- [ ] 컴포넌트 스냅샷 테스트 통과
+- [x] 컴포넌트 스냅샷 테스트 통과
 
 ---
 
@@ -147,13 +150,19 @@ Warm palette (terracotta, sage, blush), Noto Serif KR 타이포그래피, clean 
 
 ### Tasks
 
-### 13-05-01: Micro-interactions 추가
+### 13-05-01: Micro-interactions 추가 ✅
 - Card hover: translateY + shadow
 - Button hover: scale + shadow
+- card-hover, button-lift utility classes 추가
 
-### 13-05-02: Dark mode adjustment
-- Warm dark tones 적용
+### 13-05-02: Dark mode adjustment ✅
+- Warm dark tones 적용 (globals.css에 정의됨)
+
+### 13-05-03: Animation refinements ✅
+- Page transition: fadeSlideIn animation
+- Stagger delays for lists
+- Selection color themed
 
 **검증 기준**:
-- [ ] 애니메이션 부드럽게 동작
-- [ ] Dark mode에서 일관된 디자인
+- [x] 애니메이션 부드럽게 동작
+- [x] Dark mode에서 일관된 디자인

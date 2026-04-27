@@ -321,6 +321,27 @@ Plans:
 
 ---
 
+## Phase 14: 버그 수정 + 템플릿 UX 개선
+
+**Goal**: Phase 13 디자인 시스템 적용 후 발견된 버그 수정 및 템플릿 시스템 UX 개선
+
+**Requirements**:
+- BUG-01: 로고 클릭 시 로그인 페이지로 redirect되는 버그 수정
+- BUG-02: 템플릿 카드 클릭 시 미리보기 없는 문제 해결
+- BUG-03: Edit 페이지 미리보기 영역 비어있음 문제
+- UX-01: 템플릿 필드 타입 확장 (계좌번호, 배경음악, GIF 등)
+- UX-02: dashboard, login, TemplatePreview의 indigo hard-coded 색상을 warm palette로 교체
+- UX-03: 전체 디자인 퀄리티 개선 (트렌디한 UX)
+
+**Status**: Pending
+
+**다음 단계**:
+1. /gsd-discuss-phase — 상세 구현 방식 논의
+2. /gsd-plan-phase — 상세 계획 수립
+3. /gsd-execute-phase — 구현
+
+---
+
 ## 미정 (Backlog)
 
 - 프리미엄 템플릿 (V2)

@@ -55,6 +55,9 @@ Phase 13 디자인 시스템 구축 후 발견된 UX 버그 수정 + 템플릿 U
 - `src/components/templates/engine/TemplateEngine.tsx` — 빈 상태 처리 (lines 24-33)
 - `src/components/templates/editor/TemplateEditor.tsx` — 편집기 컴포넌트
 
+### Design Skills (재사용 가능)
+- `/media/jay/D/cursor/design-skills/todayis-wedding/SKILL.md` — Todayis Wedding Design System (2026 트렌드 적용)
+
 ### Web Research (2026 Design Trends)
 - TypeUI Design Skills: https://www.typeui.sh/design-skills
   - Paper: paper-like minimalist
