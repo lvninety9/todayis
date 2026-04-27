@@ -301,10 +301,12 @@ Plans:
 
 **Requirements**:
 - DESIGN-01: 디자인 트렌드 학습/탐색 (TypeUI, Pretext, Zola, TheKnot, shadcn/ui, Tailwind, Motion, Stripe, Linear, Airbnb) ✅ 완료
-- DESIGN-02: 디자인 시스템 수립 (CSS variables, Tailwind tokens, typography) ✅ 완료 (3/5 plans)
+- DESIGN-02: 디자인 시스템 수립 (CSS variables, Tailwind tokens, typography) ✅ 완료
 - DESIGN-03: 페이지별 리디자인 (로그인, 대시보드, 템플릿 라이브러리, 편집기, 공개 초대장) ✅ 완료
+- DESIGN-04: Component Updates (input, badge) ✅ 완료
+- DESIGN-05: Micro-interactions + Animation ✅ 완료
 
-**Status**: In Progress (3/5 Plans 완료 - Plan 01, 02, 04 완료)
+**Status**: Complete (5/5 Plans 완료)
 
 **분석 완료한 레퍼런스**:
 - Wedding: Zola (navy/coral), TheKnot (pink/peach)
@@ -315,9 +317,12 @@ Plans:
 - 웨딩 초대장: Editorial Minimalism, Quiet Luxury, Warm Palette (terracotta #E07A5F, sage #81B29A, blush #F4A0B5)
 - 웹 UI: Micro animations, Solid cards + subtle shadows, Clean typography system
 
-**다음 작업**: Plan 03 (Component Updates), Plan 05 (Polish & Animation)
+**디자인 스킬 생성**:
+- `/media/jay/D/cursor/design-skills/todayis-wedding/SKILL.md` — 2026 트렌드 적용
 
-**새 세션에서**: `/gsd` 또는 `/gsd-execute-phase` 로 계속 진행
+**다음 작업**: Phase 14 — 버그 수정 + UX 개선
+
+**새 세션에서**: `/gsd` — Phase 14 계속 진행
 
 ---
 
@@ -326,19 +331,69 @@ Plans:
 **Goal**: Phase 13 디자인 시스템 적용 후 발견된 버그 수정 및 템플릿 시스템 UX 개선
 
 **Requirements**:
-- BUG-01: 로고 클릭 시 로그인 페이지로 redirect되는 버그 수정
-- BUG-02: 템플릿 카드 클릭 시 미리보기 없는 문제 해결
-- BUG-03: Edit 페이지 미리보기 영역 비어있음 문제
-- UX-01: 템플릿 필드 타입 확장 (계좌번호, 배경음악, GIF 등)
+- BUG-01: 로고 클릭 시 로그인 페이지로 redirect되는 버그 수정 → `/landing`으로 변경
+- BUG-02: 템플릿 카드 클릭 시 미리보기 없는 문제 해결 → 미리보기 페이지 연결
+- BUG-03: Edit 페이지 미리보기 영역 비어있음 문제 → 빈 상태 처리
+- UX-01: 템플릿 필드 타입 확장 (계좌번호, 배경음악, GIF 등) → Phase 15로 미루기
 - UX-02: dashboard, login, TemplatePreview의 indigo hard-coded 색상을 warm palette로 교체
 - UX-03: 전체 디자인 퀄리티 개선 (트렌디한 UX)
 
-**Status**: Pending
+**Status**: Pending (discuss-phase 완료, planning 단계)
+
+**결정된 사항** (14-CONTEXT.md):
+- 로고/root 클릭 → `/landing`으로 이동
+- 템플릿 카드 클릭 → 미리보기 페이지 이동
+- Warm palette 실제 적용 (hard-coded indigo → CSS variables)
+
+**2026 디자인 트렌드** (Phase 13 리서치 결과):
+- Bento Grid Layout (67% SaaS 사용)
+- CSS Scroll-Driven Animations
+- Quiet Luxury + Warm Romance
+- TypeUI Design Skills 적용
+
+**Design Skill**:
+- `/media/jay/D/cursor/design-skills/todayis-wedding/SKILL.md` — 2026 트렌드 적용
 
 **다음 단계**:
-1. /gsd-discuss-phase — 상세 구현 방식 논의
-2. /gsd-plan-phase — 상세 계획 수립
-3. /gsd-execute-phase — 구현
+1. /gsd-plan-phase 14 — 계획 수립
+2. /gsd-execute-phase 14 — 구현
+
+**새 세션에서**: `/gsd 14` 또는 `/gsd-plan-phase 14`
+
+---
+
+## Phase 08: 테스트
+
+**Goal**: 단위 테스트 및 E2E 테스트 작성
+
+**Requirements**: 
+- TEST-01: 단위 테스트 작성
+- TEST-02: E2E 테스트 작성
+
+**Status**: Complete (단위 테스트 128개 ✅, E2E 테스트 36개 통과, 4개 실패 — Gap Closure 필요)
+
+---
+
+## Phase 15: 템플릿 필드 확장 (V2)
+
+**Goal**: 템플릿 필드 타입 확장 (계좌번호, 배경음악, GIF, 동영상, 갤러리 등)
+
+**Requirements**:
+- FIELD-01: 계좌번호 필드 (무엇을 기준으로 송금?)
+- FIELD-02: 배경 음악 URL (mp3/ogg/wav)
+- FIELD-03: GIF/애니메이션 이미지 (GIF)
+- FIELD-04: 동영상 URL (mp4)
+- FIELD-05: 갤러리 (여러 이미지)
+- FIELD-06: 축의도 메시지
+- FIELD-07: Dress Code
+- FIELD-08: 부모님 성함 (신랑/신부父모)
+
+**Status**: Pending (Backlog - Phase 14 이후)
+
+**Next Steps:**
+1. Phase 14 완료 후 discuss-phase
+2. plan-phase
+3. execute-phase
 
 ---
 

@@ -1,8 +1,88 @@
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
+
+<!-- BEGIN:skill-creation-rules -->
+# Claude Skills 생성 규칙
+
+스킬을 생성할 때는 반드시 공식 Claude Skills 구조를 따라야 합니다.
+
+## 필수 구조
+
+```
+skill-name/              # 디렉토리명 = name (kebab-case)
+├── SKILL.md             # 필수: 핵심 지침 파일 (YAML frontmatter + markdown)
+├── scripts/             # 선택: 실행 코드
+├── references/          # 선택: 참조 문서
+└── assets/              # 선택: 템플릿, 이미지
+```
+
+## YAML Frontmatter 필수 필드
+
+```yaml
+---
+name: "skill-name"           # 필수: kebab-case, 디렉토리명과 일치
+description: "이 스킬이 무엇을 하는지, 언제 사용하는지"  # 필수: 1024자 이내
+---
+```
+
+## 선택적 필드
+
+```yaml
+---
+version: "1.0.0"             # 선택: 버전
+enabled: true                # 선택: 활성화 여부
+triggers:                    # 선택: 자동 트리거 키워드
+  - 키워드1
+  - 키워드2
+requires:                    # 선택: 환경 요구사항
+  env: []
+  bins: []
+---
+```
+
+## description 작성 규칙
+
+description은 반드시 다음을 포함해야 합니다:
+1. 이 스킬이 무엇을 하는지
+2. 언제 사용하는지 (상황/맥락)
+3. 사용자가 말할 법한 구체적 표현
+
+예시:
+```
+"웨딩 초대장 플랫폼의 UI/UX 디자인 시스템 스킬입니다. (1) 사용자가 디자인 요청 시, (2) 컬러팔레트, 타이포그래피 변경 시, (3) 트렌디한 프론트엔드 요청 시 자동으로 로드됩니다."
+```
+
+## 피해야 할 실수
+
+| 실수 | 정정 |
+|------|------|
+| name에 대문자/공백 | 소문자, 숫자, 하이픈만 (kebab-case) |
+| description이 추상적 | 구체적 사용 표현 포함 |
+| SKILL.md가 폴더 내부에 없음 | skill-name/SKILL.md 필수 |
+| 디렉토리명 != name | 반드시 일치해야 함 |
+
+## 스킬 생성 요청 시
+
+사용자가 "스킬을 만들어줘", "Skill 생성" 요청 시:
+1. skill-creator 스킬을 로드
+2. 공식 구조 준수 확인
+3. name이 kebab-case인지 검증
+4. description이 구체적인지 확인
+
+## 스킬 저장 위치
+
+- 프로젝트 스킬: `{project_root}/.claude/skills/`
+- 전역 스킬: `~/.claude/skills/`
+- 사용자 정의 스킬: `/media/jay/D/cursor/opencode/skills/`
+
+## 참고 자료
+
+- Claude Skills 문서: https://code.claude.com/docs/en/skills.md
+- Skill Creator: `/media/jay/D/cursor/opencode/skills/skill-creator/`
+<!-- END:skill-creation-rules -->
 
 # Todayis - Wedding Invitation Platform
 

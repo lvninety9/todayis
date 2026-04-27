@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: In progress
-last_session: Phase 14 discuss-phase completed
+last_session: Phase 14 planning 전
 last_updated: "2026-04-27"
 progress:
   total_phases: 13
@@ -28,13 +28,13 @@ progress:
 | 05 | payment-system | complete | 3/3 |
 | 06 | publish-system | complete | 3/3 |
 | 07 | tests-unit | complete | 12/12 (128 tests) |
-| 08 | tests-e2e | in progress | 1/1 (36 passed, 4 failed) |
+| 08 | tests-e2e | complete | 1/1 (36 passed, 4 failed - needs gap closure) |
 | 09 | frontend-redesign | complete | 8/8 |
 | 10 | naver-selling | complete | 11/11 |
 | 11 | custom-fonts | complete | 2/2 |
 | 12 | background-music | pending | 0/0 (V2) |
-| 13 | design-system | in progress | 5/5 (완료, Plan 03~05刚才 완료) |
-| 14 | ux | pending | 0/0 (context gathered) |
+| 13 | design-system | complete | 5/5 |
+| 14 | ux | pending | 0/0 (discuss-phase 완료) |
 
 ## Current Position
 
