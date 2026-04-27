@@ -113,7 +113,7 @@ Implementation:
 - EDITOR-01: 편집기 드래그 앤 드롭
 - EDITOR-02: 편집기 실시간 프리뷰
 
-**Status**: In Progress (Wave 1 완료, 편집기 재설계 미실행)
+**Status**: Complete (검증됨) (Wave 1 완료, 편집기 재설계 미실행)
 
 Plans:
 - [x] 10-01-PLAN.md — UI 컴포넌트 현대화 (Button, Card, Input)
@@ -328,17 +328,17 @@ Plans:
 
 ## Phase 14: 버그 수정 + 템플릿 UX 개선
 
-**Goal**: Phase 13 디자인 시스템 적용 후 발견된 버그 수정 및 템플릿 시스템 UX 개선
+**Goal**: Phase 13 디자인 시스템 적용 후 발견된 버그 수정 및 템플릿 UX 개선
 
 **Requirements**:
-- BUG-01: 로고 클릭 시 로그인 페이지로 redirect되는 버그 수정 → `/landing`으로 변경
-- BUG-02: 템플릿 카드 클릭 시 미리보기 없는 문제 해결 → 미리보기 페이지 연결
-- BUG-03: Edit 페이지 미리보기 영역 비어있음 문제 → 빈 상태 처리
+- BUG-01: 로고 클릭 시 로그인 페이지로 redirect되는 버그 수정 → `/landing`으로 변경 ✅
+- BUG-02: 템플릿 카드 클릭 시 미리보기 없는 문제 해결 → 미리보기 페이지 연결 ✅
+- BUG-03: Edit 페이지 미리보기 영역 비어있음 문제 → 빈 상태 처리 ✅
 - UX-01: 템플릿 필드 타입 확장 (계좌번호, 배경음악, GIF 등) → Phase 15로 미루기
-- UX-02: dashboard, login, TemplatePreview의 indigo hard-coded 색상을 warm palette로 교체
-- UX-03: 전체 디자인 퀄리티 개선 (트렌디한 UX)
+- UX-02: dashboard, login, TemplatePreview의 indigo hard-coded 색상을 warm palette로 교체 ✅
+- UX-03: 전체 디자인 퀄리티 개선 (트렌디한 UX) ✅
 
-**Status**: Pending (discuss-phase 완료, planning 단계)
+**Status**: Complete (discuss-phase 완료, 4/4 Plans 완료, 빌드 검증 PASS)
 
 **결정된 사항** (14-CONTEXT.md):
 - 로고/root 클릭 → `/landing`으로 이동
@@ -388,12 +388,14 @@ Plans:
 - FIELD-07: Dress Code
 - FIELD-08: 부모님 성함 (신랑/신부父모)
 
-**Status**: Pending (Backlog - Phase 14 이후)
+**Status**: Pending (Planning 전 — Phase 14 완료로 대기 중)
 
 **Next Steps:**
-1. Phase 14 완료 후 discuss-phase
-2. plan-phase
-3. execute-phase
+1. /gsd-discuss-phase --auto — Phase 15 discuss-phase
+2. /gsd-plan-phase 15 — 상세 계획 수립
+3. /gsd-execute-phase 15 — 구현
+
+**시작 명령어**: `/gsd 15` 또는 `/gsd-discuss-phase --auto`
 
 ---
 
