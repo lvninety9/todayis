@@ -56,6 +56,14 @@ Phase 13 디자인 시스템 구축 후 발견된 UX 버그 수정 + 템플릿 U
 - `src/components/templates/editor/TemplateEditor.tsx` — 편집기 컴포넌트
 
 ### Web Research (2026 Design Trends)
+- TypeUI Design Skills: https://www.typeui.sh/design-skills
+  - Paper: paper-like minimalist
+  - Bento: Apple-style bento grid
+  - Refined: refined, premium feel (wedding에 적합)
+  - Premium: luxury, premium feel
+  - Glassmorphism: glass effects (strategic use)
+- TypeUI GitHub: https://github.com/bergside/typeui
+- Pretext (text measurement): https://github.com/chenglou/pretext
 - Figma Web Design Trends 2026: https://www.figma.com/resource-library/web-design-trends/
 - Midrocket UI Design Trends 2026: https://midrocket.com/en/guides/ui-design-trends-2026/
 - FreeFrontend Micro-interactions: https://freefrontend.com/ui-micro-interaction/
@@ -70,6 +78,26 @@ Phase 13 디자인 시스템 구축 후 발견된 UX 버그 수정 + 템플릿 U
 
 <research>
 ## 2026 Design Trends Research ( Synthesized)
+
+### TypeUI Design Skills (AI Design System Templates)
+
+**Source: https://www.typeui.sh/design-skills**
+
+TypeUI provides pre-made design skill files that can be pulled into projects:
+- **Paper**: paper-like, minimalist, clean textures
+- **Bento**: Apple-style asymmetric grid (67% of SaaS landing pages)
+- **Refined**: refined, premium feel — wedding 플랫폼에 가장 적합
+- **Premium**: luxury, premium feel, high-end aesthetic
+- **Clean**: clean, modern, minimal
+- **Artistic**: artistic, creative, expressive
+- **Glassmorphism**: glass effects (strategic use only)
+- **Neobrutalism**: bold, raw, expressive
+- **Bold**: bold typography, high contrast
+- **Cafe**: warm, cozy, inviting atmosphere
+
+**Relevance to Todayis:**
+- Wedding 플랫폼 → **Refined** 또는 **Premium** design skill 적용 권장
+- Quiet luxury aesthetic + warm palette (terracotta/sage/blush)와 궁합 좋음
 
 ### Frontend/Web Design Trends 2026
 
