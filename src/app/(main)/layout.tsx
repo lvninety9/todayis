@@ -36,7 +36,7 @@ export default function MainLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center">
+            <Link href="/landing" className="flex items-center">
               <span className="text-2xl font-bold bg-gradient-to-r from-[hsl(12,75%,55%)] to-[hsl(350,70%,60%)] bg-clip-text text-transparent">
                 Todayis
               </span>
