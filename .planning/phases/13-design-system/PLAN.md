@@ -8,6 +8,10 @@ Warm palette (terracotta, sage, blush), Noto Serif KR 타이포그래피, clean 
 ## Requirements
 
 - DESIGN-01: 디자인 트렌드 학습/탐색 (TypeUI, Pretext, 경쟁사 분석) ✅ 완료
+  - Zola, TheKnot 분석 (웨딩 플랫폼)
+  - TypeUI, Pretext 분석 (AI design tools)
+  - shadcn/ui, Tailwind 분석 (Design System)
+  - Motion, Framer, Stripe, Linear, Airbnb 분석 (Modern UI trends)
 - DESIGN-02: 디자인 시스템 수립 (CSS variables, Tailwind tokens, typography) ✅ 진행 중
 - DESIGN-03: 페이지별 리디자인 (로그인, 대시보드, 템플릿 라이브러리, 편집기, 공개 초대장, 랜딩) ✅ 진행 중
 

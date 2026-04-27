@@ -143,6 +143,12 @@ Phase 13이 진행 중입니다.
    - Landing, Login, Signup, Dashboard, Templates 등 주요 페이지 리디자인
    - 빌드 성공, 128개 테스트 통과
 
+### DESIGN-01 완료: 디자인 트렌드 학습/탐색
+Playwright로，以下デザイン 레퍼런스 분석 완료:
+- **웨딩 플랫폼**: Zola (navy/coral), TheKnot (pink/peach)
+- **Design System**: TypeUI (AI design), Pretext (text layout), shadcn/ui (oklab colors)
+- **Modern UI**: Motion (CSS animations), Stripe (purple accent), Linear (dark theme), Airbnb (red accent)
+
 ### 남은 작업
 1. **Plan 03: Component Updates** (input, badge 스타일 업데이트)
 2. **Plan 05: Polish & Animation** (micro-interactions 추가)

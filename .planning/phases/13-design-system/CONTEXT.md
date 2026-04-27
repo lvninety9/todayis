@@ -271,3 +271,143 @@ Playwright를 통해 Zola.com과 TheKnot.com의 실제 디자인 패턴을 분�
 | Background | White | White | Indigo gradient | Off-white |
 | Card Style | Solid | Solid | Glass (excessive) | Solid + subtle glass |
 | Animations | Yes | Minimal | CSS transitions | CSS micro-interactions |
+
+---
+
+## 8. Design System References 분석
+
+### 8.1 TypeUI (bergside/typeui) - AI를 위한 Design Skills
+
+**분석 결과**:
+- Fonts: Mona Sans, system fonts, monospace (SF Mono)
+- Colors: GitHub-style dark/neutral palette
+  - Background: rgb(31, 35, 40) (dark)
+  - Accent: rgb(9, 105, 218) (blue)
+  - Text: rgb(129, 139, 152) (gray)
+- Focus: Agentic tools (Claude, Cursor, etc.)
+
+**참고할 점**:
+- Clean, professional UI
+- Monospace 폰트 사용 (개발자向け)
+- Minimal color palette
+
+### 8.2 Pretext - Text Measurement & Layout
+
+**분석 결과**:
+- Same GitHub-style design
+- Focus on: Precise text rendering
+
+### 8.3 shadcn/ui - UI Component Library
+
+**분석 결과**:
+- Fonts: Geist (new, modern)
+- Colors: lab() and oklab() color space (modern CSS)
+  - Using oklab for better perceptual color matching
+- Clean, minimal design system
+- Customizable components
+
+**참고할 점**:
+- oklab color space adopted by Tailwind v4
+- Component composition over inheritance
+- Focus on accessibility
+
+### 8.4 Tailwind CSS - Utility-first Framework
+
+**분석 결과**:
+- Fonts: Inter, Plex Mono
+- Colors: oklab() color space (Tailwind v4!)
+- Dark mode with proper color handling
+- Utility-first approach
+
+**참고할 점**:
+- Tailwind v4 uses oklab for colors
+- CSS-native approach with @theme
+
+---
+
+## 9. Modern UI/UX Trends 분석
+
+### 9.1 Motion (animation library)
+
+**분석 결과**:
+- Fonts: Inter, TASA Orbiter, Azeret Mono
+- Colors: Dark theme with purple accent (#9E9EFF), mint (#8DF0CC), yellow (#FFF312)
+- Smooth CSS animations
+- No JS-heavy animations
+
+**참고할 점**:
+- Subtle, performant animations
+- Use CSS transitions instead of JS
+
+### 9.2 Framer
+
+**분석 결과**:
+- Fonts: Inter, GT Walsheim, Mona Sans, Open Runde
+- Colors: Black & white, blue accents
+- Strong animations and micro-interactions
+
+**참고할 점**:
+- Smooth page transitions
+- Hover states with scale + shadow
+
+### 9.3 Stripe
+
+**분석 결과**:
+- Fonts: Sohne (custom)
+- Colors: Purple accent (#5335FD), minimal
+- Professional, clean design
+- Subtle gradients
+
+**참고할 점**:
+- Professional minimal aesthetic
+- Clear visual hierarchy
+
+### 9.4 Linear
+
+**분석 결과**:
+- Fonts: Inter + Berkeley Mono (for code)
+- Colors: Dark theme (#08090A), purple accent (#5E6AD2)
+- Smooth animations
+- Clean, minimal interface
+
+**참고할 점**:
+- Dark theme best practices
+- Subtle purple accent works well
+
+### 9.5 Airbnb
+
+**분석 결과**:
+- Fonts: Airbnb Cereal (custom)
+- Colors: White background, red accent (#FF385C)
+- Clear typography hierarchy
+- Card-based layout
+
+**참고할 점**:
+- Strong visual hierarchy
+- Clear button hierarchy (primary vs secondary)
+
+---
+
+## 10. Design System 결론
+
+### 10.1 채택할 트렌드
+
+1. **Colors**: Warm palette (terracotta, sage, blush) + neutral backgrounds
+2. **Typography**: Noto Serif KR + Noto Sans KR + Inter (영문)
+3. **Components**: Solid cards with subtle shadows, not glass
+4. **Animations**: CSS transitions only, subtle micro-interactions
+5. **Dark Mode**: Proper dark theme with warm undertones
+
+### 10.2 참고할 패턴
+
+1. Stripe: Professional minimal aesthetic
+2. Linear: Dark theme with purple accent
+3. Airbnb: Clear visual hierarchy
+4. Framer: Smooth hover states
+
+### 10.3 향후 개선 방향
+
+1. Tailwind v4 업그레이드 시 oklab color space 고려
+2. 더 많은 animation 추가 (page transitions)
+3. 더 많은 component variants 추가
+4. Custom font (커스텀 폰트) 시스템 확장
