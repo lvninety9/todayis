@@ -20,6 +20,8 @@ const mockTemplate: Template = {
   updatedAt: '2024-01-01T00:00:00Z',
   isPublished: false,
   downloadCount: 0,
+  price: 0,
+  isPurchased: false,
 };
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (

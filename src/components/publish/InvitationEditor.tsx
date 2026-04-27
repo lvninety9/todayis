@@ -34,6 +34,13 @@ const fieldInputType: Record<TemplateField['type'], string> = {
   date: 'date',
   image: 'text',
   location: 'text',
+  account: 'text',
+  audio: 'text',
+  video: 'text',
+  gallery: 'text',
+  message: 'text',
+  dresscode: 'text',
+  parents: 'text',
 };
 
 export function InvitationEditor({

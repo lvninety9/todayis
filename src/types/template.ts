@@ -9,8 +9,9 @@
 
 /**
  * 템플릿 필드 타입
+ * Extended in Phase 15: added account, audio, video, gallery, message, dresscode, parents
  */
-export type FieldType = 'text' | 'date' | 'image' | 'location';
+export type FieldType = 'text' | 'date' | 'image' | 'location' | 'account' | 'audio' | 'video' | 'gallery' | 'message' | 'dresscode' | 'parents';
 
 /**
  * 템플릿 필드 정의
