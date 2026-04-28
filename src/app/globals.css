@@ -35,6 +35,29 @@
     --blush-dark: 350 60% 45%;
     --cream: 30 20% 95%;
     --warm-gray: 30 5% 60%;
+
+    /* Surface colors */
+    --color-surface: 30 20% 98%;
+    --color-surface-raised: 30 15% 100%;
+
+    /* Border */
+    --color-border: 30 15% 85%;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 8px 10px -6px hsl(0 0% 0% / 0.1);
+
+    /* Radii */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+
+    /* Text colors */
+    --text-primary: 30 10% 15%;
+    --text-secondary: 30 5% 45%;
+    --text-muted: 30 5% 65%;
   }
 
   .dark {
@@ -58,6 +81,24 @@
     --border: 30 10% 25%;
     --input: 30 10% 25%;
     --ring: 12 75% 60%;
+
+    /* Surface colors (dark) */
+    --color-surface: 30 15% 10%;
+    --color-surface-raised: 30 15% 15%;
+
+    /* Border (dark) */
+    --color-border: 30 15% 25%;
+
+    /* Shadows (dark) */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 8px 10px -6px hsl(0 0% 0% / 0.4);
+
+    /* Text colors (dark) */
+    --text-primary: 30 10% 95%;
+    --text-secondary: 30 5% 70%;
+    --text-muted: 30 5% 50%;
   }
 }
 
