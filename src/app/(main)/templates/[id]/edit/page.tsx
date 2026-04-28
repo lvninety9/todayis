@@ -13,7 +13,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { TemplatePreview } from '@/components/templates/preview/TemplatePreview';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { Monitor, Smartphone, Layout, Split } from 'lucide-react';
+import { Monitor, Smartphone, Layout, Split, Undo2, Redo2, Save, Eye } from 'lucide-react';
 
 /**
  * Template Edit 페이지
@@ -38,6 +38,10 @@ export default function TemplateEditPage() {
   // Preview mode state
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [splitView, setSplitView] = useState(true);
+  
+  // History for undo/redo
+  const [history, setHistory] = useState<{ name: string; category: string; thumbnail: string; layout: string; fields: TemplateField[] }[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   
   // Debounced preview update
   
@@ -637,6 +641,32 @@ export default function TemplateEditPage() {
           )}
         </div>
         
+        {/* Floating toolbar */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:hidden">
+          <div className="flex items-center gap-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-full shadow-lg border border-gray-200 dark:border-gray-700 px-3 py-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSplitView(!splitView)}
+              className="h-8 px-2"
+              title={splitView ? '미리보기 숨기기' : '미리보기 표시'}
+            >
+              <Eye className="w-4 h-4" />
+            </Button>
+            <div className="w-px h-6 bg-gray-200 dark:bg-gray-700" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSave}
+              disabled={saving}
+              className="h-8 px-2"
+              title="저장하기"
+            >
+              <Save className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
         {/* Split view toggle (bottom) */}
         {!splitView && (
           <div className="fixed bottom-4 right-4 z-50">
