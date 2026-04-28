@@ -9,6 +9,17 @@ import { TemplateUploadDialog } from '@/components/templates/library/TemplateUpl
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Grid3X3,
+  List,
+} from 'lucide-react';
 
 /**
  * Templates 페이지
@@ -27,6 +38,8 @@ export default function TemplatesPage() {
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'name'>('latest');
 
   // 템플릿 목록 조회
   const fetchTemplates = useCallback(async () => {
@@ -199,9 +212,45 @@ export default function TemplatesPage() {
         {/* 헤더 */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">템플릿 라이브러리</h1>
-          <Button onClick={() => setDialogOpen(true)} size="lg">
-            + 새 템플릿 만들기
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* 정렬 셀렉트 */}
+            <Select value={sortBy} onValueChange={(v: 'latest' | 'popular' | 'name') => setSortBy(v)}>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="정렬" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="latest">최신순</SelectItem>
+                <SelectItem value="popular">인기순</SelectItem>
+                <SelectItem value="name">이름순</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            {/* 그리드/리스트 토글 */}
+            <div className="flex border rounded-md dark:border-gray-700">
+              <Button
+                variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
+                size="sm"
+                className="rounded-r-none"
+                onClick={() => setViewMode('grid')}
+                aria-label="그리드 보기"
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'secondary' : 'ghost'}
+                size="sm"
+                className="rounded-l-none"
+                onClick={() => setViewMode('list')}
+                aria-label="리스트 보기"
+              >
+                <List className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <Button onClick={() => setDialogOpen(true)} size="lg">
+              + 새 템플릿 만들기
+            </Button>
+          </div>
         </div>
 
         {/* 에러 메시지 */}
@@ -228,6 +277,8 @@ export default function TemplatesPage() {
           onFilter={handleFilter}
           onSearch={handleSearch}
           loading={loading}
+          viewMode={viewMode}
+          sortBy={sortBy}
         />
       </div>
 

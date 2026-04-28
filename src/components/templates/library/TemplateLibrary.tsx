@@ -17,6 +17,8 @@ interface TemplateLibraryProps {
   onFilter?: (category: string) => void;
   onSearch?: (query: string) => void;
   loading?: boolean;
+  viewMode?: 'grid' | 'list';
+  sortBy?: 'latest' | 'popular' | 'name';
 }
 
 /**
@@ -37,11 +39,19 @@ export function TemplateLibrary({
   onFilter,
   onSearch,
   loading = false,
+  viewMode: externalViewMode,
+  sortBy: externalSortBy,
 }: TemplateLibraryProps) {
+  const [internalViewMode, setInternalViewMode] = useState<'grid' | 'list'>('grid');
+  const viewMode = externalViewMode ?? internalViewMode;
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortBy, setSortBy] = useState<'name' | 'date' | 'downloads'>('name');
+  const [internalSortBy, setInternalSortBy] = useState<'name' | 'date' | 'downloads'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  
+  const sortBy = externalSortBy ? 
+    (externalSortBy === 'name' ? 'name' : externalSortBy === 'popular' ? 'downloads' : 'date') : 
+    internalSortBy;
 
   // 카테고리 목록 추출
   const categories = useMemo(() => {
@@ -105,7 +115,7 @@ export function TemplateLibrary({
   // 정렬 변경 핸들러
   const handleSortChange = (value: string) => {
     const newSortBy = value as 'name' | 'date' | 'downloads';
-    setSortBy(newSortBy);
+    setInternalSortBy(newSortBy);
     
     // 기본값: 날짜는 내림차순, 나머지는 오름차순
     if (newSortBy === 'date' || newSortBy === 'downloads') {
@@ -188,19 +198,35 @@ return (
           </Select>
         </div>
 
-      {/* 그리드 레이아웃 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 scroll-reveal-stagger">
-        {filteredAndSortedTemplates.map((template, index) => (
-          <div key={template.id} className="scroll-reveal-up" style={{ animationDelay: `${index * 50}ms` }}>
-            <TemplateCard
-              template={template}
-              mode={mode}
-              onSelect={onSelect}
-              onDelete={onDelete}
-            />
-          </div>
-        ))}
-      </div>
+      {/* 그리드/리스트 레이아웃 */}
+      {viewMode === 'grid' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 scroll-reveal-stagger">
+          {filteredAndSortedTemplates.map((template, index) => (
+            <div key={template.id} className="scroll-reveal-up" style={{ animationDelay: `${index * 50}ms` }}>
+              <TemplateCard
+                template={template}
+                mode={mode}
+                onSelect={onSelect}
+                onDelete={onDelete}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-3 scroll-reveal-stagger">
+          {filteredAndSortedTemplates.map((template, index) => (
+            <div key={template.id} className="scroll-reveal-up" style={{ animationDelay: `${index * 50}ms` }}>
+              <TemplateCard
+                template={template}
+                mode={mode}
+                onSelect={onSelect}
+                onDelete={onDelete}
+                layout="list"
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* 결과 카운트 */}
       <div className="text-sm text-gray-500">
