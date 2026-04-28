@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Home, LayoutGrid, Plus, User } from 'lucide-react';
 
 export default function MainLayout({
   children,
@@ -131,7 +132,7 @@ export default function MainLayout({
       </main>
 
       {/* Footer - Minimal with gradient accent */}
-      <footer className="border-t border-gray-200 dark:border-gray-800 py-6">
+      <footer className="border-t border-gray-200 dark:border-gray-800 py-6 pb-20 md:pb-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -151,6 +152,53 @@ export default function MainLayout({
           </div>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-t border-gray-200 dark:border-gray-700 pb-safe z-50">
+        <div className="flex justify-around items-center h-16">
+          <Link
+            href="/dashboard"
+            className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
+              pathname.startsWith('/dashboard') || pathname === '/'
+                ? 'text-[hsl(12,75%,55%)]'
+                : 'text-gray-500 dark:text-gray-400'
+            }`}
+          >
+            <Home className="w-5 h-5" />
+            <span className="text-xs mt-1">홈</span>
+          </Link>
+          <Link
+            href="/templates"
+            className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
+              pathname.startsWith('/templates')
+                ? 'text-[hsl(12,75%,55%)]'
+                : 'text-gray-500 dark:text-gray-400'
+            }`}
+          >
+            <LayoutGrid className="w-5 h-5" />
+            <span className="text-xs mt-1">템플릿</span>
+          </Link>
+          <Link
+            href="/create"
+            className="flex flex-col items-center justify-center flex-1 h-full"
+          >
+            <div className="w-12 h-12 -mt-6 rounded-full bg-gradient-to-r from-[hsl(12,75%,55%)] to-[hsl(350,70%,60%)] flex items-center justify-center shadow-lg">
+              <Plus className="w-6 h-6 text-white" />
+            </div>
+          </Link>
+          <Link
+            href={user ? '/settings' : '/login'}
+            className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
+              pathname.startsWith('/settings')
+                ? 'text-[hsl(12,75%,55%)]'
+                : 'text-gray-500 dark:text-gray-400'
+            }`}
+          >
+            <User className="w-5 h-5" />
+            <span className="text-xs mt-1">내정보</span>
+          </Link>
+        </div>
+      </nav>
     </div>
   );
 }
