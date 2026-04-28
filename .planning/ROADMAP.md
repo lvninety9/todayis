@@ -407,6 +407,32 @@ Plans:
 
 ---
 
+## Phase 16: UI/UX 전면 리디자인
+
+**Goal**: 전체 페이지의 UI/UX 전면 리디자인 — 2026 최신 디자인 트렌드 적용, 일관된 디자인 시스템, 접근성 개선, 모바일 최적화
+
+**Requirements**:
+- UI-01: Landing 페이지 — hero 섹션 리디자인, social proof 추가, 스토리텔링 구조
+- UI-02: Dashboard — bento grid 개선, 데이터 시각화, 액션 중심 레이아웃
+- UI-03: Template Library — 필터/정렬 UX 개선, 미리보기 강화, 그리드/리스트 토글
+- UI-04: Template Detail — 구매 플로우 최적화, 템플릿 미리보기 확대
+- UI-05: Editor — 드래그 앤 드롭 개선, 툴바 재설계, 반응형 최적화
+- UI-06: Auth Pages — 로그인/회원가입 현대화, 소셜 로그인 개선
+- UI-07: Public Invitation — 웨딩 테마 강화, 애니메이션 개선, 공유 UX
+- UI-08: Navigation — 글로벌 네비 재설계, 모바일 바 최적화, breadcrumbs
+- UI-09: Settings/Admin — 일관된 테이블 UI, 데이터 표현 개선
+- UI-10: Design System — CSS variables 확장, 토큰 시스템, dark mode 완성도 향상
+- UI-11: Micro-interactions — hover, focus, transition 일관화, loading 상태 개선
+- UI-12: Accessibility — contrast ratio 개선, keyboard navigation, ARIA labels
+
+**Status**: Planned (5 plans, 5 waves)
+
+**Next Steps:**
+1. /gsd-execute-phase 16 — 구현
+2. /gsd-verify-work — 목표 검증
+
+---
+
 ## 미정 (Backlog)
 
 - 프리미엄 템플릿 (V2)
