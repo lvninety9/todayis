@@ -68,10 +68,10 @@ export default function DashboardPage() {
 
   if (session.loading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[hsl(30,20%,98%)] dark:bg-[hsl(30,15%,10%)]">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-surface)] dark:bg-[var(--color-surface)]">
         <div className="text-center">
           <Spinner size="lg" />
-          <p className="mt-4 text-gray-600 dark:text-gray-400">로딩 중...</p>
+          <p className="mt-4 text-[var(--text-secondary)] dark:text-[var(--text-secondary)]">로딩 중...</p>
         </div>
       </div>
     );
@@ -84,12 +84,12 @@ export default function DashboardPage() {
   const recentTemplates = templates.slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-[hsl(30,20%,98%)] dark:bg-[hsl(30,15%,10%)]">
+    <div className="min-h-screen bg-[var(--color-surface)] dark:bg-[var(--color-surface)]">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {/* 헤더 */}
         <div className="mb-8 scroll-reveal">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">대시보드</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)]">대시보드</h1>
+          <p className="mt-2 text-[var(--text-secondary)] dark:text-[var(--text-secondary)]">
             환영합니다, {session.user.email}님!
           </p>
         </div>
@@ -104,8 +104,8 @@ export default function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">템플릿</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{templates.length}</p>
+                <p className="text-sm text-[var(--text-muted)] dark:text-[var(--text-muted)]">템플릿</p>
+                <p className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)]">{templates.length}</p>
               </div>
             </div>
           </GlassCard>
@@ -118,8 +118,8 @@ export default function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">초대장</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                <p className="text-sm text-[var(--text-muted)] dark:text-[var(--text-muted)]">초대장</p>
+                <p className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)]">0</p>
               </div>
             </div>
           </GlassCard>
@@ -132,8 +132,8 @@ export default function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">구매</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                <p className="text-sm text-[var(--text-muted)] dark:text-[var(--text-muted)]">구매</p>
+                <p className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)]">0</p>
               </div>
             </div>
           </GlassCard>
@@ -150,8 +150,8 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">템플릿 라이브러리</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">템플릿 관리 및 제작</p>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)]">템플릿 라이브러리</h3>
+                <p className="text-sm text-[var(--text-muted)] dark:text-[var(--text-muted)]">템플릿 관리 및 제작</p>
                 </div>
               </div>
             </GlassCard>
@@ -166,8 +166,8 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">새 초대장 만들기</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">새로운 템플릿 생성</p>
+             <h3 className="text-lg font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)]">새 초대장 만들기</h3>
+                <p className="text-sm text-[var(--text-muted)] dark:text-[var(--text-muted)]">새로운 템플릿 생성</p>
                 </div>
               </div>
             </GlassCard>
@@ -183,8 +183,8 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">설정</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">계정 및 프로필 설정</p>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)]">설정</h3>
+                <p className="text-sm text-[var(--text-muted)] dark:text-[var(--text-muted)]">계정 및 프로필 설정</p>
                 </div>
               </div>
             </GlassCard>
@@ -193,8 +193,8 @@ export default function DashboardPage() {
 
         {/* 최근 템플릿 */}
         <GlassCard className="scroll-reveal">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">최근 템플릿</h2>
+          <div className="px-6 py-4 border-b border-[var(--color-border)] dark:border-[var(--color-border)]">
+            <h2 className="text-lg font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)]">최근 템플릿</h2>
           </div>
 
           {loading ? (
@@ -202,7 +202,7 @@ export default function DashboardPage() {
               <Spinner size="md" />
             </div>
           ) : recentTemplates.length > 0 ? (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="divide-y divide-[var(--color-border)] dark:divide-[var(--color-border)]">
               {recentTemplates.map((template) => (
                 <Link
                   key={template.id}
@@ -225,8 +225,8 @@ export default function DashboardPage() {
                         </div>
                       )}
                       <div>
-                        <h3 className="text-sm font-medium text-gray-900 dark:text-white">{template.name}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{template.category || '미분류'}</p>
+                        <h3 className="text-sm font-medium text-[var(--text-primary)] dark:text-[var(--text-primary)]">{template.name}</h3>
+                        <p className="text-sm text-[var(--text-muted)] dark:text-[var(--text-muted)]">{template.category || '미분류'}</p>
                       </div>
                     </div>
                     <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,8 +241,8 @@ export default function DashboardPage() {
               <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">아직 템플릿이 없습니다</h3>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">첫 번째 초대장을 만들어보세요!</p>
+          <h3 className="mt-2 text-sm font-medium text-[var(--text-primary)] dark:text-[var(--text-primary)]">아직 템플릿이 없습니다</h3>
+                <p className="mt-1 text-sm text-[var(--text-muted)] dark:text-[var(--text-muted)]">첫 번째 초대장을 만들어보세요!</p>
               <div className="mt-6">
                 <Button asChild variant="gradient">
                   <Link href="/templates">
