@@ -33,12 +33,12 @@ progress:
 | 14 | ux | complete | 3/3 |
 | 15 | field-extension | complete | 2/2 (V2) |
 | 16 | ui-redesign | complete | 5/5 (UI-01~UI-12) ✅ |
+| 17 | template-system | context-captured | 0/0 |
 
 ## Current Position
 
-Phase: 16 (ui-redesign) — Complete
-Plan: 5/5 executed
-Milestone v1.0: Phase 16 UI/UX 전면 리디자인 완료 (5 plans, 5 waves)
+Phase: 17 (template-system) — Context captured
+Plan: 0/0 — Ready for planning
 
 ### Phase 14 실행 결과 (2026-04-27)
 
