@@ -14,6 +14,31 @@
 export type FieldType = 'text' | 'date' | 'image' | 'location' | 'account' | 'audio' | 'video' | 'gallery' | 'message' | 'dresscode' | 'parents';
 
 /**
+ * 섹션 타입 (section 기반 렌더링)
+ */
+export type SectionType = 'image' | 'announcement' | 'invitation' | 'map' | 'accounts';
+
+/**
+ * 폰트 크기 옵션
+ */
+export type FontSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl';
+
+/**
+ * 섹션 스타일 정의
+ */
+export interface SectionStyle {
+  animation?: 'none' | 'fade-in' | 'slide-up' | 'slide-left' | 'slide-right' | 'bounce' | 'scale-up';
+  animationDuration?: number;
+  animationDelay?: number;
+  backgroundColor?: string;
+  textColor?: string;
+  accentColor?: string;
+  borderColor?: string;
+  fontFamily?: string;
+  fontSize?: FontSize;
+}
+
+/**
  * 템플릿 필드 정의
  */
 export interface TemplateField {
@@ -30,6 +55,24 @@ export interface TemplateField {
 }
 
 /**
+ * 섹션 정의 (section 기반 구조)
+ */
+export interface Section {
+  /** 고유 식별자 */
+  id: string;
+  /** 섹션 타입 */
+  type: SectionType;
+  /** 순서 (낮을수록 상단) */
+  order: number;
+  /** 표시 라벨 */
+  label: string;
+  /** 필드 목록 */
+  fields: TemplateField[];
+  /** 섹션별 스타일 */
+  style?: SectionStyle;
+}
+
+/**
  * 템플릿 정의
  */
 export interface Template {
@@ -41,7 +84,7 @@ export interface Template {
   category: string;
   /** 썸네일 URL */
   thumbnail: string;
-  /** 정의된 필드 목록 */
+  /** 정의된 필드 목록 (기존 flat 구조, 하위 호환) */
   fields: TemplateField[];
   /** 레이아웃 (JSON 문자열 또는 경로) */
   layout: string;
@@ -59,7 +102,14 @@ export interface Template {
   price: number;
   /** 구매 여부 */
   isPurchased: boolean;
+  /** 섹션 기반 구조 (신규, sections가 있으면 우선 사용) */
+  sections?: Section[];
 }
+
+/**
+ * 템플릿 스타일 타입
+ */
+export type TemplateStyle = 'romantic' | 'classic' | 'modern';
 
 /**
  * 템플릿 데이터 (바인딩된 값)
@@ -95,4 +145,13 @@ export interface TemplateData {
    * @returns 모든 필드 이름 배열
    */
   getFieldNames(): string[];
+}
+
+/**
+ * 섹션 ID 생성 헬퍼
+ * @param type 섹션 타입
+ * @returns 고유 섹션 ID
+ */
+export function generateSectionId(type: SectionType): string {
+  return `${type}-${crypto.randomUUID().slice(0, 8)}`;
 }
