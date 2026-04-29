@@ -4,18 +4,14 @@
 
 ## 🚀 시작 방법
 
-새로운 세션에서 다음 명령어 중 하나를 입력하세요:
+새 세션에서 다음 명령어 중 하나를 입력하세요:
 
 ```bash
-# 방법 1: GSD 워크플로우 자동 실행 (권장) - Phase 14 계속 진행
+# GSD 워크플로우 자동 실행 (권장)
 /gsd
 
-# 방법 2: Phase 14만 실행
-/gsd 14
-
-# 방법 3: 계획 수립부터
-/gsd-plan-phase 14
-/gsd-execute-phase 14
+# 특정 Phase 실행
+/gsd 15
 ```
 
 ---
@@ -32,81 +28,64 @@
 | 05 | payment-system | ✅ 완료 | 3/3 |
 | 06 | publish-system | ✅ 완료 | 3/3 |
 | 07 | tests-unit | ✅ 완료 | 128개 테스트 |
-| 08 | tests-e2e | ✅ 완료 | 36개 통과 (4개Gap) |
+| 08 | tests-e2e | ✅ 완료 | 36개 통과 |
 | 09 | frontend-redesign | ✅ 완료 | 8/8 |
 | 10 | naver-selling | ✅ 완료 | 11/11 |
 | 11 | custom-fonts | ✅ 완료 | 2/2 |
 | 12 | background-music | ⏳ 대기 | (V2) |
 | 13 | design-system | ✅ 완료 | 5/5 |
+| 14 | ux | ✅ 완료 | 4/4 |
 
-### 현재 진행 중
-| Phase | 이름 | 상태 | Plans |
-|-------|------|------|-------|
-| 14 | ux | 🔄 planning 전 |discuss-phase 완료 |
-
----
-
-## 🎯 Phase 14: 버그 수정 + 템플릿 UX 개선
-
-### Discuss-phase 완료 (결정된 사항)
-
-1. **로고 리다이렉트**: 로고/root 클릭 시 `/landing`으로 이동
-2. **템플릿 카드**: 클릭 시 미리보기 페이지로 이동, Edit은 별도 버튼
-3. **미리보기 페이지**: '이 템플릿으로 초대장 만들기' 버튼
-4. **디자인 시스템**: Indigo hard-coded → warm palette (CSS variables)로 교체
-
-### 2026 디자인 트렌드 (Phase 13 리서치 결과 적용)
-
-- **Style**: Quiet Luxury + Warm Romance
-- **Palette**: Terracotta (#E07A5F), Sage (#81B29A), Blush (#F4A0B5)
-- **Layout**: Bento Grid (dashboard, landing)
-- **Animations**: CSS scroll-driven + micro-interactions
-- **Glassmorphism**: nav, modals만 (카드에서 제거)
-
-### Design Skill
-- `/media/jay/D/cursor/design-skills/todayis-wedding/SKILL.md` — 공식 Claude Skills 구조 적용
+### 다음 작업
+| Phase | 이름 | 상태 | 비고 |
+|-------|------|------|------|
+| 15 | field-extension | 🔄 대기 | V2 — 템플릿 필드 타입 확장 |
 
 ---
 
-## ⚠️ Phase 14에서 수정 필요한 파일
+## ✅ Phase 14 완료 내용 (2026-04-27)
 
-1. `src/app/(main)/layout.tsx` — 로고 링크 (line 39: `href="/"`)
-2. `src/app/page.tsx` — root redirect (line 4: `redirect("/login")`)
-3. `src/app/(main)/dashboard/page.tsx` — indigo hard-coded
-4. `src/app/(auth)/login/page.tsx` — indigo hard-coded
-5. `src/components/templates/preview/TemplatePreview.tsx` — indigo hard-coded
-6. `src/components/templates/library/TemplateCard.tsx` — 클릭 이벤트
-7. `src/components/templates/engine/TemplateEngine.tsx` — 빈 상태 처리
+### 변경된 파일 (7개)
+1. `src/app/(main)/layout.tsx` — 로고 href `/` → `/landing`
+2. `src/app/page.tsx` — root redirect `/login` → `/landing`
+3. `src/app/(main)/dashboard/page.tsx` — indigo → warm palette
+4. `src/app/(auth)/login/page.tsx` — indigo → warm palette
+5. `src/app/(auth)/signup/page.tsx` — indigo → warm palette (추가 수정)
+6. `src/components/templates/preview/TemplatePreview.tsx` — indigo → warm palette
+7. `src/components/templates/library/TemplateCard.tsx` — 클릭 → 미리보기 페이지 이동
+8. `src/components/templates/engine/TemplateEngine.tsx` — 빈 상태 placeholder
 
----
-
-## 📋 다음 작업
-
-```bash
-# Phase 14 계획 수립
-/gsd-plan-phase 14
-
-# 또는 바로 실행
-/gsd 14
-```
+### 검증 결과
+- 빌드: ✅ 성공
+- 변경 파일 8개 모두 확인됨
 
 ---
 
-## 🎨 디자인 스킬 사용법
+## 🎯 Phase 15: 템플릿 필드 확장 (V2)
 
-디자인 관련 요청 시 자동으로 로드되는 스킬:
-- **파일**: `/media/jay/D/cursor/design-skills/todayis-wedding/SKILL.md`
-- **트리거**: 디자인, UI, 템플릿, frontend, stylesheet, landing, dashboard, 컬러팔레트, 애니메이션, micro-interactions
+**Goal**: 템플릿 필드 타입 확장 (계좌번호, 배경음악, GIF, 동영상, 갤러리 등)
+
+**Requirements**:
+- FIELD-01: 계좌번호 필드
+- FIELD-02: 배경 음악 URL (mp3/ogg/wav)
+- FIELD-03: GIF/애니메이션 이미지
+- FIELD-04: 동영상 URL (mp4)
+- FIELD-05: 갤러리 (여러 이미지)
+- FIELD-06: 축의도 메시지
+- FIELD-07: Dress Code
+- FIELD-08: 부모님 성함
+
+**Status**: Planning 전
 
 ---
 
 ## 📁 중요 문서 위치
 
-- `.planning/ROADMAP.md` — 전체 로드맵
-- `.planning/STATE.md` — 현재 상태
+- `.planning/ROADMAP.md` — 전체 로드맵 (Phase 14 완료, Phase 15 추가됨)
+- `.planning/STATE.md` — 현재 상태 (Phase 14 완료로 업데이트)
+- `.planning/phases/14-ux/PLAN.md` — Phase 14 실행 계획
 - `.planning/phases/14-ux/14-CONTEXT.md` — Phase 14 결정사항
-- `.planning/phases/14-ux/14-DISCUSSION-LOG.md` — 논의 로그
-- `/media/jay/D/cursor/design-skills/todayis-wedding/SKILL.md` — 디자인 스킬
+- `.planning/phases/15-field-extension/` — Phase 15 문서 (추가 예정)
 
 ---
 
@@ -116,7 +95,7 @@
 - **UI**: shadcn/ui + Tailwind CSS v4
 - **Database**: Supabase (PostgreSQL)
 - **Auth**: Supabase Auth
-- **Animation**: Pure CSS (no new libraries)
+- **Animation**: Pure CSS (tailwindcss-animate)
 
 ---
 

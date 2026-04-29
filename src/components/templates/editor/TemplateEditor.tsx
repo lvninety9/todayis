@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Template, TemplateField } from '@/types/template';
+import { Template, TemplateField, SectionStyle } from '@/types/template';
 import { useTemplateEditor } from '@/hooks/use-template-editor';
 import { FieldEditor } from './FieldEditor';
 import {
@@ -25,13 +25,6 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { StyleEditor } from './StyleEditor';
-
-interface SectionStyle {
-  animation?: string;
-  music?: string;
-  fontFamily?: string;
-  align?: string;
-}
 
 interface TemplateEditorProps {
   template: Template;
@@ -166,7 +159,7 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
   const [showSecondaryToolbar, setShowSecondaryToolbar] = useState(false);
   const [sectionSettingsOpen, setSectionSettingsOpen] = useState(false);
 
-  // Section-specific styles (per field)
+  // Section-specific styles (per sectionId)
   const [sectionStyles, setSectionStyles] = useState<Record<string, SectionStyle>>({});
 
   // Drag handlers
@@ -341,10 +334,12 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
             </DialogHeader>
             <div className="max-h-[60vh] overflow-y-auto">
               <StyleEditor
+                sectionId={activeField || ''}
+                sectionLabel={template.fields.find(f => f.name === activeField)?.label || ''}
                 style={sectionStyles[activeField || ''] || {}}
-                onChange={(style) => setSectionStyles((prev) => ({
+                onChange={(s) => setSectionStyles((prev) => ({
                   ...prev,
-                  [activeField || '']: style,
+                  [activeField || '']: s,
                 }))}
               />
             </div>

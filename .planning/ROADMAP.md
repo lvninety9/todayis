@@ -447,6 +447,33 @@ Plans:
 
 ---
 
+## Phase 17: 템플릿 시스템 전면 개편
+
+**Goal**: Wedding 초대장としてふさわしい專業적인 템플릿 디자인 시스템 구축 — 모바일 최적화, section 기반 구조, 실시간 편집
+
+**Requirements**:
+- TEMPLATE-DESIGN-01: 템플릿 Visual Design — Wedding 전문 card 스타일 (romantic, classic, modern 등)
+- TEMPLATE-DESIGN-02: 템플릿 카드 클릭 → 화면 가득 미리보기 (fullscreen preview modal)
+- TEMPLATE-EDIT-01: 에디터 — 애니메이션 추가 (fade, slide, bounce 등) + 실시간 preview 반영
+- TEMPLATE-EDIT-02: 에디터 — 글꼴 추가 (Noto Serif KR, Playfair Display 등) + 실시간 preview 반영
+- TEMPLATE-EDIT-03: 에디터 — 색상 테마 선택 + 실시간 preview 반영
+- TEMPLATE-STRUCTURE-01: 모바일 초대장 Section 구조 — 메인 이미지 → 결혼 안내 멘트 → 초대 안내文 → 지도 → 계좌번호 (신랑측/신부측)
+- TEMPLATE-STRUCTURE-02: Section 편집 UI — 각 section별 내용 입력, 순서 조정 (drag & drop)
+- TEMPLATE-STRUCTURE-03: 실시간 미리보기 — 편집 중인内容즉시手机上预览 확인
+
+**Status**: In Progress (17-01 ✅, 17-02 ✅, 17-03 ⏳)
+
+**Plan direction:**
+- Phase 17-01: 템플릿 Visual Design 시스템 구축 (TEMPLATE-DESIGN-01) ✅ Complete
+- Phase 17-02: 템플릿 미리보기 기능 구현 (TEMPLATE-DESIGN-02) ✅ Complete
+- Phase 17-03: 에디터 애니메이션/글꼴/색상 추가 (TEMPLATE-EDIT-01, 02, 03) ⏳ In Progress
+- Phase 17-04: 모바일 Section 구조 재설계 (TEMPLATE-STRUCTURE-01, 02, 03) ⬜ Pending
+
+**Reference:**
+- https://mcard.fromtoday.co.kr/w/Hr9Hp3/ — 모바일 wedding 초대장 예시 (긴 스크롤, section 기반)
+
+---
+
 ## 미정 (Backlog)
 
 - 프리미엄 템플릿 (V2)

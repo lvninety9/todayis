@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Template } from '@/types/template';
 import { TemplateLibrary } from '@/components/templates/library/TemplateLibrary';
 import { TemplateUploadDialog } from '@/components/templates/library/TemplateUploadDialog';
+import { TemplatePreviewModal } from '@/components/templates/preview/TemplatePreviewModal';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
@@ -40,6 +41,8 @@ export default function TemplatesPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'name'>('latest');
+  const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   // 템플릿 목록 조회
   const fetchTemplates = useCallback(async () => {
@@ -182,6 +185,35 @@ export default function TemplatesPage() {
     // API 에서 검색 처리
   };
 
+  // 미리보기 열기
+  const handlePreview = (template: Template) => {
+    setPreviewTemplate(template);
+    setPreviewOpen(true);
+  };
+
+  // 미리보기 닫기
+  const handlePreviewClose = () => {
+    setPreviewOpen(false);
+    setPreviewTemplate(null);
+  };
+
+  // 미리보기용 TemplateData 생성
+  const getPreviewData = (template: Template) => ({
+    templateId: template.id,
+    values: template.fields.reduce((acc, field) => {
+      const value = field.defaultValue ?? '';
+      acc[field.name] = value;
+      return acc;
+    }, {} as Record<string, string>),
+    validate: () => true,
+    getValue: (fieldName: string) => {
+      const field = template.fields.find(f => f.name === fieldName);
+      return field?.defaultValue ?? null;
+    },
+    setValue: () => {},
+    getFieldNames: () => template.fields.map(f => f.name),
+  });
+
   // 로딩 상태
   if (session.loading || loading) {
     return (
@@ -272,6 +304,7 @@ export default function TemplatesPage() {
           templates={templates}
           mode="edit"
           onSelect={handleSelect}
+          onPreview={handlePreview}
           onDelete={handleDelete}
           onCreate={() => setDialogOpen(true)}
           onFilter={handleFilter}
@@ -288,6 +321,16 @@ export default function TemplatesPage() {
         onOpenChange={setDialogOpen}
         onSubmit={handleCreate}
       />
+
+      {/* 템플릿 미리보기 모달 */}
+      {previewTemplate && (
+        <TemplatePreviewModal
+          template={previewTemplate}
+          data={getPreviewData(previewTemplate)}
+          open={previewOpen}
+          onClose={handlePreviewClose}
+        />
+      )}
     </div>
   );
 }

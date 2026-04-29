@@ -12,6 +12,7 @@ interface TemplateLibraryProps {
   templates: Template[];
   mode?: 'view' | 'edit';
   onSelect?: (template: Template) => void;
+  onPreview?: (template: Template) => void;
   onDelete?: (template: Template) => void;
   onCreate?: () => void;
   onFilter?: (category: string) => void;
@@ -34,6 +35,7 @@ export function TemplateLibrary({
   templates,
   mode = 'view',
   onSelect,
+  onPreview,
   onDelete,
   onCreate,
   onFilter,
@@ -207,6 +209,7 @@ return (
                 template={template}
                 mode={mode}
                 onSelect={onSelect}
+                onPreview={onPreview}
                 onDelete={onDelete}
               />
             </div>
@@ -220,6 +223,7 @@ return (
                 template={template}
                 mode={mode}
                 onSelect={onSelect}
+                onPreview={onPreview}
                 onDelete={onDelete}
                 layout="list"
               />

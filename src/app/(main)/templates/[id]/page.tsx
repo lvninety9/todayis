@@ -13,17 +13,12 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { Template, TemplateData } from '@/types/template';
+import { TemplateEngine } from '@/components/templates/engine/TemplateEngine';
+import { TemplatePreviewModal } from '@/components/templates/preview/TemplatePreviewModal';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { GlassCard } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
@@ -31,7 +26,7 @@ import Link from 'next/link';
 import { useSession } from '@/hooks/use-session';
 import { usePayment } from '@/hooks/use-payment';
 import { redirectToNaverSellingPage } from '@/lib/payment/naver';
-import { Expand, Check, ShoppingCart, Edit3 } from 'lucide-react';
+import { Expand, Check, ShoppingCart, Edit3, ArrowLeft } from 'lucide-react';
 
 interface TemplateInfo {
   id: string;
@@ -41,6 +36,7 @@ interface TemplateInfo {
   is_premium: boolean;
   category: string;
   layout: string;
+  fields?: any[];
 }
 
 /**
@@ -60,6 +56,7 @@ export default function TemplateDetailPage() {
   const [isPurchased, setIsPurchased] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewData, setPreviewData] = useState<TemplateData | null>(null);
 
   // 템플릿 정보 조회
   const fetchTemplate = useCallback(async () => {
@@ -161,6 +158,36 @@ export default function TemplateDetailPage() {
     }).format(price);
   };
 
+  // 미리보기 열기 - TemplateData 생성
+  const handlePreviewOpen = useCallback(() => {
+    const fields = template?.fields;
+    if (!template || !fields || fields.length === 0) return;
+    
+    const data: TemplateData = {
+      templateId: template.id,
+      values: fields.reduce((acc, field) => {
+        acc[field.name] = field.defaultValue ?? '';
+        return acc;
+      }, {} as Record<string, string>),
+      validate: () => true,
+      getValue: (fieldName: string) => {
+        const field = fields.find(f => f.name === fieldName);
+        return field?.defaultValue ?? null;
+      },
+      setValue: () => {},
+      getFieldNames: () => fields.map(f => f.name),
+    };
+    
+    setPreviewData(data);
+    setPreviewOpen(true);
+  }, [template]);
+
+  // 미리보기 닫기
+  const handlePreviewClose = useCallback(() => {
+    setPreviewOpen(false);
+    setPreviewData(null);
+  }, []);
+
   // 로딩 상태
   if (session.loading || loading) {
     return (
@@ -232,7 +259,7 @@ export default function TemplateDetailPage() {
                 variant="secondary"
                 size="sm"
                 className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => setPreviewOpen(true)}
+                onClick={handlePreviewOpen}
               >
                 <Expand className="w-4 h-4 mr-1" />
                 확대 미리보기
@@ -303,40 +330,15 @@ export default function TemplateDetailPage() {
           </div>
         </GlassCard>
 
-        {/* 확대 미리보기 Dialog */}
-        <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-          <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
-            <DialogHeader className="p-4 border-b">
-              <DialogTitle>{template.name} - 미리보기</DialogTitle>
-              <DialogDescription>
-                전체 화면으로 템플릿을 확인하세요
-              </DialogDescription>
-            </DialogHeader>
-            <div className="w-full h-[70vh] bg-gray-100 flex items-center justify-center">
-              {template.thumbnail && (
-                <img
-                  src={template.thumbnail}
-                  alt={template.name}
-                  className="w-full h-full object-contain"
-                />
-              )}
-            </div>
-            <DialogFooter className="p-4 border-t">
-              <Button variant="outline" onClick={() => setPreviewOpen(false)}>
-                닫기
-              </Button>
-              {isPurchased || isFree ? (
-                <Button variant="gradient" onClick={() => router.push(`/templates/${template.id}/edit`)}>
-                  편집하기
-                </Button>
-              ) : (
-                <Button variant="gradient" onClick={handleBuy}>
-                  구매하기 ({formatPrice(template.price)})
-                </Button>
-              )}
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        {/* 확대 미리보기 - TemplatePreviewModal */}
+        {previewData && (
+          <TemplatePreviewModal
+            template={{ ...template as any, fields: template.fields || [] } as Template}
+            data={previewData}
+            open={previewOpen}
+            onClose={handlePreviewClose}
+          />
+        )}
       </div>
     </div>
   );

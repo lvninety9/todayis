@@ -12,6 +12,7 @@ interface TemplateCardProps {
   template: Template;
   mode?: 'view' | 'edit';
   onSelect?: (template: Template) => void;
+  onPreview?: (template: Template) => void;
   onDelete?: (template: Template) => void;
   layout?: 'grid' | 'list';
 }
@@ -30,6 +31,7 @@ export function TemplateCard({
   template,
   mode = 'view',
   onSelect,
+  onPreview,
   onDelete,
   layout = 'grid',
 }: TemplateCardProps) {
@@ -37,7 +39,11 @@ export function TemplateCard({
 
   const handleCardClick = (e: React.MouseEvent) => {
     if (mode === 'view') {
-      router.push(`/templates/${template.id}`);
+      if (onPreview) {
+        onPreview(template);
+      } else {
+        router.push(`/templates/${template.id}`);
+      }
     }
   };
 

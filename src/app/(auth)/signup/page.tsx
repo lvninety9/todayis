@@ -19,7 +19,7 @@ export default function SignupPage() {
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             계정이 있으신가요?{' '}
-            <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+            <Link href="/login" className="font-medium text-[hsl(var(--primary))] hover:text-[hsl(var(--terracotta-light))] transition-colors">
               로그인
             </Link>
           </p>

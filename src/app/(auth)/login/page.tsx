@@ -23,7 +23,7 @@ export default function LoginPage() {
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             계정이 없으신가요?{' '}
-            <Link href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+            <Link href="/signup" className="font-medium text-[hsl(var(--primary))] hover:text-[hsl(var(--terracotta-light))] transition-colors">
               회원가입
             </Link>
           </p>
@@ -33,7 +33,7 @@ export default function LoginPage() {
           <div>
             <button
               onClick={() => setShowForgotPassword(false)}
-              className="mb-4 text-sm text-indigo-600 hover:text-indigo-500 transition-colors"
+              className="mb-4 text-sm text-[hsl(var(--primary))] hover:text-[hsl(var(--terracotta-light))] transition-colors"
             >
               ← 로그인으로 돌아가기
             </button>
@@ -56,7 +56,7 @@ export default function LoginPage() {
             <div className="mt-4 text-center">
               <button
                 onClick={() => setShowForgotPassword(true)}
-                className="text-sm text-indigo-600 hover:text-indigo-500 transition-colors"
+                className="text-sm text-[hsl(var(--primary))] hover:text-[hsl(var(--terracotta-light))] transition-colors"
               >
                 비밀번호를 잊으셨나요?
               </button>

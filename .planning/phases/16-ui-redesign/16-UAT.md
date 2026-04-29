@@ -1,5 +1,5 @@
 ---
-status: testing
+status: partial
 phase: 16-ui-redesign
 source:
   - 16-01-SUMMARY.md
@@ -8,16 +8,12 @@ source:
   - 16-04-SUMMARY.md
   - 16-05-SUMMARY.md
 started: 2026-04-28T10:00:00.000Z
-updated: 2026-04-28T10:00:00.000Z
+updated: 2026-04-28T10:30:00.000Z
 ---
 
 ## Current Test
 
-number: 1
-name: Landing Page - Hero & Social Proof
-expected: |
-  Landing page displays hero with gradient text, social proof section (ratings, reviews, user count), 3-step storytelling section, testimonial cards, and prominent CTAs.
-awaiting: user response
+[testing complete - user provided feedback about template system gaps instead]
 
 ## Tests
 
@@ -76,9 +72,16 @@ result: pending
 total: 10
 passed: 0
 issues: 0
-pending: 10
-skipped: 0
+pending: 0
+skipped: 10
 
 ## Gaps
 
-[none yet]
+[none yet - user provided feedback about template system issues via ROADMAP.md update instead]
+
+## Notes
+
+**User Feedback (via conversation):**
+- Phase 16 completed UI/UX redesign for app pages only
+- Template visual design system needs major overhaul (referenced: https://mcard.fromtoday.co.kr/w/Hr9Hp3/)
+- Phase 17 planned for template system overhaul in ROADMAP.md

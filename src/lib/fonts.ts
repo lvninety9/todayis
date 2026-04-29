@@ -9,28 +9,28 @@
 
 export type FontOption =
   | 'inherit'
-  | 'Pretendard'
-  | 'Noto Sans KR'
-  | 'Nanum Gothic'
-  | 'Open Sans'
+  | 'Noto Serif KR'
   | 'Playfair Display'
+  | 'Pretendard'
+  | 'Gmarket Sans'
+  | 'Lato'
   | 'custom';
 
 const GOOGLE_FONTS: Record<string, string> = {
+  'Noto Serif KR': 'https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap',
+  'Playfair Display': 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap',
   Pretendard: 'https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap',
-  'Noto Sans KR': 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap',
-  'Nanum Gothic': 'https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap',
-  'Open Sans': 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap',
-  'Playfair Display': 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap',
+  'Gmarket Sans': 'https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@400;700&display=swap',
+  Lato: 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap',
 };
 
 const FONT_FAMILIES: Record<string, string> = {
   inherit: 'inherit',
-  Pretendard: "'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
-  'Noto Sans KR': "'Noto Sans KR', sans-serif",
-  'Nanum Gothic': "'Nanum Gothic', sans-serif",
-  'Open Sans': "'Open Sans', sans-serif",
+  'Noto Serif KR': "'Noto Serif KR', serif",
   'Playfair Display': "'Playfair Display', serif",
+  Pretendard: "'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
+  'Gmarket Sans': "'Gmarket Sans', sans-serif",
+  Lato: "'Lato', sans-serif",
   custom: 'var(--font-custom)',
 };
 
