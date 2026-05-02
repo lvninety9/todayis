@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 16 complete
-last_updated: "2026-04-28T03:30:00.000Z"
+status: Phase 17 complete
+last_updated: "2026-05-02T00:00:00.000Z"
 progress:
   total_phases: 18
-  completed_phases: 14
-  total_plans: 52
-  completed_plans: 53
+  completed_phases: 16
+  total_plans: 57
+  completed_plans: 55
 ---
 
 # State
@@ -33,12 +33,12 @@ progress:
 | 14 | ux | complete | 3/3 |
 | 15 | field-extension | complete | 2/2 (V2) |
 | 16 | ui-redesign | complete | 5/5 (UI-01~UI-12) ✅ |
-| 17 | template-system | in_progress | 3/4 |
+| 17 | template-system | complete | 4/4 |
 
 ## Current Position
 
-Phase: 17 (template-system) — In Progress
-Plan: 3/4 complete (17-03 ✅, 17-04 ⏳)
+Phase: 17 (template-system) — Complete ✅
+Plan: 4/4 complete (17-01 ✅, 17-02 ✅, 17-03 ✅, 17-04 ✅)
 
 ### Phase 14 실행 결과 (2026-04-27)
 
@@ -47,18 +47,45 @@ Plan: 3/4 complete (17-03 ✅, 17-04 ⏳)
 - 14-03: CSS Scroll-Driven Animations — 완료
 - 빌드: 성공 ✅
 
-### Phase 17 실행 결과 (2026-04-29)
+### Phase 17 실행 결과 (2026-04-29 ~ 2026-05-02)
 
 - 17-01: 템플릿 비주얼 디자인 시스템 — 완료 ✅
+  - Section 타입 정의 (image, announcement, invitation, map, accounts)
+  - SectionStyle 타입 (animation, backgroundColor, textColor, accentColor, borderColor, fontFamily, fontSize)
+  - TemplateEngine: section 기반 렌더링 (sections가 있으면 우선 사용)
+  - 3개 wedding 템플릿 스타일 (romantic, classic, modern)
 - 17-02: 템플릿 미리보기 모달 — 완료 ✅
+  - TemplatePreviewModal: fullscreen preview modal (backdrop-blur, × 버튼, Escape 키)
+  - TemplateCard: click → preview callback
+  - TemplateLibrary: onPreview prop 전달
+  - templates/page.tsx: preview modal state 관리
 - 17-03: 에디터 애니메이션/글꼴/색상 추가 — 완료 ✅
   - StyleEditor: Section별 애니메이션 (7종), 색상 테마 (predefined + custom HEX), 폰트 설정
-  - fonts.ts: 5개 Google Fonts 추가
-  - TemplateEditor: SectionStyle 연동
+  - fonts.ts: 5개 Google Fonts 추가 (Noto Serif KR, Playfair Display, Pretendard, Gmarket Sans, Lato)
+  - TemplateEditor: SectionStyle 연동 (sectionId/sectionLabel prop 전달)
+  - globals.css: animation keyframes (fade-in, slide-up, slide-left, slide-right, bounce, scale-up)
+  - Build: 성공 ✅, Lint: 새 에러 없음 ✅
+- 17-04: 모바일 Section 구조 재설계 — 완료 ✅
+  - sample.ts: ROMANTIC_TEMPLATE, CLASSIC_TEMPLATE, MODERN_TEMPLATE (각 5 sections)
+  - sample.ts: SECTION_BASED_TEMPLATES 배열 + findSectionBasedTemplate() 헬퍼
+  - api/templates/route.ts: SECTION_BASED_TEMPLATES import 및 병합 (dev/인증 모드)
+  - api/templates/[id]/route.ts: findSectionBasedTemplate() 폴백 조회 + PATCH sections 지원
+  - TemplateEditor.tsx: Section 기반 편집기로 전면 재작성 (Up/Down reorder, split-view preview)
+  - edit/page.tsx: Section 기반 편집기 통합 (하위 호환 flat field fallback)
+  - FieldEditor.tsx: SectionEditor 컴포넌트 추가 (collapsible header, style grid)
+  - use-template-editor.ts: Section 헬퍼 함수 (sectionFields, findSectionForField, groupedFields, validateSections, getSectionData)
+  - TemplateEngine.tsx: animationDelay + animationDuration 적용
+  - landing/page.tsx: JSX entities 수정
+  - toss.test.ts: reserved word 오류 수정 (module → mod)
+  - next.config.js: example.com remotePatterns 추가
+  - template.e2e.ts: mock 구조 업데이트 (section-based 대응)
+  - profile.e2e.ts: response structure 수정
   - Build: 성공 ✅, Lint: 새 에러 없음 ✅
 
 ### 최근 변경 사항
 
+- 2026-05-02: Phase 17-04 완료 — Section 기반 템플릿 시스템 전면 개편 (13 files, +1991/-744 lines)
+- 2026-05-01: Phase 17-04 세션 강제 압축 전 검토 완료 — claimed vs actual 작업 불일치 확인, 실제 구현 상태 검증
 - 2026-04-29: Phase 17-03 완료 — Section별 애니메이션/글꼴/색상 설정
 - 2026-04-27: Phase 14-03 완료 — CSS Scroll-Driven Animations (animation-timeline: view())
   - globals.css에 scroll-reveal, scroll-reveal-up, scroll-reveal-stagger 클래스 추가
@@ -82,13 +109,11 @@ Plan: 3/4 complete (17-03 ✅, 17-04 ⏳)
 - 빌드: 성공 ✅
 - 변경 파일 검증: 8개 모두 확인 ✅
 
-### 다음 단계 (Phase 15 — 템플릿 필드 확장)
+### 다음 단계 (Phase 18 — 다음 마일스톤)
 
-- **목표**: 템플릿 필드 타입 확장 (계좌번호, 배경음악, GIF, 동영상, 갤러리 등)
-- **범위**:
-  1. discuss-phase — 필드 타입 논의
-  2. plan-phase — 상세 계획 수립
-  3. execute-phase — 구현
+- Phase 17 완료 — 템플릿 시스템 전면 개편 종료
+- Phase 18 논의 필요 (V2 기능: 배경음악, 이모지/GIF, 동영상 초대장 등)
+- E2E 테스트 추가 검증 권장 (section-based 템플릿 전체 흐름)
 
 ## Recent Changes
 
@@ -147,17 +172,18 @@ None.
 
 ## Next Action
 
-Phase 17-04 (모바일 Section 구조 리디자인) 실행:
+Phase 17 완료 — 다음 마일스톤 준비:
 
 ```bash
-# 17-04-PLAN.md 생성 후 실행
-/gsd-plan-phase 17-04
+# 1. E2E 테스트 실행 (section-based 템플릿 전체 흐름 검증)
+npx playwright test
 
-# 또는 직접 구현
+# 2. Phase 18 논의 (V2 기능: 배경음악, 이모지/GIF, 동영상 초대장 등)
+# 3. /gsd-plan-phase 또는 /gsd-new-milestone
 ```
 
-**Phase 17 현재:**
+**Phase 17 완료:**
 - 17-01 ✅ 템플릿 비주얼 디자인 시스템
 - 17-02 ✅ 템플릿 미리보기 모달
 - 17-03 ✅ 에디터 애니메이션/글꼴/색상 추가
-- 17-04 ⏳ 모바일 Section 구조 리디자인 (다음 작업)
+- 17-04 ✅ 모바일 Section 구조 재설계

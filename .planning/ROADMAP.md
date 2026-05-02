@@ -461,13 +461,25 @@ Plans:
 - TEMPLATE-STRUCTURE-02: Section 편집 UI — 각 section별 내용 입력, 순서 조정 (drag & drop)
 - TEMPLATE-STRUCTURE-03: 실시간 미리보기 — 편집 중인内容즉시手机上预览 확인
 
-**Status**: In Progress (17-01 ✅, 17-02 ✅, 17-03 ✅, 17-04 ⏳)
+**Status**: Complete ✅
 
 **Plan direction:**
 - Phase 17-01: 템플릿 Visual Design 시스템 구축 (TEMPLATE-DESIGN-01) ✅ Complete
 - Phase 17-02: 템플릿 미리보기 기능 구현 (TEMPLATE-DESIGN-02) ✅ Complete
 - Phase 17-03: 에디터 애니메이션/글꼴/색상 추가 (TEMPLATE-EDIT-01, 02, 03) ✅ Complete
-- Phase 17-04: 모바일 Section 구조 재설계 (TEMPLATE-STRUCTURE-01, 02, 03) ⬜ Pending
+- Phase 17-04: 모바일 Section 구조 재설계 (TEMPLATE-STRUCTURE-01, 02, 03) ✅ Complete
+
+**Implementation Summary (2026-05-02):**
+- sample.ts: ROMANTIC_TEMPLATE, CLASSIC_TEMPLATE, MODERN_TEMPLATE (각 5 sections: image → announcement → invitation → map → accounts)
+- sample.ts: SECTION_BASED_TEMPLATES 배열 + findSectionBasedTemplate() 헬퍼
+- api/templates/route.ts: SECTION_BASED_TEMPLATES import 및 병합 (dev/인증 모드)
+- api/templates/[id]/route.ts: findSectionBasedTemplate() 폴백 조회 + PATCH sections 지원
+- TemplateEditor.tsx: Section 기반 편집기로 전면 재작성 (Up/Down reorder, split-view preview)
+- edit/page.tsx: Section 기반 편집기 통합 (하위 호환 flat field fallback)
+- FieldEditor.tsx: SectionEditor 컴포넌트 추가
+- use-template-editor.ts: Section 헬퍼 함수 전체 구현
+- TemplateEngine.tsx: animationDelay + animationDuration 적용
+- Build: 성공 ✅, Lint: 새 에러 없음 ✅
 
 **Reference:**
 - https://mcard.fromtoday.co.kr/w/Hr9Hp3/ — 모바일 wedding 초대장 예시 (긴 스크롤, section 기반)
