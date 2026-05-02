@@ -220,7 +220,7 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className="text-[var(--text-secondary)] dark:text-[var(--text-secondary)] mb-4 italic">
-                  "{testimonial.quote}"
+                  &ldquo;{testimonial.quote}&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--accent))] flex items-center justify-center text-white font-semibold text-sm">

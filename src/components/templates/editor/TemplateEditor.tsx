@@ -1,30 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Template, TemplateField, SectionStyle } from '@/types/template';
+import React, { useState, useMemo } from 'react';
+import { Template, TemplateField, Section, SectionStyle, SectionType } from '@/types/template';
 import { useTemplateEditor } from '@/hooks/use-template-editor';
 import { FieldEditor } from './FieldEditor';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-  useSortable,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, CheckCircle, AlertCircle, Settings, Plus, ChevronDown, ChevronUp, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
 import { StyleEditor } from './StyleEditor';
+import { GripVertical, CheckCircle, AlertCircle, Settings, ChevronUp, ChevronDown, X, Eye, EyeOff } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface TemplateEditorProps {
   template: Template;
@@ -34,178 +17,505 @@ interface TemplateEditorProps {
   onUpdate?: (data: { templateId: string; values: Record<string, string> }) => void;
 }
 
-/**
- * SortableField component - individual sortable field section with drag handle
- */
-interface SortableFieldProps {
-  field: TemplateField;
-  value: string;
-  onChange: (value: string) => void;
-  error?: string;
-  isActive: boolean;
-  onSettingsClick?: (fieldName: string) => void;
-}
+const SECTION_ICONS: Record<SectionType, string> = {
+  image: '🖼️',
+  announcement: '📢',
+  invitation: '💌',
+  map: '📍',
+  accounts: '📞',
+};
 
-function SortableField({ field, value, onChange, error, isActive, onSettingsClick }: SortableFieldProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: field.name });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 1000 : 'auto',
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={cn(
-        'relative rounded-lg border-2 transition-all duration-200',
-        isDragging ? 'border-blue-500 shadow-lg ring-2 ring-blue-200' : 'border-transparent',
-        isActive ? 'bg-blue-50/80 dark:bg-blue-950/30' : 'bg-white/60 dark:bg-black/20',
-        error ? 'border-red-300 dark:border-red-700' : 'hover:border-gray-200 dark:hover:border-gray-700'
-      )}
-    >
-      {/* Drag handle */}
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute left-0 top-0 bottom-0 w-8 flex items-center justify-center cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 rounded-l-lg"
-      >
-        <GripVertical className="w-4 h-4" />
-      </div>
-
-      {/* Field content */}
-      <div className="ml-8 p-3">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <span className={cn('font-medium text-sm', error ? 'text-red-700 dark:text-red-400' : 'text-gray-700 dark:text-gray-300')}>
-              {field.label}
-            </span>
-            {field.required && <span className="text-red-500 text-sm">*</span>}
-            {error && <AlertCircle className="w-3 h-3 text-red-500" />}
-          </div>
-          {onSettingsClick && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSettingsClick(field.name);
-              }}
-              className="p-1 rounded hover:bg-gray-200/50 dark:hover:bg-gray-700/50 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            >
-              <Settings className="w-3 h-3" />
-            </button>
-          )}
-        </div>
-        <FieldEditor
-          field={field}
-          value={value}
-          onChange={onChange}
-          error={error}
-        />
-      </div>
-    </div>
-  );
-}
+const SECTION_COLORS: Record<SectionType, string> = {
+  image: 'bg-blue-50 border-blue-200 text-blue-700',
+  announcement: 'bg-purple-50 border-purple-200 text-purple-700',
+  invitation: 'bg-pink-50 border-pink-200 text-pink-700',
+  map: 'bg-green-50 border-green-200 text-green-700',
+  accounts: 'bg-orange-50 border-orange-200 text-orange-700',
+};
 
 /**
- * TemplateEditor - Completely redesigned template editor
+ * SectionEditor - Section 기반 편집기
  * 
- * - Left: Sortable field list with drag handles
- * - Right: Field details (shown on click)
- * - Bottom: Validate button + Save button
- * - Simplified toolbar with expandable options
+ * - Left: Section list with Up/Down reorder buttons
+ * - Right: Section field editor + Style editor
+ * - Bottom: Validate + Save buttons
+ * - Real-time preview toggle
  */
 export function TemplateEditor({ template, initialData, onUpdate }: TemplateEditorProps) {
-  const { data, errors, updateField, validateAll, getErrors, getData } = useTemplateEditor({
+  const hasSections = !!template.sections && template.sections.length > 0;
+
+  // Flat field data (for backward compatibility)
+  const {
+    data: flatData,
+    errors: flatErrors,
+    updateField: updateFlatField,
+    validateAll: validateFlat,
+    getErrors: getFlatErrors,
+    getData: getFlatData,
+  } = useTemplateEditor({
     template,
-    initialData: initialData ? {
-      templateId: template.id,
-      values: template.fields.reduce((acc, field) => {
-        const value = initialData.getValue(field.name);
-        acc[field.name] = value ?? '';
-        return acc;
-      }, {} as Record<string, string>),
-      validate: () => true,
-      getValue: initialData.getValue,
-      setValue: () => {},
-      getFieldNames: () => template.fields.map(f => f.name),
-    } : undefined,
+    initialData: initialData
+      ? {
+          templateId: template.id,
+          values: template.fields.reduce((acc, field) => {
+            const value = initialData.getValue(field.name);
+            acc[field.name] = value ?? '';
+            return acc;
+          }, {} as Record<string, string>),
+          validate: () => true,
+          getValue: initialData.getValue,
+          setValue: () => {},
+          getFieldNames: () => template.fields.map((f) => f.name),
+        }
+      : undefined,
   });
 
-  // DnD sensors
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+  // Section-based state
+  const [sections, setSections] = useState<Section[]>(template.sections?.map((s) => ({ ...s })) || []);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(
+    hasSections ? sections[0]?.id || null : null
+  );
+  const [sectionStyles, setSectionStyles] = useState<Record<string, SectionStyle>>({});
+  const [sectionFieldValues, setSectionFieldValues] = useState<Record<string, Record<string, string>>>({});
+  const [sectionFieldErrors, setSectionFieldErrors] = useState<Record<string, Record<string, string>>>({});
+  const [showPreview, setShowPreview] = useState(false);
+  const [activeField, setActiveField] = useState<string | null>(null);
+
+  // Initialize section field values from initialData
+  React.useEffect(() => {
+    if (!hasSections || !initialData) return;
+    const values: Record<string, Record<string, string>> = {};
+    sections.forEach((section) => {
+      values[section.id] = {};
+      section.fields.forEach((field) => {
+        const value = initialData.getValue(field.name);
+        values[section.id][field.name] = value ?? '';
+      });
+    });
+    setSectionFieldValues(values);
+  }, [hasSections, sections.length, initialData]);
+
+  const selectedSection = useMemo(
+    () => sections.find((s) => s.id === selectedSectionId),
+    [sections, selectedSectionId]
   );
 
-  // UI state
-  const [activeField, setActiveField] = useState<string | null>(null);
-  const [showSecondaryToolbar, setShowSecondaryToolbar] = useState(false);
-  const [sectionSettingsOpen, setSectionSettingsOpen] = useState(false);
+  // Section reorder (Up/Down)
+  const moveSection = (index: number, direction: 'up' | 'down') => {
+    const newSections = [...sections];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newSections.length) return;
+    [newSections[index], newSections[targetIndex]] = [newSections[targetIndex], newSections[index]];
+    setSections(newSections);
+    // Update order numbers
+    newSections.forEach((s, i) => (s.order = i + 1));
+  };
 
-  // Section-specific styles (per sectionId)
-  const [sectionStyles, setSectionStyles] = useState<Record<string, SectionStyle>>({});
+  // Update section field value
+  const updateSectionField = (sectionId: string, fieldName: string, value: string) => {
+    setSectionFieldValues((prev) => ({
+      ...prev,
+      [sectionId]: {
+        ...(prev[sectionId] || {}),
+        [fieldName]: value,
+      },
+    }));
+    // Clear error on change
+    setSectionFieldErrors((prev) => {
+      const errors = { ...(prev[sectionId] || {}) };
+      delete errors[fieldName];
+      return { ...prev, [sectionId]: errors };
+    });
+  };
 
-  // Drag handlers
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+  // Validate all sections
+  const validateAllSections = (): boolean => {
+    let valid = true;
+    const allErrors: Record<string, Record<string, string>> = {};
 
-    if (over && active.id !== over.id) {
-      // In a real implementation, we would reorder the fields array here
-      console.log('Reordering:', active.id, '->', over.id);
-    }
+    sections.forEach((section) => {
+      const errors: Record<string, string> = {};
+      section.fields.forEach((field) => {
+        const value = sectionFieldValues[section.id]?.[field.name] ?? '';
+        if (field.required && !value.trim()) {
+          errors[field.name] = `${field.label}은(는) 필수입니다.`;
+          valid = false;
+        }
+      });
+      allErrors[section.id] = errors;
+    });
+
+    setSectionFieldErrors(allErrors);
+    return valid;
+  };
+
+  // Get combined errors for flat field validation fallback
+  const getSectionErrors = (): Record<string, string> => {
+    const errors: Record<string, string> = {};
+    sections.forEach((section) => {
+      const fieldErrors = sectionFieldErrors[section.id] || {};
+      section.fields.forEach((field) => {
+        if (fieldErrors[field.name]) {
+          errors[field.name] = fieldErrors[field.name];
+        }
+      });
+    });
+    return errors;
+  };
+
+  // Collect all data for save
+  const getAllData = (): Record<string, string> => {
+    const allValues: Record<string, string> = {};
+    sections.forEach((section) => {
+      const fieldValues = sectionFieldValues[section.id] || {};
+      section.fields.forEach((field) => {
+        allValues[field.name] = fieldValues[field.name] ?? '';
+      });
+    });
+    return allValues;
   };
 
   const handleValidate = () => {
-    const isValid = validateAll();
-    if (!isValid) {
-      const errors = getErrors();
-      Object.keys(errors).forEach((fieldName) => {
-        alert(`${template.fields.find(f => f.name === fieldName)?.label}: ${errors[fieldName]}`);
-      });
+    if (hasSections) {
+      const isValid = validateAllSections();
+      if (!isValid) {
+        const errors = getSectionErrors();
+        const firstErrorSection = sections.find((s) => {
+          const fieldErrors = sectionFieldErrors[s.id] || {};
+          return Object.keys(fieldErrors).length > 0;
+        });
+        if (firstErrorSection) {
+          setSelectedSectionId(firstErrorSection.id);
+        }
+      }
+      return isValid;
     }
-    return isValid;
+    return validateFlat();
   };
 
   const handleSave = () => {
-    if (handleValidate()) {
-      const currentData = getData();
-      if (onUpdate) {
-        onUpdate({
-          templateId: currentData.templateId,
-          values: { ...currentData.values },
-        });
-      }
+    const isValid = hasSections ? validateAllSections() : validateFlat();
+    if (!isValid) return;
+
+    const currentData = hasSections
+      ? { templateId: template.id, values: getAllData() }
+      : getFlatData();
+
+    if (onUpdate) {
+      onUpdate({
+        templateId: currentData.templateId,
+        values: { ...currentData.values },
+      });
     }
   };
+
+  const updateSectionStyle = (sectionId: string, style: SectionStyle) => {
+    setSectionStyles((prev) => ({ ...prev, [sectionId]: style }));
+    // Also update section's style
+    setSections((prev) =>
+      prev.map((s) => (s.id === sectionId ? { ...s, style: { ...s.style, ...style } } : s))
+    );
+  };
+
+  // === Section-based UI ===
+  if (hasSections) {
+    return (
+      <div className="template-editor space-y-4">
+        {/* Header */}
+        <div className="template-editor-header flex items-center justify-between">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {template.name} 편집
+          </h2>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowPreview(!showPreview)}
+              className="border-gray-300 text-gray-700 dark:text-gray-300"
+            >
+              {showPreview ? <EyeOff className="w-4 h-4 mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
+              {showPreview ? '편집' : '미리보기'}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleValidate}
+              className="border-yellow-500/50 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-950/30"
+            >
+              <CheckCircle className="w-4 h-4 mr-1" />
+              확인
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSave}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-blue-500/25"
+            >
+              저장
+            </Button>
+          </div>
+        </div>
+
+        {/* Main editor area */}
+        <div className="template-editor-body grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left: Section list */}
+          <div className="section-list space-y-3">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">섹션 목록</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Up/Down 버튼으로 순서 변경
+            </p>
+
+            <div className="space-y-2">
+              {sections.map((section, index) => {
+                const isSelected = selectedSectionId === section.id;
+                const hasErrors = Object.keys(sectionFieldErrors[section.id] || {}).length > 0;
+                const colorClass = SECTION_COLORS[section.type] || 'bg-gray-50 border-gray-200';
+
+                return (
+                  <div
+                    key={section.id}
+                    onClick={() => setSelectedSectionId(section.id)}
+                    className={cn(
+                      'relative rounded-lg border-2 transition-all duration-200 cursor-pointer',
+                      isSelected
+                        ? 'border-blue-500 shadow-md bg-blue-50/50 dark:bg-blue-950/20'
+                        : cn('border-transparent hover:border-gray-200 dark:hover:border-gray-700', colorClass),
+                      hasErrors && !isSelected && 'border-red-300 dark:border-red-700'
+                    )}
+                  >
+                    {/* Section header */}
+                    <div className="flex items-center justify-between px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{SECTION_ICONS[section.type]}</span>
+                        <div>
+                          <span className="font-medium text-sm">{section.label}</span>
+                          <span className="ml-2 text-xs text-gray-400">
+                            ({section.fields.length} fields)
+                          </span>
+                        </div>
+                        {hasErrors && <AlertCircle className="w-3 h-3 text-red-500" />}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            moveSection(index, 'up');
+                          }}
+                          disabled={index === 0}
+                        >
+                          <ChevronUp className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            moveSection(index, 'down');
+                          }}
+                          disabled={index === sections.length - 1}
+                        >
+                          <ChevronDown className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right: Section editor */}
+          <div className="section-editors">
+            {selectedSection ? (
+              <div className="space-y-4">
+                {/* Section title */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <span className="text-lg">{SECTION_ICONS[selectedSection.type]}</span>
+                    {selectedSection.label}
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedSectionId(null)}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+
+                {/* Section fields */}
+                <div className="space-y-3">
+                  {selectedSection.fields.map((field) => {
+                    const value = sectionFieldValues[selectedSection.id]?.[field.name] ?? '';
+                    const error = sectionFieldErrors[selectedSection.id]?.[field.name];
+
+                    return (
+                      <div
+                        key={field.name}
+                        className={cn(
+                          'rounded-lg border transition-all duration-200',
+                          error
+                            ? 'border-red-300 dark:border-red-700 bg-red-50/50 dark:bg-red-950/20'
+                            : 'border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-black/20'
+                        )}
+                      >
+                        <div className="ml-8 p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <GripVertical className="w-4 h-4 text-gray-400" />
+                              <span
+                                className={cn(
+                                  'font-medium text-sm',
+                                  error
+                                    ? 'text-red-700 dark:text-red-400'
+                                    : 'text-gray-700 dark:text-gray-300'
+                                )}
+                              >
+                                {field.label}
+                              </span>
+                              {field.required && <span className="text-red-500 text-sm">*</span>}
+                              {error && <AlertCircle className="w-3 h-3 text-red-500" />}
+                            </div>
+                          </div>
+                          <FieldEditor
+                            field={field}
+                            value={value}
+                            onChange={(newValue) =>
+                              updateSectionField(selectedSection.id, field.name, newValue)
+                            }
+                            error={error}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Section style editor */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                  <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3 flex items-center gap-1">
+                    <Settings className="w-3 h-3" />
+                    섹션 스타일
+                  </h4>
+                  <StyleEditor
+                    sectionId={selectedSection.id}
+                    sectionLabel={selectedSection.label}
+                    style={sectionStyles[selectedSection.id] || selectedSection.style || {}}
+                    onChange={(s) => updateSectionStyle(selectedSection.id, s)}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-64 text-gray-400 border-2 border-dashed rounded-lg">
+                왼쪽에서 섹션을 선택하여 편집
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Real-time preview panel */}
+        {showPreview && (
+          <div className="preview-panel border rounded-lg p-4 bg-gray-50 dark:bg-gray-900">
+            <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-3">
+              실시간 미리보기
+            </h3>
+            <div className="max-w-sm mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+              {sections
+                .sort((a, b) => a.order - b.order)
+                .map((section) => {
+                  const style = sectionStyles[section.id] || section.style || {};
+                  const sectionValues = sectionFieldValues[section.id] || {};
+
+                  return (
+                    <div
+                      key={section.id}
+                      className="p-4 border-b last:border-b-0"
+                      style={{
+                        backgroundColor: style.backgroundColor || '#ffffff',
+                        color: style.textColor || '#2d2d2d',
+                      }}
+                    >
+                      <div className="text-xs text-gray-400 mb-1">
+                        {SECTION_ICONS[section.type]} {section.label}
+                      </div>
+                      {section.type === 'image' && (
+                        <div className="text-center py-4">
+                          {sectionValues.heroTitle && (
+                            <p
+                              className="font-bold"
+                              style={{
+                                fontFamily: style.fontFamily,
+                                fontSize:
+                                  style.fontSize === 'xl'
+                                    ? '1.5rem'
+                                    : style.fontSize === 'lg'
+                                      ? '1.25rem'
+                                      : '1rem',
+                                color: style.accentColor,
+                              }}
+                            >
+                              {sectionValues.heroTitle}
+                            </p>
+                          )}
+                          {!sectionValues.heroTitle && <p className="text-gray-300">이미지 영역</p>}
+                        </div>
+                      )}
+                      {section.type === 'announcement' && (
+                        <div className="space-y-1">
+                          {sectionValues.groomName && sectionValues.brideName && (
+                            <p className="font-bold text-center">
+                              {sectionValues.groomName} & {sectionValues.brideName}
+                            </p>
+                          )}
+                          {sectionValues.date && (
+                            <p className="text-center text-sm text-gray-600">{sectionValues.date}</p>
+                          )}
+                          {sectionValues.location && (
+                            <p className="text-center text-sm text-gray-600">{sectionValues.location}</p>
+                          )}
+                        </div>
+                      )}
+                      {section.type === 'invitation' && sectionValues.message && (
+                        <p className="text-sm whitespace-pre-line text-center">{sectionValues.message}</p>
+                      )}
+                      {section.type === 'map' && sectionValues.venueName && (
+                        <div className="text-center">
+                          <p className="font-medium">{sectionValues.venueName}</p>
+                          {sectionValues.address && (
+                            <p className="text-xs text-gray-500">{sectionValues.address}</p>
+                          )}
+                        </div>
+                      )}
+                      {section.type === 'accounts' && (
+                        <div className="text-center text-sm space-y-1">
+                          {sectionValues.groomPhone && <p>신랑: {sectionValues.groomPhone}</p>}
+                          {sectionValues.bridePhone && <p>신부: {sectionValues.bridePhone}</p>}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // === Fallback: Flat field-based UI (backward compatibility) ===
 
   const fieldIds = template.fields.map((f) => f.name);
 
   return (
     <div className="template-editor space-y-4">
-      {/* Header with simplified toolbar */}
+      {/* Header */}
       <div className="template-editor-header flex items-center justify-between">
         <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           {template.name} 편집
         </h2>
-
-        {/* Simplified toolbar with expandable options */}
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -223,72 +533,50 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
           >
             저장
           </Button>
-
-          {/* Expandable secondary options */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowSecondaryToolbar(!showSecondaryToolbar)}
-            className="ml-2"
-          >
-            {showSecondaryToolbar ? (
-              <ChevronUp className="w-4 h-4" />
-            ) : (
-              <Plus className="w-4 h-4" />
-            )}
-          </Button>
         </div>
       </div>
 
-      {/* Expandable secondary toolbar */}
-      {showSecondaryToolbar && (
-        <div className="flex gap-2 p-2 bg-gray-50/80 dark:bg-gray-800/50 rounded-lg animate-in slide-in-from-top-2">
-          <Button variant="outline" size="sm">
-            이미지 업로드
-          </Button>
-          <Button variant="outline" size="sm">
-            배경 설정
-          </Button>
-          <Button variant="outline" size="sm">
-            폰트 설정
-          </Button>
-        </div>
-      )}
-
-      {/* Main editor area with drag-and-drop */}
+      {/* Main editor area */}
       <div className="template-editor-body grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left: Sortable field list */}
+        {/* Left: Field list */}
         <div className="field-list space-y-3">
           <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">필드 목록</h3>
-          <p className="text-xs text-gray-500 mb-4">
-            드래그하여 순서 변경
-          </p>
+          <div className="space-y-2">
+            {template.fields.map((field) => {
+              const error = flatErrors[field.name];
+              const isActive = activeField === field.name;
 
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext items={fieldIds} strategy={verticalListSortingStrategy}>
-              <div className="space-y-2">
-                {template.fields.map((field) => (
-                  <SortableField
-                    key={field.name}
-                    field={field}
-                    value={data[field.name] || ''}
-                    onChange={(value) => updateField(field.name, value)}
-                    error={errors[field.name]}
-                    isActive={activeField === field.name}
-                    onSettingsClick={() => {
-                  // Open section settings dialog
-                  setActiveField(field.name);
-                  setSectionSettingsOpen(true);
-                }}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
+              return (
+                <div
+                  key={field.name}
+                  onClick={() => setActiveField(field.name)}
+                  className={cn(
+                    'relative rounded-lg border-2 transition-all duration-200 cursor-pointer',
+                    isActive
+                      ? 'border-blue-500 shadow-md bg-blue-50/50 dark:bg-blue-950/20'
+                      : cn('border-transparent hover:border-gray-200 dark:hover:border-gray-700', error ? 'border-red-300' : ''),
+                    error && !isActive && 'border-red-300 dark:border-red-700'
+                  )}
+                >
+                  <div className="flex items-center justify-between px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <GripVertical className="w-4 h-4 text-gray-400" />
+                      <span
+                        className={cn(
+                          'font-medium text-sm',
+                          error ? 'text-red-700 dark:text-red-400' : 'text-gray-700 dark:text-gray-300'
+                        )}
+                      >
+                        {field.label}
+                      </span>
+                      {field.required && <span className="text-red-500 text-sm">*</span>}
+                      {error && <AlertCircle className="w-3 h-3 text-red-500" />}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Right: Field editor */}
@@ -300,21 +588,21 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
             <div className="p-4 bg-white/60 dark:bg-black/20 rounded-lg border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-3">
                 <span className="font-medium">
-                  {template.fields.find(f => f.name === activeField)?.label}
+                  {template.fields.find((f) => f.name === activeField)?.label}
                 </span>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setActiveField(null)}
                 >
-                  <AlertCircle className="w-4 h-4" />
+                  <X className="w-4 h-4" />
                 </Button>
               </div>
               <FieldEditor
-                field={template.fields.find(f => f.name === activeField)!}
-                value={data[activeField] || ''}
-                onChange={(value) => updateField(activeField, value)}
-                error={errors[activeField]}
+                field={template.fields.find((f) => f.name === activeField)!}
+                value={flatData[activeField] || ''}
+                onChange={(value) => updateFlatField(activeField, value)}
+                error={flatErrors[activeField]}
               />
             </div>
           ) : (
@@ -323,28 +611,6 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
             </div>
           )}
         </div>
-
-        {/* Section Settings Dialog */}
-        <Dialog open={sectionSettingsOpen} onOpenChange={setSectionSettingsOpen}>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>
-                {template.fields.find(f => f.name === activeField)?.label} 설정
-              </DialogTitle>
-            </DialogHeader>
-            <div className="max-h-[60vh] overflow-y-auto">
-              <StyleEditor
-                sectionId={activeField || ''}
-                sectionLabel={template.fields.find(f => f.name === activeField)?.label || ''}
-                style={sectionStyles[activeField || ''] || {}}
-                onChange={(s) => setSectionStyles((prev) => ({
-                  ...prev,
-                  [activeField || '']: s,
-                }))}
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );

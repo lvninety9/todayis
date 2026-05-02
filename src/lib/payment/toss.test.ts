@@ -17,16 +17,16 @@ describe('TossPaymentsClient', () => {
     vi.clearAllMocks();
     // Set env before module loads
     process.env.TOSS_PAYMENTS_SECRET_KEY = 'test-secret-key';
-    const module = await import('@/lib/payment/toss');
-    TossPaymentsClient = module.TossPaymentsClient;
+    const mod = await import('@/lib/payment/toss');
+    TossPaymentsClient = mod.TossPaymentsClient;
   });
 
   describe('constructor', () => {
     it('throws error when no secret key provided', async () => {
       vi.resetModules();
       delete process.env.TOSS_PAYMENTS_SECRET_KEY;
-      const module = await import('@/lib/payment/toss');
-      const Client = module.TossPaymentsClient;
+      const mod = await import('@/lib/payment/toss');
+      const Client = mod.TossPaymentsClient;
       expect(() => new Client()).toThrow('TOSS_PAYMENTS_SECRET_KEY');
     });
 
@@ -64,8 +64,8 @@ describe('getTossClient', () => {
   beforeEach(async () => {
     vi.resetModules();
     process.env.TOSS_PAYMENTS_SECRET_KEY = 'test-secret-key';
-    const module = await import('@/lib/payment/toss');
-    getTossClient = module.getTossClient;
+    const mod = await import('@/lib/payment/toss');
+    getTossClient = mod.getTossClient;
   });
 
   it('creates new instance on first call', () => {

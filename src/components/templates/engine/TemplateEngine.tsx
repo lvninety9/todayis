@@ -69,6 +69,8 @@ function SectionRenderer({ section, data }: {
     ...(style?.backgroundColor && { backgroundColor: style.backgroundColor }),
     ...(style?.textColor && { color: style.textColor }),
     ...(style?.fontFamily && { fontFamily: style.fontFamily }),
+    ...(style?.animationDelay != null && { animationDelay: `${style.animationDelay}ms` }),
+    ...(style?.animationDuration != null && { animationDuration: `${style.animationDuration}ms` }),
   };
 
   switch (type) {

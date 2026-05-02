@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { TemplateInsert, TemplateField } from '@/lib/supabase/database.types';
 import { Template } from '@/types/template';
+import { SECTION_BASED_TEMPLATES } from '@/data/templates/sample';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -44,6 +45,8 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     
     // Dev 환경 인증 우회
+    const DEV_USER_ID = '55e70e8a-c073-4293-b935-f40ae7e7f149';
+    
     if (url.searchParams.get('dev') === 'true') {
       const supabase = createClient(supabaseUrl, supabaseServiceKey);
       const { data: templates, error, count } = await supabase
@@ -55,7 +58,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
       
-      const formattedTemplates: Template[] = (templates || []).map((t: any) => ({
+      const formattedDbTemplates: Template[] = (templates || []).map((t: any) => ({
         id: t.id,
         userId: t.user_id,
         name: t.name,
@@ -70,8 +73,16 @@ export async function GET(request: NextRequest) {
         createdAt: t.created_at,
         updatedAt: t.updated_at,
       }));
+
+      const formattedSampleTemplates: Template[] = SECTION_BASED_TEMPLATES.map((t) => ({
+        ...t,
+        userId: DEV_USER_ID,
+        isPurchased: false,
+      }));
+
+      const allTemplates = [...formattedDbTemplates, ...formattedSampleTemplates];
       
-      return NextResponse.json({ templates: formattedTemplates, count: count || 0 });
+      return NextResponse.json({ templates: allTemplates, count: allTemplates.length });
     }
     
     const user = await getUserFromRequest(request);
@@ -107,7 +118,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Database snake_case to JS camelCase conversion
-    const formattedTemplates: Template[] = (templates || []).map((t: any) => ({
+    const formattedDbTemplates: Template[] = (templates || []).map((t: any) => ({
       id: t.id,
       userId: t.user_id,
       name: t.name,
@@ -122,11 +133,19 @@ export async function GET(request: NextRequest) {
       createdAt: t.created_at,
       updatedAt: t.updated_at,
     }));
+
+    const formattedSampleTemplates: Template[] = SECTION_BASED_TEMPLATES.map((t) => ({
+      ...t,
+      userId: user.id,
+      isPurchased: false,
+    }));
+
+    const allTemplates = [...formattedDbTemplates, ...formattedSampleTemplates];
     
     return NextResponse.json(
       {
-        templates: formattedTemplates,
-        count: count || 0,
+        templates: allTemplates,
+        count: allTemplates.length,
       },
       {
         status: 200,
@@ -178,7 +197,7 @@ export async function POST(request: NextRequest) {
     }
     
     // 필수 필드 검증
-    const { name, category, thumbnail, fields, layout } = body;
+    const { name, category, thumbnail, fields, layout, sections } = body;
     
     if (!name || typeof name !== 'string' || name.trim().length < 1 || name.length > 255) {
       return NextResponse.json(
@@ -214,6 +233,14 @@ export async function POST(request: NextRequest) {
       }
     }
     
+    // sections 검증 (선택사항, fields와 함께 사용 가능)
+    if (sections && !Array.isArray(sections)) {
+      return NextResponse.json(
+        { error: 'sections 는 배열이어야 합니다.' },
+        { status: 400 }
+      );
+    }
+    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     const templateData: TemplateInsert = {
@@ -223,7 +250,7 @@ export async function POST(request: NextRequest) {
       thumbnail: thumbnail || '',
       fields: (fields || []) as TemplateField[],
       layout: layout || '',
-      config: { theme: 'default', styles: {} },
+      config: { theme: 'default', styles: {}, sections: sections || [] },
       is_published: false,
       download_count: 0,
     };

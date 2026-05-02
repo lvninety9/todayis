@@ -1,13 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import { TemplateField } from '@/types/template';
+import { TemplateField, Section } from '@/types/template';
+import { ChevronDown, ChevronRight, LayoutList } from 'lucide-react';
 
 interface FieldEditorProps {
   field: TemplateField;
   value: string;
   onChange: (value: string) => void;
   error?: string;
+  section?: Section | null;
+}
+
+interface SectionEditorProps {
+  section: Section;
+  values: Record<string, string>;
+  errors: Record<string, string>;
+  onUpdateField: (fieldName: string, value: string) => void;
 }
 
 /**
@@ -382,6 +391,193 @@ case 'location':
       
       {error && (
         <p className="text-sm text-red-500 mt-1">{error}</p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * SectionEditor 컴포넌트
+ * 
+ * 섹션별 필드 그룹 편집기
+ * - 섹션 헤더 (이름, 타입, collapse/expand)
+ * - 섹션 스타일 편집 (배경색, 텍스트색, accent, 폰트, 애니메이션)
+ * - 필드별 편집기 (FieldEditor)
+ */
+export function SectionEditor({ section, values, errors, onUpdateField }: SectionEditorProps) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  const sectionStyle = section.style || {};
+
+  const styleOptions = {
+    backgroundColor: ['#FFFFFF', '#FFF5F5', '#FFF9F5', '#F5F0EB', '#FAFAF8', '#1A1A2E', '#16213E', '#0F3460', '#F8F0EC'],
+    textColor: ['#2D2D2D', '#4A3728', '#3D3D3D', '#E0E0E0', '#FFFFFF'],
+    accentColor: ['#C48B7F', '#D4A59A', '#8B7355', '#A89578', '#E94560'],
+    fontFamily: ['Noto Serif KR', 'Pretendard', 'Playfair Display', 'Inter', 'San Francisco'],
+    animation: ['none', 'fade-in', 'slide-up', 'slide-down', 'slide-left', 'slide-right', 'zoom-in', 'zoom-out'],
+    fontSize: ['xs', 'sm', 'base', 'lg', 'xl'],
+  };
+
+  return (
+    <div className="mb-6 border rounded-lg overflow-hidden bg-white dark:bg-gray-900 shadow-sm">
+      {/* Section Header */}
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      >
+        <div className="flex items-center gap-2">
+          <LayoutList className="w-4 h-4 text-gray-500" />
+          <span className="font-semibold text-gray-800 dark:text-gray-200">{section.label}</span>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+            {section.type}
+          </span>
+        </div>
+        {collapsed ? (
+          <ChevronRight className="w-4 h-4 text-gray-500" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-gray-500" />
+        )}
+      </button>
+
+      {/* Section Style Editor */}
+      <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">배경색</label>
+            <div className="flex items-center gap-1">
+              <input
+                type="color"
+                value={sectionStyle.backgroundColor || '#FFFFFF'}
+                onChange={(e) => {
+                  const newStyle = { ...sectionStyle, backgroundColor: e.target.value };
+                  onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+                }}
+                className="w-8 h-8 rounded border cursor-pointer"
+              />
+              <input
+                type="text"
+                value={sectionStyle.backgroundColor || '#FFFFFF'}
+                onChange={(e) => {
+                  const newStyle = { ...sectionStyle, backgroundColor: e.target.value };
+                  onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+                }}
+                className="flex-1 px-2 py-1 text-xs border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">텍스트색</label>
+            <div className="flex items-center gap-1">
+              <input
+                type="color"
+                value={sectionStyle.textColor || '#2D2D2D'}
+                onChange={(e) => {
+                  const newStyle = { ...sectionStyle, textColor: e.target.value };
+                  onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+                }}
+                className="w-8 h-8 rounded border cursor-pointer"
+              />
+              <input
+                type="text"
+                value={sectionStyle.textColor || '#2D2D2D'}
+                onChange={(e) => {
+                  const newStyle = { ...sectionStyle, textColor: e.target.value };
+                  onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+                }}
+                className="flex-1 px-2 py-1 text-xs border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">accent</label>
+            <div className="flex items-center gap-1">
+              <input
+                type="color"
+                value={sectionStyle.accentColor || '#C48B7F'}
+                onChange={(e) => {
+                  const newStyle = { ...sectionStyle, accentColor: e.target.value };
+                  onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+                }}
+                className="w-8 h-8 rounded border cursor-pointer"
+              />
+              <input
+                type="text"
+                value={sectionStyle.accentColor || '#C48B7F'}
+                onChange={(e) => {
+                  const newStyle = { ...sectionStyle, accentColor: e.target.value };
+                  onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+                }}
+                className="flex-1 px-2 py-1 text-xs border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">폰트</label>
+            <select
+              value={sectionStyle.fontFamily || 'Noto Serif KR'}
+              onChange={(e) => {
+                const newStyle = { ...sectionStyle, fontFamily: e.target.value };
+                onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+              }}
+              className="w-full px-2 py-1 text-xs border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+            >
+              {styleOptions.fontFamily.map((font) => (
+                <option key={font} value={font}>{font}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">크기</label>
+            <select
+              value={sectionStyle.fontSize || 'base'}
+              onChange={(e) => {
+                const newStyle = { ...sectionStyle, fontSize: e.target.value };
+                onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+              }}
+              className="w-full px-2 py-1 text-xs border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+            >
+              {styleOptions.fontSize.map((size) => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">애니메이션</label>
+            <select
+              value={sectionStyle.animation || 'none'}
+              onChange={(e) => {
+                const newStyle = { ...sectionStyle, animation: e.target.value };
+                onUpdateField(`__section_style_${section.id}`, JSON.stringify(newStyle));
+              }}
+              className="w-full px-2 py-1 text-xs border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+            >
+              {styleOptions.animation.map((anim) => (
+                <option key={anim} value={anim}>{anim}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Section Fields */}
+      {!collapsed && section.fields && section.fields.length > 0 && (
+        <div className="px-4 py-3 space-y-4">
+          {section.fields.map((field) => (
+            <FieldEditor
+              key={field.name}
+              field={field}
+              value={values[field.name] ?? field.defaultValue ?? ''}
+              onChange={(newValue) => onUpdateField(field.name, newValue)}
+              error={errors[field.name]}
+              section={section}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

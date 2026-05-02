@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { TemplateUpdate, TemplateField } from '@/lib/supabase/database.types';
 import { Template } from '@/types/template';
+import { findSectionBasedTemplate } from '@/data/templates/sample';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -61,7 +62,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
-    // 템플릿 조회
+    // 템플릿 조회 (DB 우선)
     const { data: template, error } = await supabase
       .from('templates')
       .select('*')
@@ -69,13 +70,23 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .single();
     
     if (error || !template) {
+      // DB에 없으면 sample.ts에서 조회 (section 기반 템플릿)
+      const sampleTemplate = findSectionBasedTemplate(id);
+      if (sampleTemplate) {
+        const formattedTemplate: Template = {
+          ...sampleTemplate,
+          userId: user.id,
+          isPurchased: false,
+        };
+        return NextResponse.json(formattedTemplate, { status: 200 });
+      }
       return NextResponse.json(
         { error: '템플릿을 찾을 수 없습니다.' },
         { status: 404 }
       );
     }
     
-    // 소유자 검증
+    // 소유자 검증 (sample 템플릿은 제외)
     if (template.user_id !== user.id) {
       return NextResponse.json(
         { error: '이 템플릿에 접근할 권한이 없습니다.' },
@@ -188,6 +199,13 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     if ('layout' in body) updateData.layout = body.layout;
     if ('is_published' in body) updateData.is_published = body.is_published;
     if ('download_count' in body) updateData.download_count = body.download_count;
+    if ('sections' in body) {
+      const existingConfig = (existingTemplate as any).config || {};
+      updateData.config = {
+        ...existingConfig,
+        sections: body.sections,
+      };
+    }
     
     // updated_at 자동 업데이트
     updateData.updated_at = new Date().toISOString();

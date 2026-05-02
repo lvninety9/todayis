@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
-import { Template, TemplateData, TemplateField, FieldType } from '@/types/template';
+import { Template, TemplateData, TemplateField, FieldType, Section } from '@/types/template';
 import { validateTemplateData, getDefaultValue } from '@/lib/template-utils';
 
 /**
@@ -132,6 +132,95 @@ export function useTemplateEditor({ template, initialData }: UseTemplateEditorOp
     };
   }, [data, template]);
 
+  // Section 기반 필드: sections에서 모든 field를 flat하게 추출
+  const sectionFields = useMemo<TemplateField[]>(() => {
+    if (!template.sections || template.sections.length === 0) return [];
+    const allFields: TemplateField[] = [];
+    for (const section of template.sections) {
+      if (section.fields) {
+        for (const field of section.fields) {
+          allFields.push(field);
+        }
+      }
+    }
+    return allFields;
+  }, [template.sections]);
+
+  // 필드가 속한 섹션 찾기
+  const findSectionForField = useCallback((fieldName: string): Section | null => {
+    if (!template.sections || template.sections.length === 0) return null;
+    for (const section of template.sections) {
+      if (section.fields?.some((f) => f.name === fieldName)) {
+        return section;
+      }
+    }
+    return null;
+  }, [template.sections]);
+
+  // 섹션별 필드 그룹화
+  const groupedFields = useMemo(() => {
+    if (!template.sections || template.sections.length === 0) return null;
+    const groups: Record<string, { section: Section; fields: TemplateField[] }> = {};
+    for (const section of template.sections) {
+      groups[section.id] = { section, fields: section.fields || [] };
+    }
+    return groups;
+  }, [template.sections]);
+
+  // Section 기반 유효성 검사
+  const validateSections = useCallback((): boolean => {
+    const allFields = template.sections && template.sections.length > 0
+      ? sectionFields
+      : template.fields;
+    
+    const newErrors: Record<string, string> = {};
+
+    for (const field of allFields) {
+      const value = data[field.name] || '';
+
+      if (field.required && value.trim() === '') {
+        newErrors[field.name] = `${field.label}은(는) 필수입니다`;
+      } else if (field.type === 'date' && value.trim() !== '') {
+        const date = new Date(value);
+        if (isNaN(date.getTime())) {
+          newErrors[field.name] = '유효한 날짜를 입력해주세요';
+        }
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [template.sections, template.fields, sectionFields, data]);
+
+  // Section 기반 데이터 가져오기
+  const getSectionData = useCallback((): TemplateData => {
+    const allFields = template.sections && template.sections.length > 0
+      ? sectionFields
+      : template.fields;
+    const values = { ...data };
+    
+    return {
+      templateId: template.id,
+      values,
+      
+      validate() {
+        return validateTemplateData(this, allFields);
+      },
+      
+      getValue(fieldName: string) {
+        return values[fieldName] ?? null;
+      },
+      
+      setValue(fieldName: string, value: string) {
+        values[fieldName] = value;
+      },
+      
+      getFieldNames() {
+        return allFields.map((f) => f.name);
+      },
+    };
+  }, [template.sections, template.fields, sectionFields, data]);
+
   return {
     data,
     errors,
@@ -139,6 +228,11 @@ export function useTemplateEditor({ template, initialData }: UseTemplateEditorOp
     validateAll,
     getErrors,
     getData,
+    sectionFields,
+    findSectionForField,
+    groupedFields,
+    validateSections,
+    getSectionData,
   };
 }
 

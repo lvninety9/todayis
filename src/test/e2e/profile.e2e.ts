@@ -29,7 +29,7 @@ async function mockApiRoutes(page: any) {
     if (route.request().method() === 'GET') {
       await route.fulfill({
         status: 200, contentType: 'application/json',
-        body: JSON.stringify({ template: { id: 'tpl-1', name: '기본 템플릿' } }),
+        body: JSON.stringify({ id: 'tpl-1', name: '기본 템플릿', category: 'wedding', isPublished: false }),
       });
     }
   });
@@ -112,7 +112,7 @@ test.describe('대시보드에서 설정 페이지 접근', () => {
 
   test('대시보드에서 설정 페이지로 이동', async ({ page }) => {
     await page.goto('/dashboard');
-    await page.locator('a[href="/settings"]').click();
+    await page.locator('a[href="/settings"]').first().click();
     await expect(page).toHaveURL(/settings/);
   });
 });

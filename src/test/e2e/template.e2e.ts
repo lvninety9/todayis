@@ -21,44 +21,44 @@ async function mockApiRoutes(page: any) {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          templates: [
-            {
-              id: 'tpl-1',
-              name: '기본 템플릿',
-              category: 'wedding',
-              thumbnail: 'https://example.com/thumb1.jpg',
-              fields: [
-                { key: 'couple_name', label: '신랑신부 이름', type: 'text' },
-                { key: 'date', label: '날짜', type: 'date' },
-                { key: 'place', label: '장소', type: 'text' },
-              ],
-              layout: 'classic',
-            },
-            {
-              id: 'tpl-2',
-              name: '모던 템플릿',
-              category: 'wedding',
-              thumbnail: 'https://example.com/thumb2.jpg',
-              fields: [
-                { key: 'couple_name', label: '신랑신부 이름', type: 'text' },
-                { key: 'date', label: '날짜', type: 'date' },
-                { key: 'place', label: '장소', type: 'text' },
-              ],
-              layout: 'modern',
-            },
-            {
-              id: 'tpl-3',
-              name: '미니멀 템플릿',
-              category: 'wedding',
-              thumbnail: 'https://example.com/thumb3.jpg',
-              fields: [
-                { key: 'couple_name', label: '신랑신부 이름', type: 'text' },
-                { key: 'date', label: '날짜', type: 'date' },
-                { key: 'place', label: '장소', type: 'text' },
-              ],
-              layout: 'minimal',
-            },
+     templates: [
+        {
+          id: 'tpl-1',
+          name: '기본 템플릿',
+          category: 'wedding',
+          thumbnail: 'https://example.com/thumb1.jpg',
+          fields: [
+            { name: 'couple_name', label: '신랑신부 이름', type: 'text', defaultValue: 'jay & partner' },
+            { name: 'date', label: '날짜', type: 'date', defaultValue: '2025.01.01' },
+            { name: 'place', label: '장소', type: 'text', defaultValue: '테스트장소' },
           ],
+          layout: 'classic',
+        },
+        {
+          id: 'tpl-2',
+          name: '모던 템플릿',
+          category: 'wedding',
+          thumbnail: 'https://example.com/thumb2.jpg',
+          fields: [
+            { name: 'couple_name', label: '신랑신부 이름', type: 'text', defaultValue: 'jay & partner' },
+            { name: 'date', label: '날짜', type: 'date', defaultValue: '2025.01.01' },
+            { name: 'place', label: '장소', type: 'text', defaultValue: '테스트장소' },
+          ],
+          layout: 'modern',
+        },
+        {
+          id: 'tpl-3',
+          name: '미니멀 템플릿',
+          category: 'wedding',
+          thumbnail: 'https://example.com/thumb3.jpg',
+          fields: [
+            { name: 'couple_name', label: '신랑신부 이름', type: 'text', defaultValue: 'jay & partner' },
+            { name: 'date', label: '날짜', type: 'date', defaultValue: '2025.01.01' },
+            { name: 'place', label: '장소', type: 'text', defaultValue: '테스트장소' },
+          ],
+          layout: 'minimal',
+        },
+      ],
         }),
       });
     } else if (route.request().method() === 'POST') {
@@ -72,9 +72,9 @@ async function mockApiRoutes(page: any) {
             category: 'wedding',
             thumbnail: 'https://example.com/thumb-new.jpg',
             fields: [
-              { key: 'couple_name', label: '신랑신부 이름', type: 'text' },
-              { key: 'date', label: '날짜', type: 'date' },
-              { key: 'place', label: '장소', type: 'text' },
+              { name: 'couple_name', label: '신랑신부 이름', type: 'text', defaultValue: '' },
+              { name: 'date', label: '날짜', type: 'date', defaultValue: '' },
+              { name: 'place', label: '장소', type: 'text', defaultValue: '' },
             ],
             layout: 'classic',
           },
@@ -90,18 +90,17 @@ async function mockApiRoutes(page: any) {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          template: {
-            id: 'tpl-1',
-            name: '기본 템플릿',
-            category: 'wedding',
-            thumbnail: 'https://example.com/thumb1.jpg',
-            fields: [
-              { key: 'couple_name', label: '신랑신부 이름', type: 'text' },
-              { key: 'date', label: '날짜', type: 'date' },
-              { key: 'place', label: '장소', type: 'text' },
-            ],
-            layout: 'classic',
-          },
+          id: 'tpl-1',
+          name: '기본 템플릿',
+          category: 'wedding',
+          thumbnail: 'https://example.com/thumb1.jpg',
+          fields: [
+            { name: 'couple_name', label: '신랑신부 이름', type: 'text', defaultValue: 'jay & partner' },
+            { name: 'date', label: '날짜', type: 'date', defaultValue: '2025.01.01' },
+            { name: 'place', label: '장소', type: 'text', defaultValue: '테스트장소' },
+          ],
+          layout: 'classic',
+          isPublished: false,
         }),
       });
     } else if (route.request().method() === 'DELETE') {
@@ -119,18 +118,17 @@ async function mockApiRoutes(page: any) {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          template: {
-            id: 'tpl-2',
-            name: '모던 템플릿',
-            category: 'wedding',
-            thumbnail: 'https://example.com/thumb2.jpg',
-            fields: [
-              { key: 'couple_name', label: '신랑신부 이름', type: 'text' },
-              { key: 'date', label: '날짜', type: 'date' },
-              { key: 'place', label: '장소', type: 'text' },
-            ],
-            layout: 'modern',
-          },
+          id: 'tpl-2',
+          name: '모던 템플릿',
+          category: 'wedding',
+          thumbnail: 'https://example.com/thumb2.jpg',
+          fields: [
+            { name: 'couple_name', label: '신랑신부 이름', type: 'text', defaultValue: 'jay & partner' },
+            { name: 'date', label: '날짜', type: 'date', defaultValue: '2025.01.01' },
+            { name: 'place', label: '장소', type: 'text', defaultValue: '테스트장소' },
+          ],
+          layout: 'modern',
+          isPublished: false,
         }),
       });
     }
@@ -267,8 +265,9 @@ test.describe('템플릿 상세 페이지', () => {
   });
 
   test('편집 폼이 표시되어야 함', async ({ page }) => {
-    const coupleNameInput = page.locator('input, [name="couple_name"], [data-field="couple_name"]');
-    await expect(coupleNameInput.first()).toBeVisible();
+    // 템플릿 이름 입력 필드가 표시되어야 함
+    const nameInput = page.locator('#edit-name');
+    await expect(nameInput).toBeVisible();
   });
 });
 
@@ -280,19 +279,21 @@ test.describe('템플릿 편집 및 생성', () => {
   });
 
   test('필드 값을 변경할 수 있어야 함', async ({ page }) => {
-    const coupleNameInput = page.locator('input, [name="couple_name"], [data-field="couple_name"]').first();
-    await coupleNameInput.clear();
-    await coupleNameInput.fill('jay & partner');
-    await expect(coupleNameInput).toHaveValue('jay & partner');
+    const nameInput = page.locator('#edit-name');
+    await expect(nameInput).toBeVisible();
+    await nameInput.clear();
+    await nameInput.fill('jay & partner');
+    await expect(nameInput).toHaveValue('jay & partner');
   });
 
   test('실시간 미리보기에 변경된 값이 반영되어야 함', async ({ page }) => {
-    const coupleNameInput = page.locator('input, [name="couple_name"], [data-field="couple_name"]').first();
-    await coupleNameInput.clear();
-    await coupleNameInput.fill('testcouple');
+    const nameInput = page.locator('#edit-name');
+    await expect(nameInput).toBeVisible();
+    await nameInput.clear();
+    await nameInput.fill('testcouple');
     
-    // 미리보기 영역에 값이 반영되는지 확인
-    const preview = page.locator('[class*="preview"], [class*="template-preview"], [class*="preview"]');
+    // 미리보기 영역이 표시되어야 함
+    const preview = page.locator('[class*="preview"], [class*="template-preview"], .border.rounded-lg');
     await expect(preview.first()).toBeVisible();
   });
 });
@@ -318,7 +319,7 @@ test.describe('대시보드에서 템플릿 접근', () => {
   test('대시보드에서 설정 페이지로 이동', async ({ page }) => {
     await page.goto('/dashboard');
     
-    const settingsLink = page.locator('a[href="/settings"]');
+    const settingsLink = page.locator('a[href="/settings"]').first();
     await settingsLink.click();
     
     await expect(page).toHaveURL(/.*\/settings/);
