@@ -117,6 +117,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       isPurchased: false,
       createdAt: template.created_at,
       updatedAt: template.updated_at,
+      sections: (template.config as any)?.sections || [],
     };
     
     return NextResponse.json(
@@ -239,6 +240,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       isPurchased: false,
       createdAt: updatedTemplate.created_at,
       updatedAt: updatedTemplate.updated_at,
+      sections: (updatedTemplate.config as any)?.sections || [],
     };
     
     return NextResponse.json(

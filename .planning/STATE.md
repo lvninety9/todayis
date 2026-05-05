@@ -2,7 +2,7 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 17 INCOMPLETE — Bug 1 fixed, 3 bugs remaining (Bug 2: state sync, Bug 3: create flow, Bug 4: preview data)
+status: Phase 17 INCOMPLETE — Bug 1~4 fixed, 1 bug remaining (Bug 5: API sections 미반환)
 last_updated: "2026-05-05T00:00:00.000Z"
 progress:
   total_phases: 18
@@ -97,6 +97,52 @@ Plan: 4/4 complete (17-01 ✅, 17-02 ✅, 17-03 ✅, 17-04 ✅)
 - **수정:** `edit/page.tsx` line 132 의존성 배열에 `sectionFieldValues` 추가
 - **결과:** `setPreviewKey`가 section field 값 변경 시 트리거되어 preview 재렌더링 ✅
 - **커밋:** `6834d8d`
+
+### ✅ Bug 2 수정 완료 (2026-05-05)
+
+- **문제:** TemplateEditor 내부 state 변경이 page state(`sectionFieldValues`)로 전달 안됨
+- **수정:** 
+  - `TemplateEditor.tsx`: `onFieldChange` prop 추가, `updateSectionField`에서 콜백 호출
+  - `edit/page.tsx`: `handleFieldChange` → `setSectionFieldValues` 연결
+- **결과:** 필드 변경 → page state → previewKey 트리거 → 실시간 미리보기 ✅
+- **커밋:** `a4cb3a5`
+
+### ✅ Bug 3 수정 완료 (2026-05-05)
+
+- **문제:** InvitationEditor가 `template.fields`만 읽음 → section 기반 템플릿 필드 미표시
+- **수정:** `effectiveFields` 추가 — `fields`가 비어있으면 `sections`에서 flat 추출
+- **결과:** section 기반 템플릿 생성 시 필드 표시 + 저장 ✅
+- **커밋:** `b24fbc2`
+
+### ✅ Bug 4 수정 완료 (2026-05-05)
+
+- **문제:** TemplatePreview가 `template.fields`만 참조 → sections 기반 템플릿 빈 값 렌더링
+- **수정:** `effectiveFields` 추가 (Bug 3 동일 로직), `editorData`/`handleUpdate` 모두 `effectiveFields` 사용
+- **결과:** sections 기반 템플릿 preview + editorData 정상 작동 ✅
+- **커밋:** `92394ec`
+
+### 🚨 Bug 5: API 응답에서 `sections` 누락 — edit 페이지 빈 화면
+
+**상태:** ❌ OPEN (2026-05-05 발견)
+**우선순위:** P0
+
+**문제:**
+- `GET /api/templates/[id]` (route.ts:106-120): `formattedTemplate`에 `sections` 필드 누락
+- `GET /api/templates` (route.ts:61-75, 121-135): 동일하게 `sections` 미반환
+- `PATCH /api/templates/[id]` (route.ts:228-242): 동일하게 `sections` 미반환
+- DB의 `config` 컬럼에 sections가 JSON으로 저장됨 → API가 추출 안 함
+- edit 페이지에서 `hasSections = false` → "필드가 없습니다." 메시지만 표시
+
+**수정 필요 파일:**
+| 파일 | 라인 | 수정 내용 |
+|------|------|-----------|
+| `src/app/api/templates/[id]/route.ts` | 106-120, 228-242 | `formattedTemplate`에 `sections` 추가 |
+| `src/app/api/templates/route.ts` | 61-75, 121-135 | `formattedDbTemplates`에 `sections` 추가 |
+
+**검증 방법:**
+1. `GET /api/templates/{id}?dev=true` 응답에 `sections` 배열 포함 확인
+2. `GET /api/templates?dev=true` 응답에 sample 템플릿의 `sections` 포함 확인
+3. edit 페이지에서 섹션 편집 UI 표시 확인
 
 ### ✅ Phase 17 추가 작업: 템플릿 현실화 (완료 — 2026-05-05)
 
@@ -217,110 +263,31 @@ None.
 - accounts 섹션 order: 5 → 6으로 변경
 - 빌드: tsc ✅, npm run build ✅
 
-## 🚨 Phase 17 치명적 버그 (BUG-FIX-NOTES — 2026-05-05)
+## ✅ Bug 1~4 모두 FIXED (2026-05-05)
 
-**상태:** 4개 plan 모두 완료되었으나, 런타임 버그로 인해 기능이 작동하지 않음.
-**우선순위:** P0 (즉시 수정 필요)
-
-### Bug 1: 편집기에서 필드 변경 시 미리보기가 실시간으로 업데이트되지 않음
-
-**상태:** ✅ **FIXED** (2026-05-05, 커밋 `6834d8d`)
-
-**수정 내용:** `edit/page.tsx` line 132 의존성 배열에 `sectionFieldValues` 추가
-
-### Bug 2: TemplateEditor 내부 상태와 페이지 상태 동기화 안됨
-
-**위치:** `src/app/(main)/templates/[id]/edit/page.tsx` + `src/components/templates/editor/TemplateEditor.tsx`
-
-**문제:**
-- 페이지 컴포넌트가 `sectionFieldValues`를 관리
-- TemplateEditor가 내부 state를 가짐
-- `initialData`로 값 전달은 되지만, 에디터 변경사항이 페이지 state로 안 돌아옴
-- `onUpdate`는 저장 시에만 호출 (실시간 동기화 아님)
-
-**해결책:**
-- `TemplateEditor`에 `onFieldChange` callback prop 추가
-- 또는 상태 리프팅: `sectionFieldValues`를 TemplateEditor로 올리고 `setSectionFieldValues`를 page에서 prop으로 전달
-- 또는 `use-template-editor.ts`의 `useTemplateEditor` hook에서 section field 변경 시 즉시 page state 반영
-
-### Bug 3: 템플릿 생성 흐름(Create Flow)이 섹션 기반 템플릿을 지원하지 않음
-
-**위치:** `src/components/publish/InvitationEditor.tsx` line 54-61
-
-**문제:**
-```typescript
-// InvitationEditor는 template.fields만 읽음
-const fields = template.fields || [];
-```
-섹션 기반 템플릿은 `fields`가 빈 배열이고 `sections` 배열을 가짐 → 필드가 전혀 표시되지 않음.
-
-**해결책:**
-- `InvitationEditor`가 섹션 기반 템플릿 감지 후 `sections`에서 필드 추출
-- 또는 `use-template-editor.ts`의 `sectionFields()` 헬퍼로 섹션 기반 필드를 flat 배열로 변환
-- 또는 섹션 기반 템플릿용 별도 에디터 컴포넌트 생성
-
-### Bug 4: TemplatePreview가 섹션 기반 데이터를 제대로 렌더링하지 않음
-
-**위치:** `src/components/templates/preview/TemplatePreview.tsx` line 33-42
-
-**문제:**
-```typescript
-// editorData가 template.fields만 참조
-const editorData = {
-  getValue: (name: string) => {
-    const field = template.fields?.find(f => f.name === name);
-    return field?.defaultValue || ''; // sections 기반 템플릿은 fields가 빈 배열
-  },
-};
-```
-섹션 기반 템플릿의 `sections[].fields`를 읽지 않음 → 모든 값이 빈 문자열.
-
-**해결책:**
-- `editorData` 생성 시 `template.sections`도 확인
-- 또는 `use-template-editor.ts`의 `getSectionData()` 헬퍼 사용
-- sections 기반 템플릿용 previewData 추출 로직 추가
-
-### 수정해야 할 파일 목록
-
-| 파일 | 버그 | 수정 내용 |
-|------|------|-----------|
-| `src/app/(main)/templates/[id]/edit/page.tsx` | ~~Bug 1~~, 2 | previewKey 의존성 추가 (✅ 완료), 상태 동기화 |
-| `src/components/templates/editor/TemplateEditor.tsx` | Bug 2 | onFieldChange callback 또는 상태 리프팅 |
-| `src/components/publish/InvitationEditor.tsx` | Bug 3 | sections 기반 필드 추출 로직 추가 |
-| `src/components/templates/preview/TemplatePreview.tsx` | Bug 4 | sections 기반 editorData 추출 |
-
-### 테스트 방법
-
-1. 템플릿 목록에서 템플릿 클릭 → "편집하기"
-2. 필드 수정 → 미리보기가 실시간으로 업데이트되는지 확인
-3. 새 템플릿 생성 → 편집기에서 필드 수정 가능 여부 확인
-4. TemplatePreview 모달에서 섹션 기반 데이터가 제대로 표시되는지 확인
+| Bug | 파일 | 커밋 | 내용 |
+|-----|------|------|------|
+| 1 | `edit/page.tsx` | `6834d8d` | previewKey에 sectionFieldValues 의존성 추가 |
+| 2 | `TemplateEditor.tsx` + `edit/page.tsx` | `a4cb3a5` | onFieldChange 콜백으로 상태 동기화 |
+| 3 | `InvitationEditor.tsx` | `b24fbc2` | effectiveFields로 sections 기반 필드 추출 |
+| 4 | `TemplatePreview.tsx` | `92394ec` | effectiveFields로 sections 기반 데이터 렌더링 |
 
 ---
 
 ## Next Action
 
 ```bash
-# 1. Bug 2 수정 (TemplateEditor 상태 동기화)
-# 2. Bug 3 수정 (InvitationEditor create flow)
-# 3. Bug 4 수정 (TemplatePreview sections 기반 데이터)
-# 4. E2E 테스트 실행 (section-based 템플릿 전체 흐름 검증)
+# 1. Bug 5 수정 (API 응답에 sections 필드 추가)
+# 2. E2E 테스트 실행 (section-based 템플릿 전체 흐름 검증)
 npx playwright test
 
-# 5. /gsd-new-milestone — 다음 마일스톤 시작 (V2 기능 논의)
+# 3. /gsd-new-milestone — 다음 마일스톤 시작 (V2 기능 논의)
 ```
 
-## ⚠️ Phase 17 — BUG FIX REQUIRED (아직 완료 아님)
+## ✅ Phase 17 — BUG 1~4 FIXED, BUG 5 ONLY REMAINING
 
 **Phase 17 plan:** 4/4 완료 ✅
-**Phase 17 runtime:** ❌ 치명적 버그 3개 남음 (Bug 1 ✅ 고정)
-
-**수정 필요:**
-- Bug 2: TemplateEditor 상태 동기화 (edit/page.tsx + TemplateEditor.tsx)
-- Bug 3: InvitationEditor create flow (sections 기반 미지원)
-- Bug 4: TemplatePreview sections 기반 데이터 미반영
-
-**아래로 아래 내용은 Phase 17 plan 완료 기록임 — 실제 기능은 버그 수정 전까지 미완성**
+**Phase 17 runtime:** ✅ Bug 1~4 FIXED, ❌ Bug 5 OPEN (API sections 누락)
 
 **Phase 17 plan 완료:**
 - 17-01 ✅ 템플릿 비주얼 디자인 시스템
@@ -330,11 +297,6 @@ npx playwright test
 - ✅ 템플릿 현실화: 실제 이미지, 긴 메시지, 계좌 정보, 갤러리 섹션 추가
 
 **다음 단계:**
-- Bug 1~4 수정 (NEW-SESSION-PROMPT-BUG-FIX.md 참조)
+- Bug 5 수정 (API 응답에 sections 필드 추가)
 - E2E 테스트 실행 권장 (section-based 템플릿 전체 흐름 검증)
-- `/gsd-new-milestone` — V2 기능 논의 (배경음악, 이모지/GIF, 동영상 초대장 등)
-
-**GSD 최적화 완료:**
-- Wave 1~5 ✅ workflow slim화 (31% 감소)
-- Wave 6~8 ✅ 보조 문서 정리 (27% 감소)
-- 컨텍스트 여유: 45% (65,000토큰 중 ~35,500토큰 사용)
+- `/gsd-new-milestone` — V2 기능 논의 (배경음악, 이모지/GIF, 동영상 초대장 등) 생성

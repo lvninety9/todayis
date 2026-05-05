@@ -72,6 +72,7 @@ export async function GET(request: NextRequest) {
         isPurchased: false,
         createdAt: t.created_at,
         updatedAt: t.updated_at,
+        sections: t.config?.sections || [],
       }));
 
       const formattedSampleTemplates: Template[] = SECTION_BASED_TEMPLATES.map((t) => ({
@@ -132,6 +133,7 @@ export async function GET(request: NextRequest) {
       isPurchased: false,
       createdAt: t.created_at,
       updatedAt: t.updated_at,
+      sections: t.config?.sections || [],
     }));
 
     const formattedSampleTemplates: Template[] = SECTION_BASED_TEMPLATES.map((t) => ({
@@ -284,6 +286,7 @@ export async function POST(request: NextRequest) {
       isPurchased: false,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
+      sections: data.config?.sections || [],
     };
     
     return NextResponse.json(
