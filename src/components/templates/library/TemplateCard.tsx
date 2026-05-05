@@ -38,12 +38,10 @@ export function TemplateCard({
   const router = useRouter();
 
   const handleCardClick = (e: React.MouseEvent) => {
-    if (mode === 'view') {
-      if (onPreview) {
-        onPreview(template);
-      } else {
-        router.push(`/templates/${template.id}`);
-      }
+    if (onPreview) {
+      onPreview(template);
+    } else if (mode === 'view') {
+      router.push(`/templates/${template.id}`);
     }
   };
 

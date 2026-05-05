@@ -48,6 +48,20 @@ export default function TemplateEditPage() {
   // Section field values (for section-based templates)
   const [sectionFieldValues, setSectionFieldValues] = useState<Record<string, Record<string, string>>>({});
 
+  // Sync field changes from TemplateEditor to page state
+  const handleFieldChange = useCallback(
+    (sectionId: string, fieldName: string, value: string) => {
+      setSectionFieldValues((prev) => ({
+        ...prev,
+        [sectionId]: {
+          ...(prev[sectionId] || {}),
+          [fieldName]: value,
+        },
+      }));
+    },
+    []
+  );
+
   const categories = ['wedding', 'birthday', 'custom'];
   const layoutOptions = [
     { value: 'simple', label: '심플 (단일 컬럼)' },
@@ -382,6 +396,7 @@ export default function TemplateEditPage() {
               }}
               initialData={previewData ?? undefined}
               onUpdate={handleSectionSave}
+              onFieldChange={handleFieldChange}
             />
 
             {/* Preview */}

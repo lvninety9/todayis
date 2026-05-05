@@ -15,6 +15,7 @@ interface TemplateEditorProps {
     getValue: (fieldName: string) => string | null;
   };
   onUpdate?: (data: { templateId: string; values: Record<string, string> }) => void;
+  onFieldChange?: (sectionId: string, fieldName: string, value: string) => void;
 }
 
 const SECTION_ICONS: Record<SectionType, string> = {
@@ -23,6 +24,8 @@ const SECTION_ICONS: Record<SectionType, string> = {
   invitation: '💌',
   map: '📍',
   accounts: '📞',
+  gallery: '📸',
+  story: '📖',
 };
 
 const SECTION_COLORS: Record<SectionType, string> = {
@@ -31,6 +34,8 @@ const SECTION_COLORS: Record<SectionType, string> = {
   invitation: 'bg-pink-50 border-pink-200 text-pink-700',
   map: 'bg-green-50 border-green-200 text-green-700',
   accounts: 'bg-orange-50 border-orange-200 text-orange-700',
+  gallery: 'bg-teal-50 border-teal-200 text-teal-700',
+  story: 'bg-rose-50 border-rose-200 text-rose-700',
 };
 
 /**
@@ -41,7 +46,7 @@ const SECTION_COLORS: Record<SectionType, string> = {
  * - Bottom: Validate + Save buttons
  * - Real-time preview toggle
  */
-export function TemplateEditor({ template, initialData, onUpdate }: TemplateEditorProps) {
+export function TemplateEditor({ template, initialData, onUpdate, onFieldChange }: TemplateEditorProps) {
   const hasSections = !!template.sections && template.sections.length > 0;
 
   // Flat field data (for backward compatibility)
@@ -126,6 +131,8 @@ export function TemplateEditor({ template, initialData, onUpdate }: TemplateEdit
       delete errors[fieldName];
       return { ...prev, [sectionId]: errors };
     });
+    // Notify parent of field change for real-time sync
+    onFieldChange?.(sectionId, fieldName, value);
   };
 
   // Validate all sections

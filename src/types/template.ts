@@ -16,7 +16,7 @@ export type FieldType = 'text' | 'date' | 'image' | 'location' | 'account' | 'au
 /**
  * 섹션 타입 (section 기반 렌더링)
  */
-export type SectionType = 'image' | 'announcement' | 'invitation' | 'map' | 'accounts';
+export type SectionType = 'image' | 'announcement' | 'invitation' | 'map' | 'accounts' | 'gallery' | 'story';
 
 /**
  * 폰트 크기 옵션

@@ -29,9 +29,12 @@ interface SectionEditorProps {
  * - location: Input + Map button skeleton
  */
 export function FieldEditor({ field, value, onChange, error }: FieldEditorProps) {
-  const [calendarDate, setCalendarDate] = useState<string | undefined>(
-    value ? new Date(value).toISOString().split('T')[0] : undefined
-  );
+  const [calendarDate, setCalendarDate] = useState<string | undefined>(() => {
+    if (!value || value.trim() === '') return undefined;
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return undefined;
+    return d.toISOString().split('T')[0];
+  });
 
   const handleCalendarSelect = (date: Date | undefined) => {
     if (date) {
