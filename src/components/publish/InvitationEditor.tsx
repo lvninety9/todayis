@@ -50,10 +50,25 @@ export function InvitationEditor({
   onCancel,
   saving,
 }: InvitationEditorProps) {
+  const effectiveFields = React.useMemo<TemplateField[]>(() => {
+    if (template.fields && template.fields.length > 0) return template.fields;
+    const fields: TemplateField[] = [];
+    if (template.sections) {
+      for (const section of template.sections) {
+        if (section.fields) {
+          for (const field of section.fields) {
+            fields.push(field);
+          }
+        }
+      }
+    }
+    return fields;
+  }, [template.fields, template.sections]);
+
   const [title, setTitle] = useState('');
   const [data, setData] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
-    for (const field of template.fields) {
+    for (const field of effectiveFields) {
       initial[field.name] =
         initialData?.[field.name] ?? field.defaultValue ?? '';
     }
@@ -81,7 +96,7 @@ export function InvitationEditor({
       newErrors.title = '초대장 제목은 필수입니다.';
     }
 
-    for (const field of template.fields) {
+    for (const field of effectiveFields) {
       const value = data[field.name] ?? '';
       if (field.required && !value.trim()) {
         newErrors[field.name] = `${field.label}은(는) 필수입니다.`;
@@ -96,7 +111,7 @@ export function InvitationEditor({
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [title, data, template.fields]);
+  }, [title, data, effectiveFields]);
 
   const handleSave = useCallback(() => {
     if (!validate()) {
@@ -133,7 +148,7 @@ export function InvitationEditor({
         {/* 필드 값 입력 */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">필드 값</Label>
-          {template.fields.map((field) => (
+          {effectiveFields.map((field) => (
             <div key={field.name} className="space-y-2">
               <Label
                 htmlFor={`field-${field.name}`}
