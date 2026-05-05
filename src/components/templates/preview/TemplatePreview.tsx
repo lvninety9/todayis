@@ -27,10 +27,25 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
   const [isEditing, setIsEditing] = useState(false);
 
   // Editor 에서 사용할 데이터
+  const effectiveFields = useMemo(() => {
+    if (template.fields && template.fields.length > 0) return template.fields;
+    const fields: typeof template.fields = [];
+    if (template.sections) {
+      for (const section of template.sections) {
+        if (section.fields) {
+          for (const field of section.fields) {
+            fields.push(field);
+          }
+        }
+      }
+    }
+    return fields;
+  }, [template.fields, template.sections]);
+
   const editorData = useMemo(() => {
     return {
       templateId: template.id,
-      values: template.fields.reduce((acc, field) => {
+      values: effectiveFields.reduce((acc, field) => {
         const value = data.getValue(field.name);
         acc[field.name] = value ?? '';
         return acc;
@@ -38,9 +53,9 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
       validate: () => true,
       getValue: data.getValue.bind(data),
       setValue: () => {},
-      getFieldNames: () => template.fields.map(f => f.name),
+      getFieldNames: () => effectiveFields.map(f => f.name),
     };
-  }, [template, data]);
+  }, [template, data, effectiveFields]);
 
   // 데이터 업데이트 핸들러
   const handleUpdate = (updatedData: { templateId: string; values: Record<string, string> }) => {
@@ -53,7 +68,7 @@ export function TemplatePreview({ template, data, onUpdate }: TemplatePreviewPro
         setValue: (fieldName: string, value: string) => {
           updatedData.values[fieldName] = value;
         },
-        getFieldNames: () => template.fields.map(f => f.name),
+        getFieldNames: () => effectiveFields.map(f => f.name),
       };
       onUpdate(newData);
     }
