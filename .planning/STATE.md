@@ -2,7 +2,7 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Phase 17 INCOMPLETE — Bug 1~4 fixed, 1 bug remaining (Bug 5: API sections 미반환)
+status: Phase 17 COMPLETE — All 5 bugs fixed (Bug 1~4: runtime, Bug 5: API sections)
 last_updated: "2026-05-05T00:00:00.000Z"
 progress:
   total_phases: 18
@@ -121,28 +121,17 @@ Plan: 4/4 complete (17-01 ✅, 17-02 ✅, 17-03 ✅, 17-04 ✅)
 - **결과:** sections 기반 템플릿 preview + editorData 정상 작동 ✅
 - **커밋:** `92394ec`
 
-### 🚨 Bug 5: API 응답에서 `sections` 누락 — edit 페이지 빈 화면
+### ✅ Bug 5 수정 완료 (2026-05-05)
 
-**상태:** ❌ OPEN (2026-05-05 발견)
-**우선순위:** P0
-
-**문제:**
-- `GET /api/templates/[id]` (route.ts:106-120): `formattedTemplate`에 `sections` 필드 누락
-- `GET /api/templates` (route.ts:61-75, 121-135): 동일하게 `sections` 미반환
-- `PATCH /api/templates/[id]` (route.ts:228-242): 동일하게 `sections` 미반환
-- DB의 `config` 컬럼에 sections가 JSON으로 저장됨 → API가 추출 안 함
-- edit 페이지에서 `hasSections = false` → "필드가 없습니다." 메시지만 표시
-
-**수정 필요 파일:**
-| 파일 | 라인 | 수정 내용 |
-|------|------|-----------|
-| `src/app/api/templates/[id]/route.ts` | 106-120, 228-242 | `formattedTemplate`에 `sections` 추가 |
-| `src/app/api/templates/route.ts` | 61-75, 121-135 | `formattedDbTemplates`에 `sections` 추가 |
-
-**검증 방법:**
-1. `GET /api/templates/{id}?dev=true` 응답에 `sections` 배열 포함 확인
-2. `GET /api/templates?dev=true` 응답에 sample 템플릿의 `sections` 포함 확인
-3. edit 페이지에서 섹션 편집 UI 표시 확인
+- **문제:** API 응답(`GET/POST/PATCH`)에서 `sections` 필드 누락 → edit 페이지가 `hasSections=false`로 판정
+- **수정:** 4개 위치 모두에 `sections: config?.sections || []` 추가
+  - `GET /api/templates/[id]` (route.ts:106-121)
+  - `PATCH /api/templates/[id]` (route.ts:228-244)
+  - `GET /api/templates` dev 모드 (route.ts:61-76)
+  - `GET /api/templates` auth 모드 (route.ts:121-137)
+  - `POST /api/templates` (route.ts:274-290)
+- **결과:** API 응답에 sections 포함 → edit 페이지에서 섹션 편집 UI 표시 ✅
+- **커밋:** `175b8b4`
 
 ### ✅ Phase 17 추가 작업: 템플릿 현실화 (완료 — 2026-05-05)
 
@@ -277,17 +266,16 @@ None.
 ## Next Action
 
 ```bash
-# 1. Bug 5 수정 (API 응답에 sections 필드 추가)
-# 2. E2E 테스트 실행 (section-based 템플릿 전체 흐름 검증)
+# 1. E2E 테스트 실행 (section-based 템플릿 전체 흐름 검증)
 npx playwright test
 
-# 3. /gsd-new-milestone — 다음 마일스톤 시작 (V2 기능 논의)
+# 2. /gsd-new-milestone — 다음 마일스톤 시작 (V2 기능 논의)
 ```
 
-## ✅ Phase 17 — BUG 1~4 FIXED, BUG 5 ONLY REMAINING
+## ✅ Phase 17 — COMPLETE (All 5 bugs fixed)
 
 **Phase 17 plan:** 4/4 완료 ✅
-**Phase 17 runtime:** ✅ Bug 1~4 FIXED, ❌ Bug 5 OPEN (API sections 누락)
+**Phase 17 runtime:** ✅ All bugs FIXED (Bug 1~5)
 
 **Phase 17 plan 완료:**
 - 17-01 ✅ 템플릿 비주얼 디자인 시스템
@@ -297,6 +285,5 @@ npx playwright test
 - ✅ 템플릿 현실화: 실제 이미지, 긴 메시지, 계좌 정보, 갤러리 섹션 추가
 
 **다음 단계:**
-- Bug 5 수정 (API 응답에 sections 필드 추가)
 - E2E 테스트 실행 권장 (section-based 템플릿 전체 흐름 검증)
 - `/gsd-new-milestone` — V2 기능 논의 (배경음악, 이모지/GIF, 동영상 초대장 등) 생성
