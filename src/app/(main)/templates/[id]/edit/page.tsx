@@ -129,7 +129,7 @@ export default function TemplateEditPage() {
       setPreviewKey((k) => k + 1);
     }, 300);
     return () => clearTimeout(timer);
-  }, [name, category, thumbnail, layout]);
+  }, [name, category, thumbnail, layout, sectionFieldValues]);
 
   const previewWidth = previewMode === 'mobile' ? 375 : 1200;
 
