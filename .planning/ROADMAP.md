@@ -572,10 +572,11 @@ Plans:
 - VIDEO-03: Video Field Editor 탭 UI (YouTube / Bilibili / Upload)
 - ANIM-01: StyleEditor 애니메이션 실시간 미리보기 (재생 버튼)
 
-**Status**: In Progress (all waves implemented, awaiting commit + verification)
+**Status**: Complete (build/lint 통과, 2 commits)
+**Implementation**: Bilibili iframe (TemplateEngine + InvitationViewer), video upload (50MB), VideoFieldEditor tabs (YouTube/Bilibili/Upload + preview), StyleEditor animation preview (play/rewind)
 
 Plans:
-- [ ] 24-PLAN.md — Video enhancement + animation preview
+- [x] 24-PLAN.md — Video enhancement + animation preview
 
 ---
 

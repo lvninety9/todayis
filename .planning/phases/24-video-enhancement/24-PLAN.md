@@ -17,7 +17,7 @@
 4. FieldEditor에서 VideoFieldEditor 탭 UI (YouTube/Bilibili/Upload + 미리보기)
 5. StyleEditor에서 애니메이션 선택 시 재생 버튼으로 실시간 미리보기 가능
 
-**Status**: In Progress
+**Status**: Complete (build/lint 통과, 2 commits)
 
 ---
 
@@ -40,8 +40,8 @@
 
 ## Verification
 
-- [ ] Build passes
-- [ ] Lint passes
+- [x] Build passes
+- [x] Lint passes
 - [ ] Manual test: Bilibili URL → iframe embed (TemplateEngine + InvitationViewer)
 - [ ] Manual test: Video file upload → Supabase Storage
 - [ ] Manual test: Video Field Editor tabs → preview works
