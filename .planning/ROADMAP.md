@@ -89,7 +89,7 @@ Implementation:
 - PAYMENT-02: 템플릿 상세 페이지에서 "구매하기" 클릭 시 네이버 판매 페이지로 리다이렉트
 - PAYMENT-03: 구매 완료 후 복귀 처리, 구매 상태 확인
 
-**Status**: Pending
+**Status**: Complete (verify 통과)
 
 ---
 
@@ -267,31 +267,12 @@ Plans:
 - MUSIC-03: StyleEditor 연동 — 음악 선택/미리보기
 - MUSIC-04: InvitationViewer 연동 — 자동 재생 옵션
 
-**Status**: Pending (계획 단계)
-
-**Next Steps**:
-1. /gsd-discuss-phase --auto — 배경 음악 구현 방식 논의
-2. /gsd-plan-phase — 상세 계획 수립
-3. /gsd-execute-phase — 구현
-
----
-
-## Phase 12: 배경 음악 (V2)
-
-**Goal**: 사용자가 배경 음악을 업로드하고 초대장에서 재생
-
-**Requirements**:
-- MUSIC-01: 음악 파일 업로드 API (mp3, wav, ogg)
-- MUSIC-02: 음악 플레이어 컴포넌트
-- MUSIC-03: StyleEditor 연동
-- MUSIC-04: InvitationViewer 연동
-
-**Status**: Pending
+**Status**: Complete (Phase 19에서 audio 필드 통합 완료, Phase 21에서 애니메이션 적용)
 
 **의사결정 사항**:
-- 음악 파일 저장소: Supabase Storage vs AWS S3
-- 음악 재생 방식: HTML5 Audio vs Web Audio API
-- 편집기 미리보기: 실시간 음악 재생 여부
+- 음악 파일 저장소: Supabase Storage (MVP)
+- 음악 재생 방식: HTML5 Audio
+- 편집기 미리보기: 실시간 음악 재생
 
 ---
 
@@ -396,14 +377,16 @@ Plans:
 - FIELD-07: Dress Code
 - FIELD-08: 부모님 성함 (신랑/신부父모)
 
-**Status**: Pending (Planning 전 — Phase 14 완료로 대기 중)
+**Status**: Complete (Phase 15~22 모두 완료)
 
-**Next Steps:**
-1. /gsd-discuss-phase --auto — Phase 15 discuss-phase
-2. /gsd-plan-phase 15 — 상세 계획 수립
-3. /gsd-execute-phase 15 — 구현
+**완료된 하위 페이즈**:
+- Phase 18: Video 필드 템플릿 적용 (VIDEO-01)
+- Phase 19: Audio 필드 통합 (AUDIO-01~02)
+- Phase 20: Dress Code 렌더링 (DRESSCODE-01~02)
+- Phase 21: Template Engine 애니메이션 (TEMPLATE-ENGINE-01)
+- Phase 22: InvitationViewer video 렌더링 (VIDEO-02)
 
-**시작 명령어**: `/gsd 15` 또는 `/gsd-discuss-phase --auto`
+**시작 명령어**: `/gsd 23`
 
 ---
 
@@ -483,6 +466,116 @@ Plans:
 
 **Reference:**
 - https://mcard.fromtoday.co.kr/w/Hr9Hp3/ — 모바일 wedding 초대장 예시 (긴 스크롤, section 기반)
+
+---
+
+## Phase 18: Video 필드 템플릿 적용
+
+**Goal**: 3개 템플릿(ROMANTIC, CLASSIC, MODERN)에 video 필드 추가 (웨딩 영상 링크)
+
+**Depends on**: Phase 17
+
+**Requirements**: VIDEO-01
+
+**Success Criteria** (what must be TRUE):
+  1. ROMANTIC, CLASSIC, MODERN 템플릿 모두 video 필드 (youtube embed URL) 포함
+  2. 템플릿 API 응답에 video 필드 포함 (GET /api/templates)
+  3. 에디터에서 video 필드 값 입력/저장 가능
+
+**Status**: Complete (execute + verify 통과)
+**Implementation**: SectionType에 video 추가, 3개 템플릿에 video 섹션 삽입, TemplateEngine에 VideoSection 컴포넌트, SECTION_ICONS/COLORS 확장
+
+---
+
+## Phase 19: Audio 필드 통합
+
+**Goal**: 3개 템플릿에 audio 필드 추가하고 InvitationViewer에서 musicUrl prop과 연동 (기존 musicUrl 제거, 필드 기반 통합)
+
+**Depends on**: Phase 17
+
+**Requirements**: AUDIO-01, AUDIO-02
+
+**Success Criteria** (what must be TRUE):
+  1. ROMANTIC, CLASSIC, MODERN 템플릿 모두 audio 필드 (배경음악 URL) 포함
+  2. InvitationViewer에서 audio 필드 값을 musicUrl로 전달
+  3. 기존 musicUrl prop 제거 — 템플릿 필드 기반 통합
+  4. InvitationViewer에서 배경음악 재생/일시정지/볼륨 컨트롤 가능
+
+**Status**: Complete (execute + verify 통과)
+**Implementation**: SectionType에 audio 추가, 3개 템플릿에 audio 섹션(order 1.5) 삽입, InvitationViewer에서 audioUrl 연동(musicUrl fallback), 볼륨 슬라이더 추가
+
+---
+
+## Phase 20: Dress Code 렌더링
+
+**Goal**: 3개 템플릿에 dresscode 필드 추가하고 InvitationViewer에서 styled badge 렌더링 (sage-100 배경, rounded-full)
+
+**Depends on**: Phase 17
+
+**Requirements**: DRESSCODE-01, DRESSCODE-02
+
+**Success Criteria** (what must be TRUE):
+  1. ROMANTIC, CLASSIC, MODERN 템플릿 모두 dresscode 필드 포함
+  2. InvitationViewer에서 dresscode 값 sage-100 배경 + rounded-full badge로 렌더링
+  3. dresscode가 비어있으면 badge 표시 안됨
+
+**Status**: Complete (execute + verify 통과)
+**Implementation**: ROMANTIC/CLASSIC/MODERN 3개 템플릿 dresscode field type을 'text' → 'dresscode'로 변경, build/테스트 통과(128개)
+
+---
+
+## Phase 21: Template Engine 애니메이션
+
+**Goal**: TemplateEngine에서 video/audio 섹션에 animation 지원 (fade-in, scale-up)
+
+**Depends on**: Phase 18, Phase 19
+
+**Requirements**: TEMPLATE-ENGINE-01
+
+**Success Criteria** (what must be TRUE):
+  1. TemplateEngine에서 video 섹션에 fade-in animation 적용
+  2. TemplateEngine에서 audio 섹션에 scale-up animation 적용
+  3. animation 설정이 section style에서 읽혀서 적용됨
+
+**Status**: Complete (execute + build/lint 통과)
+**Implementation**: AudioSection 컴포넌트 추가, switch문 audio case 추가, animationClass 연동
+
+---
+
+## Phase 22: InvitationViewer video 렌더링
+
+**Goal**: InvitationViewer에서 video player 컴포넌트 구현 (controls, animation)
+
+**Depends on**: Phase 18
+
+**Requirements**: VIDEO-02
+
+**Success Criteria** (what must be TRUE):
+  1. InvitationViewer에서 video URL이 있으면 YouTube embed player 표시
+  2. video player에 재생/일시정지/전체화면 controls 포함
+  3. video 섹션에 fade-in animation 적용
+
+**Status**: Complete (execute + build/lint 통과)
+**Implementation**: YouTube URL 패턴 감지(5개 패턴), iframe embed 렌더링
+
+---
+
+## Phase 24: Video Section Enhancement & Animation Preview
+
+**Goal**: Video 섹션에 Bilibili iframe 지원, 파일 업로드 지원 추가 + StyleEditor에서 애니메이션 실시간 미리보기 구현
+
+**Depends on**: Phase 17, Phase 18, Phase 19, Phase 21, Phase 22
+
+**Requirements**:
+- VIDEO-01: Bilibili iframe embed 지원 (TemplateEngine + InvitationViewer)
+- VIDEO-02: 동영상 파일 업로드 지원 (GIF, MP4, WebM, MOV, 50MB 제한)
+- VIDEO-03: Video Field Editor 탭 UI (YouTube / Bilibili / Upload)
+- ANIM-01: StyleEditor 애니메이션 실시간 미리보기 (재생 버튼)
+
+**Status**: In Progress (all waves implemented, awaiting commit + verification)
+
+Plans:
+- [ ] 24-PLAN.md — Video enhancement + animation preview
 
 ---
 

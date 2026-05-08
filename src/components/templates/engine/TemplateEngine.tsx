@@ -86,8 +86,12 @@ function SectionRenderer({ section, data }: {
       return <AccountsSection fields={fields} data={data} style={sectionStyle} className={animationClass} />;
     case 'gallery':
       return <GallerySection fields={fields} data={data} style={sectionStyle} className={animationClass} />;
+    case 'video':
+      return <VideoSection fields={fields} data={data} style={sectionStyle} className={animationClass} />;
     case 'story':
       return <StorySection fields={fields} data={data} style={sectionStyle} className={animationClass} />;
+    case 'audio':
+      return <AudioSection fields={fields} data={data} style={sectionStyle} className={animationClass} />;
     default:
       return null;
   }
@@ -545,8 +549,130 @@ function StorySection({ fields, data, style, className }: {
 }
 
 /* ============================================
-   Flat Field Rendering (Backward Compatible)
-   ============================================ */
+    Audio Section Renderer
+    ============================================ */
+
+function AudioSection({ fields, data, style, className }: {
+  fields: TemplateField[];
+  data: TemplateData;
+  style?: React.CSSProperties;
+  className?: string;
+}) {
+  const audioUrl = data.getValue('audioUrl') || '';
+  const audioTitle = data.getValue('audioTitle') || '배경음악';
+
+  if (!audioUrl) return null;
+
+  return (
+    <div className={cn('section-audio py-8 px-4', className)} style={style}>
+      <h3 className="text-center text-lg font-semibold mb-4">{audioTitle}</h3>
+      <div className="max-w-lg mx-auto">
+        <audio
+          src={audioUrl}
+          controls
+          loop
+          className="w-full"
+          preload="metadata"
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ============================================
+    Video Section Renderer
+    ============================================ */
+
+function VideoSection({ fields, data, style, className }: {
+  fields: TemplateField[];
+  data: TemplateData;
+  style?: React.CSSProperties;
+  className?: string;
+}) {
+  const videoUrl = data.getValue('videoUrl') || data.getValue('video') || '';
+  const videoTitle = data.getValue('videoTitle') || '결혼식 영상';
+
+  const isYouTube = (url: string) => {
+    return /youtube\.com|youtu\.be/i.test(url);
+  };
+
+  const isBilibili = (url: string) => {
+    return /bilibili\.com/i.test(url);
+  };
+
+  const getYouTubeEmbedUrl = (url: string) => {
+    const match = url.match(/(?:youtube\.com\/(?:.*\/.*\/|.*\?v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    if (match) {
+      return `https://www.youtube.com/embed/${match[1]}`;
+    }
+    return null;
+  };
+
+  const getBilibiliEmbedUrl = (url: string) => {
+    const bvMatch = url.match(/BV[a-zA-Z0-9]+/);
+    if (bvMatch) {
+      return `https://player.bilibili.com/player.html?bvid=${bvMatch[0]}&high_quality=1`;
+    }
+    return null;
+  };
+
+  const renderVideoPlayer = () => {
+    if (!videoUrl) return null;
+
+    if (isYouTube(videoUrl)) {
+      const embedUrl = getYouTubeEmbedUrl(videoUrl);
+      if (embedUrl) {
+        return (
+          <iframe
+            src={embedUrl}
+            className="w-full aspect-video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title={videoTitle}
+          />
+        );
+      }
+    }
+
+    if (isBilibili(videoUrl)) {
+      const embedUrl = getBilibiliEmbedUrl(videoUrl);
+      if (embedUrl) {
+        return (
+          <iframe
+            src={embedUrl}
+            className="w-full aspect-video"
+            allowFullScreen
+            title={videoTitle}
+          />
+        );
+      }
+    }
+
+    return (
+      <video
+        controls
+        src={videoUrl}
+        className="w-full aspect-video"
+        preload="metadata"
+      />
+    );
+  };
+
+  return (
+    <div className={cn('section-video py-8 px-4', className)} style={style}>
+      <h3 className="text-center text-lg font-semibold mb-4">{videoTitle}</h3>
+      {videoUrl && (
+        <div className="max-w-lg mx-auto rounded-lg overflow-hidden shadow-lg">
+          {renderVideoPlayer()}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================
+    Flat Field Rendering (Backward Compatible)
+    ============================================ */
 
 function FlatFieldRenderer({ template, data }: {
   template: Template;

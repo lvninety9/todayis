@@ -1,9 +1,9 @@
 /**
  * Template Media API
  * 
- * 템플릿 미디어 파일 (배경 음악) 업로드/삭제 API
- * - POST /api/templates/media - 음악 파일 업로드 또는 URL 저장
- * - DELETE /api/templates/media?url=xxx - 음악 파일 삭제
+ * 템플릿 미디어 파일 (배경 음악, 동영상) 업로드/삭제 API
+ * - POST /api/templates/media - 음악/동영상 파일 업로드 또는 URL 저장
+ * - DELETE /api/templates/media?url=xxx - 미디어 파일 삭제
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -37,40 +37,49 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const templateId = formData.get('templateId') as string;
-    const musicUrl = formData.get('musicUrl') as string;
+    const mediaUrl = formData.get('mediaUrl') as string;
+    const mediaType = formData.get('mediaType') as 'audio' | 'video' | null;
     const file = formData.get('file') as File | null;
 
-    // URL이 제공된 경우 (Suno 등 외부 서비스)
-    if (musicUrl) {
+    // URL이 제공된 경우 (YouTube, Bilibili 등 외부 서비스)
+    if (mediaUrl) {
       return NextResponse.json({
         success: true,
-        musicUrl: musicUrl,
+        mediaUrl: mediaUrl,
         isExternal: true,
+        type: mediaType || 'audio',
       });
     }
 
     // 파일 업로드
     if (!file) {
       return NextResponse.json(
-        { error: '음악 파일이 필요합니다.' },
+        { error: '파일이 필요합니다.' },
         { status: 400 }
       );
     }
+
+    const isVideo = mediaType === 'video';
 
     // 파일 타입 검증
-    const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp3'];
+    const allowedAudioTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp3'];
+    const allowedVideoTypes = ['video/mp4', 'video/webm', 'video/quicktime', 'image/gif'];
+    const allowedTypes = isVideo ? allowedVideoTypes : allowedAudioTypes;
+    
     if (!allowedTypes.includes(file.type)) {
+      const typeLabel = isVideo ? 'MP4, WebM, MOV, GIF' : 'MP3, WAV, OGG';
       return NextResponse.json(
-        { error: 'MP3, WAV, OGG 파일만 지원됩니다.' },
+        { error: `${typeLabel} 파일만 지원됩니다.` },
         { status: 400 }
       );
     }
 
-    // 파일 크기 검증 (10MB)
-    const maxSize = 10 * 1024 * 1024;
+    // 파일 크기 검증
+    const maxSize = isVideo ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+    const sizeLabel = isVideo ? '50MB' : '10MB';
     if (file.size > maxSize) {
       return NextResponse.json(
-        { error: '최대 10MB까지 업로드 가능합니다.' },
+        { error: `최대 ${sizeLabel}까지 업로드 가능합니다.` },
         { status: 400 }
       );
     }
@@ -84,16 +93,17 @@ export async function POST(request: NextRequest) {
     if (!buckets?.find(b => b.name === bucketName)) {
       await supabase.storage.createBucket(bucketName, {
         public: true,
-        fileSizeLimit: 10485760, // 10MB
+        fileSizeLimit: 52428800, // 50MB (video max)
       });
     }
 
     // 파일 확장자 추출
-    let extension = file.name.split('.').pop() || 'mp3';
+    let extension = file.name.split('.').pop() || (isVideo ? 'mp4' : 'mp3');
     if (extension === 'mp3') extension = 'mpeg';
 
     // 파일 경로 생성
-    const fileName = `${templateId}/${Date.now()}.${extension}`;
+    const subDir = isVideo ? 'video' : 'audio';
+    const fileName = `${templateId}/${subDir}/${Date.now()}.${extension}`;
     
     // 파일을 ArrayBuffer로 변환
     const arrayBuffer = await file.arrayBuffer();
@@ -110,7 +120,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Storage upload error:', error);
       return NextResponse.json(
-        { error: '음악 파일 업로드에 실패했습니다.' },
+        { error: '파일 업로드에 실패했습니다.' },
         { status: 500 }
       );
     }
@@ -122,8 +132,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      musicUrl: urlData.publicUrl,
+      mediaUrl: urlData.publicUrl,
       isExternal: false,
+      type: mediaType || (isVideo ? 'video' : 'audio'),
     });
   } catch (error) {
     console.error('Media upload error:', error);
@@ -135,11 +146,11 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * DELETE /api/templates/media
- * 
- * 음악 파일 삭제
- * - url: 삭제할 파일 URL
- */
+  * DELETE /api/templates/media
+  * 
+  * 미디어 파일 (음악/동영상) 삭제
+  * - url: 삭제할 파일 URL
+  */
 export async function DELETE(request: NextRequest) {
   try {
     const user = await getUserFromRequest(request);
@@ -170,7 +181,7 @@ export async function DELETE(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // 파일 경로 추출
+    // 파일 경로 추출 (audio 또는 video 하위 디렉토리 지원)
     const urlParts = url.split('/storage/v1/object/public/');
     if (urlParts.length < 2) {
       return NextResponse.json({ success: true });

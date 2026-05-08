@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { SectionStyle, FontSize } from '@/types/template';
 import { CustomFont } from '@/lib/fonts';
+import { Play, RotateCcw } from 'lucide-react';
 
 /* ============================================
    Predefined Color Palettes
@@ -102,6 +103,7 @@ interface StyleEditorProps {
 export function StyleEditor({ style, onChange, sectionId, sectionLabel, templateId, customFonts = [] }: StyleEditorProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isPreviewing, setIsPreviewing] = useState(false);
 
   const handleChange = (key: keyof SectionStyle, value: string | number | undefined) => {
     onChange({ ...style, [key]: value });
@@ -200,6 +202,22 @@ export function StyleEditor({ style, onChange, sectionId, sectionLabel, template
     return '보통 (0.6s)';
   })();
 
+  const handlePlayPreview = useCallback(() => {
+    setIsPreviewing(true);
+  }, []);
+
+  const animationDurationMs = style.animationDuration || 600;
+
+  const previewAnimationStyle: React.CSSProperties = style.animation && style.animation !== 'none'
+    ? {
+        animationName: `animate-${style.animation}`,
+        animationDuration: `${animationDurationMs}ms`,
+        animationTimingFunction: 'ease-out',
+        animationDelay: `${style.animationDelay || 0}ms`,
+        animationFillMode: 'both',
+      }
+    : {};
+
   return (
     <div className="space-y-4">
       {/* Section label */}
@@ -266,6 +284,52 @@ export function StyleEditor({ style, onChange, sectionId, sectionLabel, template
             onChange={(e) => handleChange('animationDelay', Number(e.target.value))}
             className="h-9 text-sm"
           />
+        </div>
+
+        {/* Animation Preview */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="block text-xs text-gray-500">미리보기</label>
+            <div className="flex gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePlayPreview}
+                className="h-7 px-2 text-xs gap-1"
+              >
+                <Play className="w-3 h-3" />
+                재생
+              </Button>
+              {isPreviewing && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsPreviewing(false)}
+                  className="h-7 px-2 text-xs gap-1"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  재재생
+                </Button>
+              )}
+            </div>
+          </div>
+          <div className="relative h-16 bg-gray-50 rounded-md border border-gray-200 overflow-hidden flex items-center">
+            {isPreviewing && (
+              <div
+                className="absolute inset-y-0 left-0 flex items-center px-3"
+                style={previewAnimationStyle}
+              >
+                <span className="text-xs font-medium text-gray-600 whitespace-nowrap">
+                  애니메이션 미리보기
+                </span>
+              </div>
+            )}
+            {!isPreviewing && (
+              <span className="text-xs text-gray-400 px-3">
+                {style.animation && style.animation !== 'none' ? '재생 버튼을 클릭하세요' : '애니메이션을 선택하세요'}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 

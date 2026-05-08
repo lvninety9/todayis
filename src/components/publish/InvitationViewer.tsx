@@ -145,10 +145,66 @@ function renderParents(value: string): React.ReactNode {
 }
 
 /**
- * Render video field
+ * Extract YouTube video ID from various URL formats
+ */
+function extractYouTubeId(url: string): string | null {
+  if (!url) return null;
+  
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]+)/,
+    /(?:youtu\.be\/)([a-zA-Z0-9_-]+)/,
+    /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/,
+    /(?:youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)/,
+    /(?:youtube\.com\/v\/)([a-zA-Z0-9_-]+)/,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  
+  return null;
+}
+
+/**
+ * Extract Bilibili BVID from URL
+ */
+function extractBilibiliBvid(url: string): string | null {
+  if (!url) return null;
+  const match = url.match(/BV[a-zA-Z0-9]+/);
+  return match?.[0] || null;
+}
+
+/**
+ * Render video field (supports YouTube, Bilibili, and direct URLs)
  */
 function renderVideo(value: string): React.ReactNode {
   if (!value) return null;
+  
+  const youtubeId = extractYouTubeId(value);
+  if (youtubeId) {
+    return (
+      <iframe
+        src={`https://www.youtube.com/embed/${youtubeId}`}
+        className="w-full aspect-video rounded-lg mt-2"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        title="YouTube video"
+      />
+    );
+  }
+  
+  const bvid = extractBilibiliBvid(value);
+  if (bvid) {
+    return (
+      <iframe
+        src={`https://player.bilibili.com/player.html?bvid=${bvid}&high_quality=1`}
+        className="w-full aspect-video rounded-lg mt-2"
+        allowFullScreen
+        title="Bilibili video"
+      />
+    );
+  }
   
   return (
     <video
@@ -212,14 +268,16 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
     }
   }, [customFonts]);
   
-  // 음악 관련 데이터
-  const musicUrl = (layout as Record<string, string>).musicUrl || (invitation.data as Record<string, string>).musicUrl;
+  // 오디오 관련 데이터 — audioUrl 우선, musicUrl은 기존 호환성용 fallback
+  const audioUrl = (invitation.data as Record<string, string>).audioUrl
+    || (layout as Record<string, string>).musicUrl;
   const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(0.5);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // 음악 재생/정지
   const toggleMusic = () => {
-    if (!audioRef.current || !musicUrl) return;
+    if (!audioRef.current || !audioUrl) return;
     
     if (isPlaying) {
       audioRef.current.pause();
@@ -229,14 +287,23 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
     }
   };
 
-  // 음악 URL이 있으면 오디오 플레이어 렌더링
+  // 볼륨 변경
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+  };
+
+  // 오디오 URL이 있으면 오디오 플레이어 렌더링
   const renderAudioPlayer = () => {
-    if (!musicUrl) return null;
+    if (!audioUrl) return null;
 
     return (
       <audio
         ref={audioRef}
-        src={musicUrl}
+        src={audioUrl}
         loop
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
@@ -279,9 +346,9 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
         '--font-custom': `'${customFonts[0].family}', sans-serif`,
       } as React.CSSProperties : undefined}
     >
-      {/* 음악 컨트롤 버튼 */}
-      {musicUrl && (
-        <div className="fixed top-4 right-4 z-50">
+      {/* 오디오 컨트롤 버튼 + 볼륨 슬라이더 */}
+      {audioUrl && (
+        <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-1">
           <Button
             variant={isPlaying ? 'default' : 'outline'}
             size="sm"
@@ -291,6 +358,16 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
           >
             {isPlaying ? '🔊' : '🔇'}
           </Button>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.1"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="w-16 h-1 accent-primary"
+            title={`볼륨: ${Math.round(volume * 100)}%`}
+          />
         </div>
       )}
 

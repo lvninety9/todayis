@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import { TemplateField, Section } from '@/types/template';
-import { ChevronDown, ChevronRight, LayoutList } from 'lucide-react';
+import { ChevronDown, ChevronRight, LayoutList, Upload, Link } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface FieldEditorProps {
   field: TemplateField;
@@ -211,23 +213,7 @@ case 'location':
         );
       
       case 'video':
-        return (
-          <div className="space-y-2">
-            <input
-              type="url"
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder="https://example.com/video.mp4"
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-400 ${
-                error ? 'border-red-500' : 'border-gray-300'
-              }`}
-            />
-            <p className="text-xs text-gray-500">MP4 파일 URL</p>
-            {value && (
-              <video controls src={value} className="w-full mt-2 rounded-md" />
-            )}
-          </div>
-        );
+        return <VideoFieldEditor value={value} onChange={onChange} error={error} />;
       
       case 'gallery':
         return (
@@ -580,6 +566,219 @@ export function SectionEditor({ section, values, errors, onUpdateField }: Sectio
               section={section}
             />
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================
+   Video Field Editor with Tabs
+   ============================================ */
+
+type VideoSourceType = 'youtube' | 'bilibili' | 'upload';
+
+function VideoFieldEditor({ value, onChange, error }: {
+  value: string;
+  onChange: (value: string) => void;
+  error?: string;
+}) {
+  const [activeTab, setActiveTab] = useState<VideoSourceType>(
+    value.includes('youtube') ? 'youtube'
+    : value.includes('bilibili') ? 'bilibili'
+    : 'upload'
+  );
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setUploadError(null);
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('mediaType', 'video');
+    formData.append('templateId', 'current');
+
+    try {
+      const res = await fetch('/api/templates/media?dev=true', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setUploadError(data.error || '업로드에 실패했습니다.');
+        return;
+      }
+
+      onChange(data.mediaUrl);
+      setActiveTab('upload');
+    } catch {
+      setUploadError('서버 오류가 발생했습니다.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const tabs: { key: VideoSourceType; label: string; icon: string }[] = [
+    { key: 'youtube', label: 'YouTube', icon: '▶️' },
+    { key: 'bilibili', label: 'Bilibili', icon: '📺' },
+    { key: 'upload', label: '파일 업로드', icon: '📁' },
+  ];
+
+  return (
+    <div className="space-y-2">
+      {/* Tabs */}
+      <div className="flex gap-1 border rounded-md p-1">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => setActiveTab(tab.key)}
+            className={cn(
+              'flex-1 px-2 py-1.5 text-xs font-medium rounded transition-all flex items-center justify-center gap-1',
+              activeTab === tab.key
+                ? 'bg-gray-800 text-white shadow-sm'
+                : 'bg-transparent text-gray-500 hover:bg-gray-100'
+            )}
+          >
+            <span>{tab.icon}</span>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* YouTube Tab */}
+      {activeTab === 'youtube' && (
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={value}
+              onChange={(e) => { onChange(e.target.value); setActiveTab('youtube'); }}
+              placeholder="https://www.youtube.com/watch?v=xxxxx"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${
+                error ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            {value && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onChange('')}
+                className="shrink-0"
+              >
+                삭제
+              </Button>
+            )}
+          </div>
+          <p className="text-xs text-gray-400">YouTube 영상 URL을 입력하세요</p>
+          {value && (
+            <div className="aspect-video bg-gray-100 rounded-md overflow-hidden">
+              <iframe
+                src={`https://www.youtube.com/embed/${value.match(/(?:v=)([a-zA-Z0-9_-]+)/)?.[1] || ''}`}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="YouTube Preview"
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Bilibili Tab */}
+      {activeTab === 'bilibili' && (
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={value}
+              onChange={(e) => { onChange(e.target.value); setActiveTab('bilibili'); }}
+              placeholder="https://www.bilibili.com/video/BVxxxx"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm ${
+                error ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            {value && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onChange('')}
+                className="shrink-0"
+              >
+                삭제
+              </Button>
+            )}
+          </div>
+          <p className="text-xs text-gray-400">Bilibili 영상 URL을 입력하세요</p>
+          {value && (
+            <div className="aspect-video bg-gray-100 rounded-md overflow-hidden">
+              {(() => {
+                const bvMatch = value.match(/BV[a-zA-Z0-9]+/);
+                const bvid = bvMatch?.[0] || '';
+                const playerUrl = bvid
+                  ? `https://player.bilibili.com/player.html?bvid=${bvid}&high_quality=1`
+                  : '';
+                return playerUrl ? (
+                  <iframe src={playerUrl} className="w-full h-full" allowFullScreen title="Bilibili Preview" />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-xs text-gray-400">미리보기 불가 (URL 확인)</div>
+                );
+              })()}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Upload Tab */}
+      {activeTab === 'upload' && (
+        <div className="space-y-2">
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
+            <input
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime,image/gif"
+              onChange={handleUpload}
+              disabled={uploading}
+              className="hidden"
+              id="video-upload"
+            />
+            <label
+              htmlFor="video-upload"
+              className="cursor-pointer flex flex-col items-center gap-2"
+            >
+              <Upload className="w-8 h-8 text-gray-400" />
+              <div>
+                <p className="text-sm text-gray-600">
+                  {uploading ? '업로드 중...' : '클릭하여 파일 선택'}
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  MP4, WebM, MOV, GIF (최대 50MB)
+                </p>
+              </div>
+            </label>
+          </div>
+          {uploadError && <p className="text-xs text-red-500">{uploadError}</p>}
+          {value && (
+            <div className="space-y-1">
+              <p className="text-xs text-gray-500 truncate">현재: {value}</p>
+              <div className="aspect-video bg-gray-100 rounded-md overflow-hidden">
+                <video controls src={value} className="w-full h-full" preload="metadata" />
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onChange('')}
+                className="w-full text-xs"
+              >
+                파일 삭제
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
