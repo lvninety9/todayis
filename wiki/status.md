@@ -2,7 +2,7 @@
 
 ## 활성 페이즈
 
-Phase 24: Video Section Enhancement & Animation Preview — 🔄 진행 중 (Wave 1~4 구현 완료, 커밋 대기)
+Phase 24: Video Section Enhancement & Animation Preview — ✅ 완료 (Wave 1~4 전체 구현, build/lint 통과)
 
 ## 완료된 페이즈 (19개)
 
@@ -23,4 +23,4 @@ Phase 1~4, 6~12, 14~23 — 템플릿 엔진, 인증, 템플릿 관리, 초대장
 2026-05-07 slim화 완료 (스킬 22개 제거, AGENTS.md 60줄, .planning/ 6개, wiki slim화). 상세: `wiki/CONTEXT-OPTIMIZATION-LOG.md`
 
 ---
-*최신 업데이트: 2026-05-08 (Phase 24 — Video Bilibili/Upload 지원, Animation Preview 구현 완료, 커밋 대기)*
+*최신 업데이트: 2026-05-08 (Phase 24 완료 — Video Bilibili/Upload 지원 + Animation Preview, build/lint 통과)*
