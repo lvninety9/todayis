@@ -17,3 +17,10 @@
 ## [2026-05-10] build | Phase 27 Wave 4 build 통과 — 새 오류 없음 (경고 모두 기존 것들), Vercel 재배포 준비 완료
 ## [2026-05-10] session-recovery | 세션 강제 중단 복구 — Wave 4 구현 파일 5개 모두 PLAN.md와 일치 확인, build/lint 재검증 통과, wiki 문서 전체 동기화 완료, Vercel 재배포 대기
 ## [2026-05-15] /gsd 27 | Phase 27 완료 확인 — git history에서 large files(images/, 1.5GB) 제거, filter-branch + gc prune, 99 commits origin/master push 완료, .gitignore images/ 추가
+## [2026-05-15] /gsd | Phase 27 최종 완료 — ROADMAP/status.md/next-session.md 동기화, Phase 1~27 전체 완료 확인, build/lint 통과
+## [2026-05-15] analyze | Bug 6 (대시보드 버튼 비클릭) + Bug 7 (로그인 리다이렉트 재발) 분석 — 코드 수정 없이 읽기만 함, wiki 문서 업데이트 완료, 다음 세션으로 컨텍스트 넘김
+## [2026-05-15] /gsd 28 | Phase 28 구현 완료 — Bug 7 수정: use-session.ts에 hasCheckedSession flag 추가, edit/page.tsx 리다이렉트 조건 변경, 로딩 스피너에 에러 메시지 표시, build/lint 통과
+## [2026-05-15] /gsd 29 등록 | Phase 29 plan 작성 — Bug 6 (대시보드 버튼 비클릭) GlassCard pseudo-element pointer-events 차단 문제, PLAN.md 생성 완료
+## [2026-05-15] /gsd 29 | Phase 29 완료 — GlassCard ::before pseudo-element에 pointer-events-none 추가, build 통과
+## [2026-05-15] /gsd | Phase 29까지 완료 확인 — 활성 페이즈 없음, bug 1~7 모두 해결, build/lint 통과, git push 완료
+## [2026-05-15] /gsd | 세션 종료 — 마일스톤 완료 상태 확인, 다음 세션 프롬프트 제공

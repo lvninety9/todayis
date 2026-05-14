@@ -9,6 +9,7 @@ export interface Session {
   session: AuthSession | null;
   loading: boolean;
   error: string | null;
+  hasCheckedSession: boolean;
 }
 
 export function useSession() {
@@ -17,6 +18,7 @@ export function useSession() {
     session: null,
     loading: true,
     error: null,
+    hasCheckedSession: false,
   });
   const hasInitialized = useRef(false);
   const lastSessionJson = useRef<string | null>(null);
@@ -32,6 +34,7 @@ export function useSession() {
             session: null,
             loading: false,
             error: error.message,
+            hasCheckedSession: true,
           });
           return;
         }
@@ -44,6 +47,7 @@ export function useSession() {
           session: currentSession,
           loading: false,
           error: null,
+          hasCheckedSession: true,
         });
 
         hasInitialized.current = true;
@@ -63,6 +67,7 @@ export function useSession() {
               session: newSession,
               loading: false,
               error: null,
+              hasCheckedSession: true,
             });
           }
         );
@@ -74,6 +79,7 @@ export function useSession() {
           session: null,
           loading: false,
           error: error instanceof Error ? error.message : '세션 초기화에 실패했습니다.',
+          hasCheckedSession: true,
         });
       }
     };

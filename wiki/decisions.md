@@ -117,6 +117,22 @@
 
 - (Phase 12 항목 2개는 Phase 19에서 Supabase Storage + HTML5 Audio로 결정됨 — stale 제거 예정)
 
+## Bug 6: 대시보드 버튼 비클릭 문제 — ✅ Phase 29로 이관 (2026-05-15)
+
+| 결정 | 선택지 A | 선택지 B | 선택 | 근거 |
+|------|----------|----------|------|------|
+| GlassCard `before:absolute` 제거 | 제거 | 유지 | before:pointer-events-none 추가 | pseudo-element는 시각 효과(gradient overlay)로 필요. pointer-events 차단만 제거하면 됨 |
+| Button에 `pointer-events-auto` 명시 | 추가 | 미추가 | 추가 | GlassCard hover 효과와 명시적 충돌 방지 |
+| z-index 확인 | 추가 | 미추가 | 추가 | `relative z-10` 등으로 버튼 영역 명시적 z-order 보장 |
+
+## Bug 7: 로그인 리다이렉트 재발 — ✅ Phase 28 완료 (2026-05-15)
+
+| 결정 | 선택지 A | 선택지 B | 선택 | 근거 |
+|------|----------|----------|------|------|
+| 세션 체크 상태 추적 | `session.loading` 사용 | `hasCheckedSession` flag 추가 | hasCheckedSession | loading은 UI 상태, hasCheckedSession은 세션 체크 완료 여부 — 명확한 분리 |
+| 리다이렉트 조건 | `!session.loading && !session.user` | `session.hasCheckedSession && !session.user` | hasCheckedSession 기반 | 세션 체크 완료 전에는 절대 리다이렉트 안함 |
+| 에러 메시지 표시 | 로딩 스피너만 | 스피너 + 에러 메시지 | 둘 다 | 사용자가 세션 초기화 실패 시 피드백 받음 |
+
 ---
 
 *최신 업데이트: 2026-05-15 (Phase 27 완료 — git push 99 commits 모두 반영, large files git history 제거)*

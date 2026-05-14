@@ -134,14 +134,14 @@ export default function TemplateEditPage() {
   }, [templateId, session.session, router]);
 
   useEffect(() => {
-    if (!session.loading && !session.user) {
+    if (session.hasCheckedSession && !session.user) {
       router.push('/login');
       return;
     }
     if (templateId) {
       fetchTemplate();
     }
-  }, [session.loading, session.user, templateId, fetchTemplate, router]);
+  }, [session.hasCheckedSession, session.user, templateId, fetchTemplate, router]);
 
   // Debounced preview update
   useEffect(() => {
@@ -335,6 +335,13 @@ export default function TemplateEditPage() {
           <div className="flex justify-center py-12">
             <Spinner size="lg" />
           </div>
+          {session.error && (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                <p className="text-red-700">{session.error}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

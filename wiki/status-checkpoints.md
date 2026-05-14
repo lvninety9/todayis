@@ -69,6 +69,30 @@
 - 완료: git filter-branch로 images/ (1.5GB) git history에서 제거, gc prune, 99 commits origin/master push 완료, .gitignore images/ 추가
 - 다음: Vercel 재배포 → 모바일 테스트 → 신규 페이즈 논의
 - 추정 토큰: 200
+## 체크포인트: Phase 27 - 완료
+- 완료: Phase 1~27 전체 완료 확인 — 27개 페이즈 모두 실행/검증 통과, build/lint 통과, git push 99 commits 완료, ROADMAP/status.md/decisions.md 동기화
+- 다음: Vercel 재배포 (`vercel deploy --prod`) → 모바일 테스트 → V2/V3 마일스톤 논의
+- 추정 토큰: 100
+## 체크포인트: Bug 6/7 분석
+- 완료: 대시보드 버튼 비클릭 문제 (GlassCard `before:absolute` pseudo-element, hover 효과 확인) + 로그인 리다이렉트 재발 문제 (세션 초기화 타이밍, middleware getUser 무의미 호출 확인) — 코드 수정 없이 분석만 수행, wiki 문서 업데이트 완료
+- 다음: Bug 6 수정 (GlassCard CSS 수정) + Bug 7 수정 (세션 체크 조건 강화, middleware getUser 제거)
+- 추정 토큰: 300
+## 체크포인트: Phase 28 - Bug 7 수정
+- 완료: use-session.ts에 hasCheckedSession flag 추가 (초기 false, 세션 로드 후 true), edit/page.tsx 리다이렉트 조건을 session.hasCheckedSession 기반으로 변경, 로딩 스피너에 session.error 메시지 표시 추가, build/lint 통과
+- 다음: Bug 6 수정 (GlassCard CSS 수정) + Vercel 배포
+- 추정 토큰: 200
+## 체크포인트: Phase 29 - plan
+- 완료: Bug 6 (대시보드 버튼 비클릭) plan 작성 — GlassCard `before:absolute` pseudo-element가 pointer-events 차단, 수정 방향: `before:pointer-events-none` 추가 + 버튼 영역 `relative z-10` + `pointer-events-auto` 명시, PLAN.md 생성
+- 다음: Wave 1 실행 (GlassCard CSS 수정)
+- 추정 토큰: 200
+## 체크포인트: Phase 29 - Wave 1
+- 완료: GlassCard `::before` pseudo-element에 `before:pointer-events-none` 추가 — 대시보드 최근 템플릿 버튼 클릭 문제 해결, build 통과
+- 다음: 완료
+- 추정 토큰: 100
+## 체크포인트: Phase 완료 — 활성 페이즈 없음 (2026-05-15)
+- 완료: Phase 1~29 전체 완료, bug 1~7 모두 해결, build/lint 통과, git push 99 commits 완료, large files git history 제거
+- 다음: 신규 기능 요청 또는 V2/V3 마일스톤 시작
+- 추정 토큰: 100
 
 ---
 *append-only — 체크포인트 추가만. 삭제 금지.*
