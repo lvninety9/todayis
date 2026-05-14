@@ -106,10 +106,17 @@
 | 공개 토글 자동 | 공유 시 자동 공개 | 수동 공개 토글 후 공유 | 수동 공개 토글 | 사용자가 공개 여부 직접 결정 |
 | 세션 디버깅 우선 | Vercel 로그 확인 | 로컬 production build 재현 | 둘 다 | Vercel 로그 먼저 확인, 필요시 로컬 재현 |
 
+## Phase 27: git push blocker 해결 (2026-05-15) ✅ 완료
+
+| 결정 | 선택지 A | 선택지 B | 선택 | 근거 |
+|------|----------|----------|------|------|
+| large files 제거 | git filter-branch | BFG Repo-Cleaner | git filter-branch | 외부 도구 설치 불필요, git 기본 도구로 해결 |
+| .gitignore 추가 | images/ 추가 | 이미 추가됨 | images/ 추가 | stash 손실로 .gitignore에서 images/ 제거됨 — 복원 |
+
 ## 미결/논의 중
 
 - (Phase 12 항목 2개는 Phase 19에서 Supabase Storage + HTML5 Audio로 결정됨 — stale 제거 예정)
 
 ---
 
-*최신 업데이트: 2026-05-10 (Phase 27 Wave 4 완료 — Bug 5 fix, build/lint 통과, Vercel 재배포 대기)*
+*최신 업데이트: 2026-05-15 (Phase 27 완료 — git push 99 commits 모두 반영, large files git history 제거)*

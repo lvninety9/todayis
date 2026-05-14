@@ -65,6 +65,10 @@
 - 완료: 세션 강제 중단 후 복구 — Wave 4 구현 파일 5개 모두 PLAN.md와 일치 확인, build/lint 재검증 통과, wiki 문서 전체 동기화 완료
 - 다음: Vercel 재배포 (`vercel deploy --prod`) → 모바일 테스트 → Phase 27 완료
 - 추정 토큰: 200
+## 체크포인트: Phase 27 - git push 완료
+- 완료: git filter-branch로 images/ (1.5GB) git history에서 제거, gc prune, 99 commits origin/master push 완료, .gitignore images/ 추가
+- 다음: Vercel 재배포 → 모바일 테스트 → 신규 페이즈 논의
+- 추정 토큰: 200
 
 ---
 *append-only — 체크포인트 추가만. 삭제 금지.*

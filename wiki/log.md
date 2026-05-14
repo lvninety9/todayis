@@ -16,3 +16,4 @@
 ## [2026-05-10] verify | Wave 4 2차 검증 — 실제 파일 5개 모두 PLAN.md 계획과 일치 확인, wiki 문서 동기화 완료
 ## [2026-05-10] build | Phase 27 Wave 4 build 통과 — 새 오류 없음 (경고 모두 기존 것들), Vercel 재배포 준비 완료
 ## [2026-05-10] session-recovery | 세션 강제 중단 복구 — Wave 4 구현 파일 5개 모두 PLAN.md와 일치 확인, build/lint 재검증 통과, wiki 문서 전체 동기화 완료, Vercel 재배포 대기
+## [2026-05-15] /gsd 27 | Phase 27 완료 확인 — git history에서 large files(images/, 1.5GB) 제거, filter-branch + gc prune, 99 commits origin/master push 완료, .gitignore images/ 추가
