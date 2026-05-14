@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { usePayment } from '@/hooks/use-payment';
 
 interface TemplateInfo {
   id: string;
@@ -44,6 +45,9 @@ export default function CreateInvitationPage() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isPurchased, setIsPurchased] = useState<boolean | null>(null);
+  const [checkingPurchase, setCheckingPurchase] = useState(false);
+  const { checkPurchase } = usePayment();
 
   const fetchTemplate = useCallback(async () => {
     try {
@@ -79,6 +83,32 @@ export default function CreateInvitationPage() {
       setLoading(false);
     }
   }, [templateId, session.session, router]);
+
+  // 프리미엄 템플릿 구매 상태 확인
+  useEffect(() => {
+    if (!template || template.price === 0 || !template.is_premium) {
+      setIsPurchased(true);
+      return;
+    }
+
+    const verifyPurchase = async () => {
+      setCheckingPurchase(true);
+      try {
+        const purchased = await checkPurchase(templateId);
+        setIsPurchased(purchased);
+        if (!purchased) {
+          router.push(`/templates/${templateId}`);
+        }
+      } catch {
+        setIsPurchased(false);
+        router.push(`/templates/${templateId}`);
+      } finally {
+        setCheckingPurchase(false);
+      }
+    };
+
+    verifyPurchase();
+  }, [template, templateId, checkPurchase, router]);
 
   useEffect(() => {
     if (!session.loading && !session.user) {
@@ -138,7 +168,7 @@ export default function CreateInvitationPage() {
     router.push(`/templates/${templateId}`);
   }, [router, templateId]);
 
-  if (session.loading || loading) {
+  if (session.loading || loading || checkingPurchase || isPurchased === null) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

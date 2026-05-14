@@ -10,17 +10,16 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Invitation } from '@/types/publish';
 
 interface ShareDialogProps {
-  invitation: Invitation;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  shareUrl: string;
+  title?: string;
 }
 
-export function ShareDialog({ invitation }: ShareDialogProps) {
-  const [open, setOpen] = useState(false);
+export function ShareDialog({ open, onOpenChange, shareUrl, title = '초대장 공유' }: ShareDialogProps) {
   const [copied, setCopied] = useState(false);
-
-  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/${invitation.slug}`;
 
   const handleCopy = async () => {
     try {
@@ -33,10 +32,10 @@ export function ShareDialog({ invitation }: ShareDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>초대장 공유</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
             아래 링크를 복사하여 초대장을 공유하세요.
           </DialogDescription>
@@ -68,7 +67,7 @@ export function ShareDialog({ invitation }: ShareDialogProps) {
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             닫기
           </Button>
         </DialogFooter>

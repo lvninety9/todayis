@@ -26,16 +26,20 @@ const SECTION_ICONS: Record<SectionType, string> = {
   accounts: '📞',
   gallery: '📸',
   story: '📖',
+  video: '🎬',
+  audio: '🎵',
 };
 
 const SECTION_COLORS: Record<SectionType, string> = {
   image: 'bg-blue-50 border-blue-200 text-blue-700',
   announcement: 'bg-purple-50 border-purple-200 text-purple-700',
-  invitation: 'bg-pink-50 border-pink-200 text-pink-700',
+  invitation: 'bg-pink-50 border-pink-50 text-pink-700',
   map: 'bg-green-50 border-green-200 text-green-700',
   accounts: 'bg-orange-50 border-orange-200 text-orange-700',
   gallery: 'bg-teal-50 border-teal-200 text-teal-700',
   story: 'bg-rose-50 border-rose-200 text-rose-700',
+  video: 'bg-cyan-50 border-cyan-200 text-cyan-700',
+  audio: 'bg-violet-50 border-violet-200 text-violet-700',
 };
 
 /**
@@ -500,6 +504,14 @@ export function TemplateEditor({ template, initialData, onUpdate, onFieldChange 
                         <div className="text-center text-sm space-y-1">
                           {sectionValues.groomPhone && <p>신랑: {sectionValues.groomPhone}</p>}
                           {sectionValues.bridePhone && <p>신부: {sectionValues.bridePhone}</p>}
+                        </div>
+                      )}
+                      {section.type === 'video' && sectionValues.videoUrl && (
+                        <div className="text-center">
+                          <p className="text-xs text-gray-400">🎬 Video Preview</p>
+                          <div className="mt-2 aspect-video bg-gray-100 rounded flex items-center justify-center">
+                            <span className="text-gray-400 text-xs">Video</span>
+                          </div>
                         </div>
                       )}
                     </div>

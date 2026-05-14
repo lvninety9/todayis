@@ -10,6 +10,8 @@ import { TemplatePreviewModal } from '@/components/templates/preview/TemplatePre
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
+import { ShareDialog } from '@/components/publish/ShareDialog';
+import { Share2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -43,6 +45,11 @@ export default function TemplatesPage() {
   const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'name'>('latest');
   const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+
+  // Share state
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+  const [shareLoading, setShareLoading] = useState(false);
 
   // 템플릿 목록 조회
   const fetchTemplates = useCallback(async () => {
@@ -198,21 +205,86 @@ export default function TemplatesPage() {
   };
 
   // 미리보기용 TemplateData 생성
-  const getPreviewData = (template: Template) => ({
-    templateId: template.id,
-    values: template.fields.reduce((acc, field) => {
-      const value = field.defaultValue ?? '';
-      acc[field.name] = value;
-      return acc;
-    }, {} as Record<string, string>),
-    validate: () => true,
-    getValue: (fieldName: string) => {
-      const field = template.fields.find(f => f.name === fieldName);
-      return field?.defaultValue ?? null;
-    },
-    setValue: () => {},
-    getFieldNames: () => template.fields.map(f => f.name),
-  });
+  const getPreviewData = (template: Template) => {
+    const values: Record<string, string> = {};
+    
+    // Section-based template: sections[].fields[].defaultValue에서 값 읽기
+    if (template.sections && template.sections.length > 0) {
+      template.sections.forEach((section) => {
+        section.fields.forEach((field) => {
+          values[field.name] = field.defaultValue ?? '';
+        });
+      });
+    } else {
+      // Flat field-based template (backward compatibility)
+      template.fields.forEach((field) => {
+        values[field.name] = field.defaultValue ?? '';
+      });
+    }
+
+    return {
+      templateId: template.id,
+      values,
+      validate: () => true,
+      getValue: (fieldName: string) => values[fieldName] ?? null,
+      setValue: () => {},
+      getFieldNames: () => Object.keys(values),
+    };
+  };
+
+  // 공유 핸들러 — 초대장 생성 후 링크 복사
+  const handleShare = async (template: Template) => {
+    const token = session.session?.access_token;
+    if (!token) {
+      toast.error('로그인이 필요합니다.');
+      return;
+    }
+
+    setShareLoading(true);
+    try {
+      // 섹션 기반에서 데이터 추출
+      const values: Record<string, string> = {};
+      if (template.sections && template.sections.length > 0) {
+        template.sections.forEach((section) => {
+          section.fields.forEach((field) => {
+            values[field.name] = field.defaultValue ?? '';
+          });
+        });
+      } else {
+        template.fields.forEach((field) => {
+          values[field.name] = field.defaultValue ?? '';
+        });
+      }
+
+      const response = await fetch('/api/invitations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          templateId: template.id,
+          title: template.name,
+          data: values,
+          is_published: true,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '초대장 생성에 실패했습니다');
+      }
+
+      const data = await response.json();
+      const url = `${window.location.origin}/${data.invitation.slug}`;
+      setShareUrl(url);
+      setShareOpen(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : '공유 링크 생성에 실패했습니다');
+    } finally {
+      setShareLoading(false);
+    }
+  };
 
   // 로딩 상태
   if (session.loading || loading) {
@@ -307,6 +379,7 @@ export default function TemplatesPage() {
           onPreview={handlePreview}
           onDelete={handleDelete}
           onCreate={() => setDialogOpen(true)}
+          onShare={handleShare}
           onFilter={handleFilter}
           onSearch={handleSearch}
           loading={loading}
@@ -324,13 +397,21 @@ export default function TemplatesPage() {
 
       {/* 템플릿 미리보기 모달 */}
       {previewTemplate && (
-        <TemplatePreviewModal
-          template={previewTemplate}
-          data={getPreviewData(previewTemplate)}
-          open={previewOpen}
-          onClose={handlePreviewClose}
+       <TemplatePreviewModal
+            template={previewTemplate}
+            data={getPreviewData(previewTemplate)}
+            open={previewOpen}
+            onClose={handlePreviewClose}
+          />
+        )}
+
+        {/* 공유 다이얼로그 */}
+        <ShareDialog
+          open={shareOpen}
+          onOpenChange={setShareOpen}
+          shareUrl={shareUrl}
+          title="초대장 공유"
         />
-      )}
     </div>
   );
 }

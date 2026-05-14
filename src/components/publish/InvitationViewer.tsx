@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Invitation } from '@/types/publish';
 import { getFontFamily, loadCustomFontCSS, CustomFont } from '@/lib/fonts';
+import { Guestbook } from './Guestbook';
 
 interface InvitationViewerProps {
   /** 공개된 초대장 데이터 */
@@ -90,7 +91,8 @@ function renderGallery(value: string): React.ReactNode {
           key={idx}
           src={url}
           alt={`Gallery ${idx + 1}`}
-          className="w-full h-32 object-cover rounded-lg"
+          className="w-full h-32 object-cover rounded-lg invitation-image-slide"
+          style={{ animationDelay: `${idx * 100}ms` }}
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none';
           }}
@@ -223,7 +225,8 @@ function detectFieldType(key: string): string {
   if (lowerKey.includes('account') || lowerKey.includes('계좌')) return 'account';
   if (lowerKey.includes('audio') || lowerKey.includes('music') || lowerKey.includes('음악')) return 'audio';
   if (lowerKey.includes('video') || lowerKey.includes('동영상')) return 'video';
-  if (lowerKey.includes('gallery') || lowerKey.includes('사진')) return 'gallery';
+  if (lowerKey.includes('image') || lowerKey.includes('photo') || lowerKey.includes('사진')) return 'image';
+  if (lowerKey.includes('gallery') || lowerKey.includes('갤러리')) return 'gallery';
   if (lowerKey.includes('message') || lowerKey.includes('메시지') || lowerKey.includes('축하')) return 'message';
   if (lowerKey.includes('dresscode') || lowerKey.includes('복장')) return 'dresscode';
   if (lowerKey.includes('parent') || lowerKey.includes('부모')) return 'parents';
@@ -315,9 +318,9 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
     ? `'${customFonts[0].family}', sans-serif`
     : getFontFamily(fontFamily);
 
-  /**
-   * Render a field value based on detected or known field type
-   */
+/**
+ * Render a field value based on detected or known field type
+ */
   const renderFieldValue = (key: string, value: string): React.ReactNode => {
     const fieldType = detectFieldType(key);
     
@@ -332,6 +335,17 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
         return renderParents(value);
       case 'video':
         return renderVideo(value);
+      case 'image':
+        return (
+          <img
+            src={value}
+            alt={key}
+            className="w-full h-64 object-cover rounded-lg invitation-image-scale"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        );
       case 'message':
         return <p className="text-gray-900 whitespace-pre-wrap">{value}</p>;
       default:
@@ -346,6 +360,38 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
         '--font-custom': `'${customFonts[0].family}', sans-serif`,
       } as React.CSSProperties : undefined}
     >
+      {/* CSS Animations for images */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.9); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes gentleZoom {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.03); }
+          100% { transform: scale(1); }
+        }
+        .invitation-image-fade {
+          animation: fadeIn 0.8s ease-out forwards;
+        }
+        .invitation-image-scale {
+          animation: scaleIn 0.8s ease-out forwards;
+        }
+        .invitation-image-slide {
+          animation: slideUp 0.6s ease-out forwards;
+        }
+        .invitation-image-zoom {
+          animation: gentleZoom 6s ease-in-out infinite;
+        }
+      `}</style>
       {/* 오디오 컨트롤 버튼 + 볼륨 슬라이더 */}
       {audioUrl && (
         <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-1">
@@ -415,6 +461,11 @@ export function InvitationViewer({ invitation, template }: InvitationViewerProps
           </div>
         </CardContent>
       </Card>
+
+      {/* Guestbook */}
+      <div className="mt-8">
+        <Guestbook />
+      </div>
 
       {/* 오디오 플레이어 (숨김) */}
       {renderAudioPlayer()}

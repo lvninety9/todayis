@@ -15,6 +15,7 @@ interface TemplateLibraryProps {
   onPreview?: (template: Template) => void;
   onDelete?: (template: Template) => void;
   onCreate?: () => void;
+  onShare?: (template: Template) => void;
   onFilter?: (category: string) => void;
   onSearch?: (query: string) => void;
   loading?: boolean;
@@ -38,6 +39,7 @@ export function TemplateLibrary({
   onPreview,
   onDelete,
   onCreate,
+  onShare,
   onFilter,
   onSearch,
   loading = false,
@@ -205,13 +207,14 @@ return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 scroll-reveal-stagger">
           {filteredAndSortedTemplates.map((template, index) => (
             <div key={template.id} className="scroll-reveal-up" style={{ animationDelay: `${index * 50}ms` }}>
-              <TemplateCard
-                template={template}
-                mode={mode}
-                onSelect={onSelect}
-                onPreview={onPreview}
-                onDelete={onDelete}
-              />
+             <TemplateCard
+                  template={template}
+                  mode={mode}
+                  onSelect={onSelect}
+                  onPreview={onPreview}
+                  onDelete={onDelete}
+                  onShare={onShare}
+                />
             </div>
           ))}
         </div>
@@ -219,14 +222,15 @@ return (
         <div className="space-y-3 scroll-reveal-stagger">
           {filteredAndSortedTemplates.map((template, index) => (
             <div key={template.id} className="scroll-reveal-up" style={{ animationDelay: `${index * 50}ms` }}>
-              <TemplateCard
-                template={template}
-                mode={mode}
-                onSelect={onSelect}
-                onPreview={onPreview}
-                onDelete={onDelete}
-                layout="list"
-              />
+            <TemplateCard
+                  template={template}
+                  mode={mode}
+                  onSelect={onSelect}
+                  onPreview={onPreview}
+                  onDelete={onDelete}
+                  onShare={onShare}
+                  layout="list"
+                />
             </div>
           ))}
         </div>

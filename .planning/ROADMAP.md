@@ -580,13 +580,38 @@ Plans:
 
 ---
 
+## Phase 25: 회원 목록 페이지네이션
+
+**Goal**: Admin 페이지의 회원 목록에 페이지네이션 구현 (이전/다음 버튼, 페이지 표시)
+
+**Requirements**:
+- USER-PAG-01: `/api/admin/users` GET — `page`/`limit` 쿼리파라미터 지원
+- USER-PAG-02: admin 페이지에서 `page` state 연동
+- USER-PAG-03: 페이지네이션 UI (이전/다음 버튼, 페이지 번호 표시)
+
+**Status**: Complete (build/lint 통과)
+**Implementation**: API page/limit 쿼리파라미터 지원, admin 페이지 userPage state 연동 + 페이지네이션 UI
+
+---
+
+## Phase 27: Critical Bug Fixes & Sharing Feature
+
+**Goal**: Vercel 배포 후 발견된 5개 critical bug 수정 + 초대장 공유 기능 구현
+
+**Requirements**:
+- BUG-01: Double Login Issue — 로그인 후 다시 로그인 페이지로 리다이렉트되는 문제 수정
+- BUG-02: Dashboard Buttons Non-functional — 대시보드 버튼(전체 보기, 편집, 공유, 발행) 클릭 시 동작하도록 수정
+- BUG-03: Template Preview Data Mismatch — 라이브러리 미리보기에서 편집한 실제 데이터가 표시되도록 수정
+- BUG-04: Logout on Edit — 편집 페이지 접근 시 로그아웃되는 문제 수정
+- BUG-05: Missing Sharing Feature — 템플릿 공유 링크 생성/복사 기능 구현
+
+**Status**: 🟡 plan완료, execute 대기
+
+Plans:
+- [ ] 27-PLAN.md — 5개 bug 수정 + 공유 기능 구현 계획
+
+---
+
 ## 미정 (Backlog)
 
-- 프리미엄 템플릿 (V2)
-- 이모지/GIF 지원 (V2)
-- 동영상 초대장 (V3)
-- Kakao 로그인 (V3)
-- AI 추천 템플릿 (V3)
-- 회원 목록 페이지네이션
-- 프리미엄 템플릿 (V2)
-- 이모지/GIF 지원 (V2)
+- (V2/V3 기능은 별도 마일스톤에서 진행)

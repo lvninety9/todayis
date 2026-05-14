@@ -16,9 +16,15 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
+    const url = new URL(request.url);
+    const page = Math.max(1, parseInt(url.searchParams.get('page') || '1', 10));
+    const limit = Math.min(100, Math.max(1, parseInt(url.searchParams.get('limit') || '10', 10)));
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    
     const { data: users, error } = await supabase.auth.admin.listUsers({
-      page: 1,
-      perPage: 100,
+      page,
+      perPage: limit,
     });
     
     if (error) {
@@ -41,6 +47,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       users: formattedUsers,
       total: users?.total || 0,
+      page,
+      limit,
     });
   } catch (error) {
     return NextResponse.json(

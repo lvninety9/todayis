@@ -130,6 +130,45 @@ export default function TemplateDetailPage() {
     }
   }, [template, templateId, checkIfPurchased]);
 
+  // 구매 후 템플릿 복사
+  const handleCopyAfterPurchase = useCallback(async () => {
+    if (!template || isPurchased !== true) return;
+    
+    try {
+      const token = session.session?.access_token;
+      const isDev = typeof window !== 'undefined' && localStorage.getItem('__DEV_MODE__') === 'true';
+      
+      const headers: Record<string, string> = {};
+      let url = `/api/templates/${templateId}/purchase`;
+      
+      if (isDev && !token) {
+        url += '?dev=true';
+      } else if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast.success(`${data.templateName || '템플릿'}이 라이브러리에 추가되었습니다!`);
+      }
+    } catch {
+      // 복사 실패 시에도 구매 상태는 유지 (나중에 다시 시도 가능)
+      console.error('Template copy failed');
+    }
+  }, [template, isPurchased, templateId, session.session]);
+
+  // 구매 상태가 true로 변경되면 자동 복사
+  useEffect(() => {
+    if (template && isPurchased && !checkingPurchase) {
+      handleCopyAfterPurchase();
+    }
+  }, [template, isPurchased, checkingPurchase, handleCopyAfterPurchase]);
+
   // 구매하기 - Naver Selling Page로 redirect
   const handleBuy = useCallback(async () => {
     if (!template) return;

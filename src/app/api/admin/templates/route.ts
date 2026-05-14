@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
       downloadCount: t.download_count,
       price: t.price || 0,
       isPurchased: false,
+      isPremium: t.is_premium || false,
       createdAt: t.created_at,
       updatedAt: t.updated_at,
     }));

@@ -23,6 +23,7 @@ export const WEDDING_TEMPLATE: Template = {
   downloadCount: 0,
   price: 0,
   isPurchased: false,
+  isPremium: false,
   fields: [
     {
       name: 'groomName',
@@ -85,6 +86,7 @@ export const BIRTHDAY_TEMPLATE: Template = {
   downloadCount: 0,
   price: 0,
   isPurchased: false,
+  isPremium: false,
   fields: [
     {
       name: 'hostName',
@@ -208,6 +210,7 @@ export const ROMANTIC_TEMPLATE: Template = {
   downloadCount: 0,
   price: 5000,
   isPurchased: false,
+  isPremium: false,
   layout: 'simple',
   fields: [],
   sections: [
@@ -244,9 +247,66 @@ export const ROMANTIC_TEMPLATE: Template = {
       },
     },
     {
+      id: 'audio-background',
+      type: 'audio',
+      order: 1.5,
+      label: '배경음악',
+      fields: [
+        {
+          name: 'audioUrl',
+          type: 'text',
+          label: '배경음악 URL',
+          required: false,
+          defaultValue: '',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 800,
+        animationDelay: 250,
+        backgroundColor: '#FFF5F5',
+        textColor: '#4A3728',
+        accentColor: '#C48B7F',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'video-wedding',
+      type: 'video',
+      order: 2,
+      label: '웨딩 영상',
+      fields: [
+        {
+          name: 'videoUrl',
+          type: 'video',
+          label: '영상 URL (YouTube 또는 MP4)',
+          required: false,
+          defaultValue: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        },
+        {
+          name: 'videoTitle',
+          type: 'text',
+          label: '영상 제목',
+          required: false,
+          defaultValue: 'Our Wedding Story',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 800,
+        animationDelay: 300,
+        backgroundColor: '#000000',
+        textColor: '#FFFFFF',
+        accentColor: '#C48B7F',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'base',
+      },
+    },
+    {
       id: 'announcement-main',
       type: 'announcement',
-      order: 2,
+      order: 3,
       label: '주요 공지',
       fields: [
         {
@@ -299,7 +359,7 @@ export const ROMANTIC_TEMPLATE: Template = {
     {
       id: 'invitation-message',
       type: 'invitation',
-      order: 3,
+      order: 4,
       label: '초대 메시지',
       fields: [
         {
@@ -325,7 +385,7 @@ export const ROMANTIC_TEMPLATE: Template = {
         },
         {
           name: 'dressCode',
-          type: 'text',
+          type: 'dresscode',
           label: '드레스 코드',
           required: false,
           defaultValue: 'White or Neutral tones',
@@ -345,7 +405,7 @@ export const ROMANTIC_TEMPLATE: Template = {
     {
       id: 'map-location',
       type: 'map',
-      order: 4,
+      order: 5,
       label: '오시는 길',
       fields: [
         {
@@ -391,7 +451,7 @@ export const ROMANTIC_TEMPLATE: Template = {
     {
       id: 'gallery-romantic',
       type: 'gallery',
-      order: 5,
+      order: 6,
       label: '갤러리',
       fields: [
         {
@@ -451,7 +511,7 @@ export const ROMANTIC_TEMPLATE: Template = {
     {
       id: 'accounts-contact',
       type: 'accounts',
-      order: 6,
+      order: 7,
       label: '축의금 계좌',
       fields: [
         {
@@ -554,6 +614,7 @@ export const CLASSIC_TEMPLATE: Template = {
   downloadCount: 0,
   price: 5000,
   isPurchased: false,
+  isPremium: false,
   layout: 'simple',
   fields: [],
   sections: [
@@ -590,9 +651,66 @@ export const CLASSIC_TEMPLATE: Template = {
       },
     },
     {
+      id: 'audio-background-classic',
+      type: 'audio',
+      order: 1.5,
+      label: '배경음악',
+      fields: [
+        {
+          name: 'audioUrl',
+          type: 'text',
+          label: '배경음악 URL',
+          required: false,
+          defaultValue: '',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 800,
+        animationDelay: 250,
+        backgroundColor: '#F5F0EB',
+        textColor: '#3D3D3D',
+        accentColor: '#8B7355',
+        fontFamily: 'Playfair Display',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'video-classic',
+      type: 'video',
+      order: 2,
+      label: '웨딩 영상',
+      fields: [
+        {
+          name: 'videoUrl',
+          type: 'video',
+          label: '영상 URL (YouTube 또는 MP4)',
+          required: false,
+          defaultValue: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        },
+        {
+          name: 'videoTitle',
+          type: 'text',
+          label: '영상 제목',
+          required: false,
+          defaultValue: 'Our Wedding Story',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 800,
+        animationDelay: 300,
+        backgroundColor: '#000000',
+        textColor: '#FFFFFF',
+        accentColor: '#8B7355',
+        fontFamily: 'Playfair Display',
+        fontSize: 'base',
+      },
+    },
+    {
       id: 'announcement-classic',
       type: 'announcement',
-      order: 2,
+      order: 3,
       label: '주요 공지',
       fields: [
         {
@@ -645,7 +763,7 @@ export const CLASSIC_TEMPLATE: Template = {
     {
       id: 'invitation-classic',
       type: 'invitation',
-      order: 3,
+      order: 4,
       label: '초대 메시지',
       fields: [
         {
@@ -671,7 +789,7 @@ export const CLASSIC_TEMPLATE: Template = {
         },
         {
           name: 'dressCode',
-          type: 'text',
+          type: 'dresscode',
           label: '드레스 코드',
           required: false,
           defaultValue: 'Elegant Attire',
@@ -691,7 +809,7 @@ export const CLASSIC_TEMPLATE: Template = {
     {
       id: 'map-classic',
       type: 'map',
-      order: 4,
+      order: 5,
       label: '오시는 길',
       fields: [
         {
@@ -737,7 +855,7 @@ export const CLASSIC_TEMPLATE: Template = {
     {
       id: 'gallery-classic',
       type: 'gallery',
-      order: 5,
+      order: 6,
       label: '갤러리',
       fields: [
         {
@@ -797,7 +915,7 @@ export const CLASSIC_TEMPLATE: Template = {
     {
       id: 'accounts-classic',
       type: 'accounts',
-      order: 6,
+      order: 7,
       label: '축의금 계좌',
       fields: [
         {
@@ -900,6 +1018,7 @@ export const MODERN_TEMPLATE: Template = {
   downloadCount: 0,
   price: 5000,
   isPurchased: false,
+  isPremium: false,
   layout: 'simple',
   fields: [],
   sections: [
@@ -936,9 +1055,66 @@ export const MODERN_TEMPLATE: Template = {
       },
     },
     {
+      id: 'audio-background-modern',
+      type: 'audio',
+      order: 1.5,
+      label: '배경음악',
+      fields: [
+        {
+          name: 'audioUrl',
+          type: 'text',
+          label: '배경음악 URL',
+          required: false,
+          defaultValue: '',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 800,
+        animationDelay: 250,
+        backgroundColor: '#1A1A2E',
+        textColor: '#FFFFFF',
+        accentColor: '#E94560',
+        fontFamily: 'Pretendard',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'video-modern',
+      type: 'video',
+      order: 2,
+      label: '웨딩 영상',
+      fields: [
+        {
+          name: 'videoUrl',
+          type: 'video',
+          label: '영상 URL (YouTube 또는 MP4)',
+          required: false,
+          defaultValue: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        },
+        {
+          name: 'videoTitle',
+          type: 'text',
+          label: '영상 제목',
+          required: false,
+          defaultValue: 'Our Wedding Story',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 800,
+        animationDelay: 300,
+        backgroundColor: '#000000',
+        textColor: '#FFFFFF',
+        accentColor: '#E94560',
+        fontFamily: 'Pretendard',
+        fontSize: 'base',
+      },
+    },
+    {
       id: 'announcement-modern',
       type: 'announcement',
-      order: 2,
+      order: 3,
       label: '주요 공지',
       fields: [
         {
@@ -991,7 +1167,7 @@ export const MODERN_TEMPLATE: Template = {
     {
       id: 'invitation-modern',
       type: 'invitation',
-      order: 3,
+      order: 4,
       label: '초대 메시지',
       fields: [
         {
@@ -1017,7 +1193,7 @@ export const MODERN_TEMPLATE: Template = {
         },
         {
           name: 'dressCode',
-          type: 'text',
+          type: 'dresscode',
           label: '드레스 코드',
           required: false,
           defaultValue: 'Smart Casual',
@@ -1037,7 +1213,7 @@ export const MODERN_TEMPLATE: Template = {
     {
       id: 'map-modern',
       type: 'map',
-      order: 4,
+      order: 5,
       label: '오시는 길',
       fields: [
         {
@@ -1083,7 +1259,7 @@ export const MODERN_TEMPLATE: Template = {
     {
       id: 'gallery-modern',
       type: 'gallery',
-      order: 5,
+      order: 6,
       label: '갤러리',
       fields: [
         {
@@ -1143,7 +1319,7 @@ export const MODERN_TEMPLATE: Template = {
     {
       id: 'accounts-modern',
       type: 'accounts',
-      order: 6,
+      order: 7,
       label: '축의금 계좌',
       fields: [
         {
@@ -1232,12 +1408,927 @@ export const MODERN_TEMPLATE: Template = {
 };
 
 /**
+ * Section 기반 프리미엄 로맨틱 템플릿
+ * 기존 ROMANTIC보다 고급스러운 골드/딥 로즈 컬러 스킴
+ */
+export const PREMIUM_ROMANTIC_TEMPLATE: Template = {
+  id: 'premium-romantic-001',
+  name: '로열 로맨틱',
+  category: 'wedding',
+  thumbnail: '/templates/premium-romantic-thumbnail.png',
+  userId: 'sample-user',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  isPublished: true,
+  downloadCount: 0,
+  price: 10000,
+  isPurchased: false,
+  isPremium: true,
+  layout: 'simple',
+  fields: [],
+  sections: [
+    {
+      id: 'image-hero-premium-romantic',
+      type: 'image',
+      order: 1,
+      label: '헤드라인 이미지',
+      fields: [
+        {
+          name: 'heroImage',
+          type: 'image',
+          label: '헤드라인 이미지',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1520854221256-17451cc310b4?w=1200&q=80',
+        },
+        {
+          name: 'heroTitle',
+          type: 'text',
+          label: '타이틀',
+          required: false,
+          defaultValue: 'Our Royal Wedding',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 1000,
+        animationDelay: 200,
+        backgroundColor: '#FFF8F0',
+        textColor: '#3D2B1F',
+        accentColor: '#C9A96E',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'xl',
+      },
+    },
+    {
+      id: 'audio-background-premium-romantic',
+      type: 'audio',
+      order: 1.5,
+      label: '배경음악',
+      fields: [
+        {
+          name: 'audioUrl',
+          type: 'text',
+          label: '배경음악 URL',
+          required: false,
+          defaultValue: '',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 1000,
+        animationDelay: 250,
+        backgroundColor: '#FFF8F0',
+        textColor: '#3D2B1F',
+        accentColor: '#C9A96E',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'video-premium-romantic',
+      type: 'video',
+      order: 2,
+      label: '웨딩 영상',
+      fields: [
+        {
+          name: 'videoUrl',
+          type: 'video',
+          label: '영상 URL (YouTube 또는 MP4)',
+          required: false,
+          defaultValue: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        },
+        {
+          name: 'videoTitle',
+          type: 'text',
+          label: '영상 제목',
+          required: false,
+          defaultValue: 'Our Love Story',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 1000,
+        animationDelay: 300,
+        backgroundColor: '#000000',
+        textColor: '#FFFFFF',
+        accentColor: '#C9A96E',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'announcement-premium-romantic',
+      type: 'announcement',
+      order: 3,
+      label: '주요 공지',
+      fields: [
+        {
+          name: 'groomName',
+          type: 'text',
+          label: '신랑 이름',
+          required: true,
+          defaultValue: '김철수',
+        },
+        {
+          name: 'brideName',
+          type: 'text',
+          label: '신부 이름',
+          required: true,
+          defaultValue: '이영희',
+        },
+        {
+          name: 'date',
+          type: 'date',
+          label: '결혼식 날짜',
+          required: true,
+          defaultValue: '2026-08-01',
+        },
+        {
+          name: 'time',
+          type: 'text',
+          label: '결혼식 시간',
+          required: false,
+          defaultValue: '오후 3 시',
+        },
+        {
+          name: 'location',
+          type: 'location',
+          label: '결혼식 장소',
+          required: true,
+          defaultValue: '서울 그랜드 인터컨티넨탈 ballroom',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 400,
+        backgroundColor: '#FFFFFF',
+        textColor: '#2D2D2D',
+        accentColor: '#C9A96E',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'lg',
+      },
+    },
+    {
+      id: 'invitation-premium-romantic',
+      type: 'invitation',
+      order: 4,
+      label: '초대 메시지',
+      fields: [
+        {
+          name: 'groomParents',
+          type: 'parents',
+          label: '신랑 측 부모님',
+          required: false,
+          defaultValue: '아버지 김OO / 어머니 장OO',
+        },
+        {
+          name: 'brideParents',
+          type: 'parents',
+          label: '신부 측 부모님',
+          required: false,
+          defaultValue: '아버지 이OO / 어머니 박OO',
+        },
+        {
+          name: 'message',
+          type: 'message',
+          label: '초대 메시지',
+          required: false,
+          defaultValue: '사랑하는 가족과 친구들에게\n이 행복한 소식을 전합니다.\n두 사람이 새로운 삶을 시작하는 이 특별한 순간에\n소중한 분들이 함께해 주시기를 간곡히 부탁드립니다.',
+        },
+        {
+          name: 'dressCode',
+          type: 'dresscode',
+          label: '드레스 코드',
+          required: false,
+          defaultValue: 'Black Tie Optional',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 600,
+        backgroundColor: '#FFFBF5',
+        textColor: '#3D2B1F',
+        accentColor: '#D4AF8A',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'map-premium-romantic',
+      type: 'map',
+      order: 5,
+      label: '오시는 길',
+      fields: [
+        {
+          name: 'venueName',
+          type: 'text',
+          label: '장소명',
+          required: true,
+          defaultValue: '그랜드 인터컨티넨탈',
+        },
+        {
+          name: 'address',
+          type: 'location',
+          label: '주소',
+          required: true,
+          defaultValue: '서울특별시 중구 명동길 100',
+        },
+        {
+          name: 'mapUrl',
+          type: 'text',
+          label: '지도 URL',
+          required: false,
+          defaultValue: 'https://map.naver.com',
+        },
+        {
+          name: 'navigation',
+          type: 'text',
+          label: '네비게이션 주소',
+          required: false,
+          defaultValue: '서울특별시 중구 명동길 100 그랜드 인터컨티넨탈',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 800,
+        backgroundColor: '#FFFFFF',
+        textColor: '#2D2D2D',
+        accentColor: '#C9A96E',
+        fontFamily: 'Pretendard',
+        fontSize: 'sm',
+      },
+    },
+    {
+      id: 'gallery-premium-romantic',
+      type: 'gallery',
+      order: 6,
+      label: '갤러리',
+      fields: [
+        {
+          name: 'image1',
+          type: 'image',
+          label: '갤러리 이미지 1',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1591604465035-641acb3a5757?w=800&q=80',
+        },
+        {
+          name: 'image2',
+          type: 'image',
+          label: '갤러리 이미지 2',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1522673607200-164d3b178040?w=800&q=80',
+        },
+        {
+          name: 'image3',
+          type: 'image',
+          label: '갤러리 이미지 3',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80',
+        },
+        {
+          name: 'image4',
+          type: 'image',
+          label: '갤러리 이미지 4',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1507504031981-9257d497c5f2?w=800&q=80',
+        },
+        {
+          name: 'image5',
+          type: 'image',
+          label: '갤러리 이미지 5',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1465495970360-7f81403a7bc6?w=800&q=80',
+        },
+        {
+          name: 'image6',
+          type: 'image',
+          label: '갤러리 이미지 6',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1519657313402722575f4bb0c124954c89?w=800&q=80',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 900,
+        backgroundColor: '#FFFFFF',
+        textColor: '#3D2B1F',
+        accentColor: '#C9A96E',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'accounts-premium-romantic',
+      type: 'accounts',
+      order: 7,
+      label: '축의금 계좌',
+      fields: [
+        {
+          name: 'groomBank',
+          type: 'account',
+          label: '신랑 측 은행',
+          required: false,
+          defaultValue: 'KB국민은행',
+        },
+        {
+          name: 'groomAccount',
+          type: 'account',
+          label: '신랑 측 계좌번호',
+          required: false,
+          defaultValue: '123-456789-012345',
+        },
+        {
+          name: 'groomHolder',
+          type: 'text',
+          label: '신랑 측 예금주',
+          required: false,
+          defaultValue: '김철수',
+        },
+        {
+          name: 'brideBank',
+          type: 'account',
+          label: '신부 측 은행',
+          required: false,
+          defaultValue: 'SH수협은행',
+        },
+        {
+          name: 'brideAccount',
+          type: 'account',
+          label: '신부 측 계좌번호',
+          required: false,
+          defaultValue: '456-789012-987654',
+        },
+        {
+          name: 'brideHolder',
+          type: 'text',
+          label: '신부 측 예금주',
+          required: false,
+          defaultValue: '이영희',
+        },
+        {
+          name: 'groomPhone',
+          type: 'text',
+          label: '신랑 연락처',
+          required: false,
+          defaultValue: '010-1234-5678',
+        },
+        {
+          name: 'bridePhone',
+          type: 'text',
+          label: '신부 연락처',
+          required: false,
+          defaultValue: '010-8765-4321',
+        },
+        {
+          name: 'plannerName',
+          type: 'text',
+          label: '플래너 이름',
+          required: false,
+          defaultValue: '김플래너',
+        },
+        {
+          name: 'plannerPhone',
+          type: 'text',
+          label: '플래너 연락처',
+          required: false,
+          defaultValue: '02-1234-5678',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 600,
+        animationDelay: 1000,
+        backgroundColor: '#FFF5E6',
+        textColor: '#3D2B1F',
+        accentColor: '#C9A96E',
+        fontFamily: 'Pretendard',
+        fontSize: 'sm',
+      },
+    },
+  ],
+};
+
+/**
+ * Section 기반 프리미엄 클래식 템플릿
+ * 기존 CLASSIC보다 고급스러운 다크 골드/아이보리 컬러 스킴
+ */
+export const PREMIUM_CLASSIC_TEMPLATE: Template = {
+  id: 'premium-classic-001',
+  name: '로열 클래식',
+  category: 'wedding',
+  thumbnail: '/templates/premium-classic-thumbnail.png',
+  userId: 'sample-user',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  isPublished: true,
+  downloadCount: 0,
+  price: 10000,
+  isPurchased: false,
+  isPremium: true,
+  layout: 'simple',
+  fields: [],
+  sections: [
+    {
+      id: 'image-hero-premium-classic',
+      type: 'image',
+      order: 1,
+      label: '헤드라인 이미지',
+      fields: [
+        {
+          name: 'heroImage',
+          type: 'image',
+          label: '헤드라인 이미지',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1544078751-58fee4d8e0b1?w=1200&q=80',
+        },
+        {
+          name: 'heroTitle',
+          type: 'text',
+          label: '타이틀',
+          required: false,
+          defaultValue: 'A Timeless Celebration',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 1000,
+        animationDelay: 200,
+        backgroundColor: '#FDFBF7',
+        textColor: '#2C2C2C',
+        accentColor: '#B8960C',
+        fontFamily: 'Playfair Display',
+        fontSize: 'xl',
+      },
+    },
+    {
+      id: 'audio-background-premium-classic',
+      type: 'audio',
+      order: 1.5,
+      label: '배경음악',
+      fields: [
+        {
+          name: 'audioUrl',
+          type: 'text',
+          label: '배경음악 URL',
+          required: false,
+          defaultValue: '',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 1000,
+        animationDelay: 250,
+        backgroundColor: '#FDFBF7',
+        textColor: '#2C2C2C',
+        accentColor: '#B8960C',
+        fontFamily: 'Playfair Display',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'video-premium-classic',
+      type: 'video',
+      order: 2,
+      label: '웨딩 영상',
+      fields: [
+        {
+          name: 'videoUrl',
+          type: 'video',
+          label: '영상 URL (YouTube 또는 MP4)',
+          required: false,
+          defaultValue: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        },
+        {
+          name: 'videoTitle',
+          type: 'text',
+          label: '영상 제목',
+          required: false,
+          defaultValue: 'Our Love Story',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 1000,
+        animationDelay: 300,
+        backgroundColor: '#000000',
+        textColor: '#FFFFFF',
+        accentColor: '#B8960C',
+        fontFamily: 'Playfair Display',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'announcement-premium-classic',
+      type: 'announcement',
+      order: 3,
+      label: '주요 공지',
+      fields: [
+        {
+          name: 'groomName',
+          type: 'text',
+          label: '신랑 이름',
+          required: true,
+          defaultValue: '김철수',
+        },
+        {
+          name: 'brideName',
+          type: 'text',
+          label: '신부 이름',
+          required: true,
+          defaultValue: '이영희',
+        },
+        {
+          name: 'date',
+          type: 'date',
+          label: '결혼식 날짜',
+          required: true,
+          defaultValue: '2026-09-15',
+        },
+        {
+          name: 'time',
+          type: 'text',
+          label: '결혼식 시간',
+          required: false,
+          defaultValue: '오후 2 시',
+        },
+        {
+          name: 'location',
+          type: 'location',
+          label: '결혼식 장소',
+          required: true,
+          defaultValue: '서울 신라호텔 ballroom',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 400,
+        backgroundColor: '#FFFFFF',
+        textColor: '#1A1A1A',
+        accentColor: '#B8960C',
+        fontFamily: 'Playfair Display',
+        fontSize: 'lg',
+      },
+    },
+    {
+      id: 'invitation-premium-classic',
+      type: 'invitation',
+      order: 4,
+      label: '초대 메시지',
+      fields: [
+        {
+          name: 'groomParents',
+          type: 'parents',
+          label: '신랑 측 부모님',
+          required: false,
+          defaultValue: '아버지 김OO / 어머니 장OO',
+        },
+        {
+          name: 'brideParents',
+          type: 'parents',
+          label: '신부 측 부모님',
+          required: false,
+          defaultValue: '아버지 이OO / 어머니 박OO',
+        },
+        {
+          name: 'message',
+          type: 'message',
+          label: '초대 메시지',
+          required: false,
+          defaultValue: '사랑하는 가족과 친구들에게\n이 행복한 소식을 전합니다.\n두 사람이 새로운 삶을 시작하는 이 특별한 순간에\n소중한 분들이 함께해 주시기를 간곡히 부탁드립니다.',
+        },
+        {
+          name: 'dressCode',
+          type: 'dresscode',
+          label: '드레스 코드',
+          required: false,
+          defaultValue: 'Formal Attire',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 600,
+        backgroundColor: '#FAF8F3',
+        textColor: '#2C2C2C',
+        accentColor: '#D4B84A',
+        fontFamily: 'Playfair Display',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'map-premium-classic',
+      type: 'map',
+      order: 5,
+      label: '오시는 길',
+      fields: [
+        {
+          name: 'venueName',
+          type: 'text',
+          label: '장소명',
+          required: true,
+          defaultValue: '신라호텔 ballroom',
+        },
+        {
+          name: 'address',
+          type: 'location',
+          label: '주소',
+          required: true,
+          defaultValue: '서울특별시 중구 명동길 108',
+        },
+        {
+          name: 'mapUrl',
+          type: 'text',
+          label: '지도 URL',
+          required: false,
+          defaultValue: 'https://map.naver.com',
+        },
+        {
+          name: 'navigation',
+          type: 'text',
+          label: '네비게이션 주소',
+          required: false,
+          defaultValue: '서울특별시 중구 명동길 108 신라호텔',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 800,
+        backgroundColor: '#FFFFFF',
+        textColor: '#1A1A1A',
+        accentColor: '#B8960C',
+        fontFamily: 'Pretendard',
+        fontSize: 'sm',
+      },
+    },
+    {
+      id: 'gallery-premium-classic',
+      type: 'gallery',
+      order: 6,
+      label: '갤러리',
+      fields: [
+        {
+          name: 'image1',
+          type: 'image',
+          label: '갤러리 이미지 1',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1583337130417-131043efe3e?w=800&q=80',
+        },
+        {
+          name: 'image2',
+          type: 'image',
+          label: '갤러리 이미지 2',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1529636798458-92132c23cb1d?w=800&q=80',
+        },
+        {
+          name: 'image3',
+          type: 'image',
+          label: '갤러리 이미지 3',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1510011477330-1242e0daadab?w=800&q=80',
+        },
+        {
+          name: 'image4',
+          type: 'image',
+          label: '갤러리 이미지 4',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1492684223066-816473dfa291?w=800&q=80',
+        },
+        {
+          name: 'image5',
+          type: 'image',
+          label: '갤러리 이미지 5',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1537633555587-7fe8fd19470a?w=800&q=80',
+        },
+        {
+          name: 'image6',
+          type: 'image',
+          label: '갤러리 이미지 6',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1519657313402722575f4bb0c124954c89?w=800&q=80',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 900,
+        backgroundColor: '#FFFFFF',
+        textColor: '#2C2C2C',
+        accentColor: '#B8960C',
+        fontFamily: 'Playfair Display',
+        fontSize: 'base',
+      },
+    },
+    {
+      id: 'accounts-premium-classic',
+      type: 'accounts',
+      order: 7,
+      label: '축의금 계좌',
+      fields: [
+        {
+          name: 'groomBank',
+          type: 'account',
+          label: '신랑 측 은행',
+          required: false,
+          defaultValue: 'KB국민은행',
+        },
+        {
+          name: 'groomAccount',
+          type: 'account',
+          label: '신랑 측 계좌번호',
+          required: false,
+          defaultValue: '987-654321-123456',
+        },
+        {
+          name: 'groomHolder',
+          type: 'text',
+          label: '신랑 측 예금주',
+          required: false,
+          defaultValue: '김철수',
+        },
+        {
+          name: 'brideBank',
+          type: 'account',
+          label: '신부 측 은행',
+          required: false,
+          defaultValue: 'KB국민은행',
+        },
+        {
+          name: 'brideAccount',
+          type: 'account',
+          label: '신부 측 계좌번호',
+          required: false,
+          defaultValue: '321-654987-654321',
+        },
+        {
+          name: 'brideHolder',
+          type: 'text',
+          label: '신부 측 예금주',
+          required: false,
+          defaultValue: '이영희',
+        },
+        {
+          name: 'groomPhone',
+          type: 'text',
+          label: '신랑 연락처',
+          required: false,
+          defaultValue: '010-1234-5678',
+        },
+        {
+          name: 'bridePhone',
+          type: 'text',
+          label: '신부 연락처',
+          required: false,
+          defaultValue: '010-8765-4321',
+        },
+        {
+          name: 'plannerName',
+          type: 'text',
+          label: '플래너 이름',
+          required: false,
+          defaultValue: '박플래너',
+        },
+        {
+          name: 'plannerPhone',
+          type: 'text',
+          label: '플래너 연락처',
+          required: false,
+          defaultValue: '02-9876-5432',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 600,
+        animationDelay: 1000,
+        backgroundColor: '#F5F0E6',
+        textColor: '#2C2C2C',
+        accentColor: '#B8960C',
+        fontFamily: 'Pretendard',
+        fontSize: 'sm',
+      },
+    },
+  ],
+};
+
+/**
+ * 장근재 & DING XIYUAN 맞춤 템플릿 (Phase 26)
+ * 단순 3섹션: Hero, Blessing Message, Guestbook
+ * 날짜/장소/지도/계좌 섹션 제거
+ */
+export const JANG_DING_TEMPLATE: Template = {
+  id: 'jang-ding-001',
+  name: '근희 & XIYUAN',
+  category: 'wedding',
+  thumbnail: '/templates/jang-ding-thumbnail.png',
+  userId: 'sample-user',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  isPublished: true,
+  downloadCount: 0,
+  price: 0,
+  isPurchased: false,
+  isPremium: false,
+  layout: 'simple',
+  fields: [],
+  sections: [
+    {
+      id: 'image-hero-jang-ding',
+      type: 'image',
+      order: 1,
+      label: '히어로 이미지',
+      fields: [
+        {
+          name: 'heroImage',
+          type: 'image',
+          label: '히어로 이미지',
+          required: false,
+          defaultValue: 'https://images.unsplash.com/photo-1519741497674-6132876ee333?w=1200&q=80',
+        },
+        {
+          name: 'heroTitle',
+          type: 'text',
+          label: '타이틀',
+          required: false,
+          defaultValue: 'We are getting married',
+        },
+      ],
+      style: {
+        animation: 'fade-in',
+        animationDuration: 1000,
+        animationDelay: 200,
+        backgroundColor: '#FFF5F0',
+        textColor: '#4A3728',
+        accentColor: '#C48B7F',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'xl',
+      },
+    },
+    {
+      id: 'blessing-message-jang-ding',
+      type: 'invitation',
+      order: 2,
+      label: '축하 메시지',
+      fields: [
+        {
+          name: 'groomName',
+          type: 'text',
+          label: '신랑 이름',
+          required: true,
+          defaultValue: '장근재',
+        },
+        {
+          name: 'brideName',
+          type: 'text',
+          label: '신부 이름',
+          required: true,
+          defaultValue: 'DING XIYUAN',
+        },
+        {
+          name: 'blessingMessage',
+          type: 'message',
+          label: '축하 메시지',
+          required: false,
+          defaultValue: '사랑하는 가족과 친구들에게\n이 행복한 소식을 전합니다.\n두 사람이 새로운 삶을 시작하는 이 특별한 순간에\n소중한 분들이 함께해 주시기를 간곡히 부탁드립니다.',
+        },
+        {
+          name: 'dressCode',
+          type: 'dresscode',
+          label: '드레스 코드',
+          required: false,
+          defaultValue: 'Elegant Attire',
+        },
+      ],
+      style: {
+        animation: 'slide-up',
+        animationDuration: 800,
+        animationDelay: 400,
+        backgroundColor: '#FFFFFF',
+        textColor: '#4A3728',
+        accentColor: '#D4A59A',
+        fontFamily: 'Noto Serif KR',
+        fontSize: 'base',
+      },
+    },
+  ],
+};
+
+/**
  * Section 기반 템플릿 목록
  */
 export const SECTION_BASED_TEMPLATES: Template[] = [
   ROMANTIC_TEMPLATE,
   CLASSIC_TEMPLATE,
   MODERN_TEMPLATE,
+  PREMIUM_ROMANTIC_TEMPLATE,
+  PREMIUM_CLASSIC_TEMPLATE,
+  JANG_DING_TEMPLATE,
 ];
 
 /**

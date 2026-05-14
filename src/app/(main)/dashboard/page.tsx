@@ -8,6 +8,14 @@ import { Template } from '@/types/template';
 import { Spinner } from '@/components/ui/spinner';
 import { GlassCard } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface DashboardStats {
   totalTemplates: number;
@@ -26,6 +34,9 @@ export default function DashboardPage() {
   const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareTemplate, setShareTemplate] = useState<Template | null>(null);
+  const [copied, setCopied] = useState(false);
   const [stats, setStats] = useState<DashboardStats>({
     totalTemplates: 0,
     totalInvitations: 0,
@@ -111,6 +122,28 @@ export default function DashboardPage() {
   }
 
   const recentTemplates = templates.slice(0, 3);
+
+  const handleShare = (template: Template) => {
+    setShareTemplate(template);
+    setShareOpen(true);
+    setCopied(false);
+  };
+
+  const handleCopyShareLink = async () => {
+    if (!shareTemplate) return;
+    const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/templates/${shareTemplate.id}`;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      alert('복사에 실패했습니다. 수동으로 복사해주세요.');
+    }
+  };
+
+  const handlePublish = (template: Template) => {
+    router.push(`/templates/${template.id}/edit`);
+  };
 
   const statCards = [
     {
@@ -325,13 +358,13 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 ml-4">
-                      <Button size="sm" variant="ghost" className="text-sm" onClick={(e) => { e.preventDefault(); router.push(`/templates/${template.id}/edit`); }}>
+                      <Button size="sm" variant="ghost" className="text-sm" onClick={() => router.push(`/templates/${template.id}/edit`)}>
                         편집
                       </Button>
-                      <Button size="sm" variant="ghost" className="text-sm">
+                      <Button size="sm" variant="ghost" className="text-sm" onClick={() => handleShare(template)}>
                         공유
                       </Button>
-                      <Button size="sm" variant="ghost" className="text-sm">
+                      <Button size="sm" variant="ghost" className="text-sm" onClick={() => handlePublish(template)}>
                         발행
                       </Button>
                     </div>
@@ -360,6 +393,49 @@ export default function DashboardPage() {
             </div>
           )}
         </GlassCard>
+
+        {/* Share Dialog */}
+        <Dialog open={shareOpen} onOpenChange={setShareOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>초대장 공유</DialogTitle>
+              <DialogDescription>
+                {shareTemplate?.name} 초대장 링크를 공유하세요.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="flex flex-col gap-4 py-4">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={shareTemplate ? `${typeof window !== 'undefined' ? window.location.origin : ''}/templates/${shareTemplate.id}` : ''}
+                  className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md bg-gray-50 text-gray-700"
+                />
+                <Button
+                  onClick={handleCopyShareLink}
+                  variant={copied ? 'default' : 'outline'}
+                  size="sm"
+                  className="whitespace-nowrap"
+                >
+                  {copied ? '복사 완료!' : '링크 복사'}
+                </Button>
+              </div>
+
+              {copied && (
+                <p className="text-sm text-green-600">
+                  링크가 클립보드에 복사되었습니다.
+                </p>
+              )}
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShareOpen(false)}>
+                닫기
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ interface TemplateCardProps {
   onSelect?: (template: Template) => void;
   onPreview?: (template: Template) => void;
   onDelete?: (template: Template) => void;
+  onShare?: (template: Template) => void;
   layout?: 'grid' | 'list';
 }
 
@@ -33,6 +34,7 @@ export function TemplateCard({
   onSelect,
   onPreview,
   onDelete,
+  onShare,
   layout = 'grid',
 }: TemplateCardProps) {
   const router = useRouter();
@@ -120,6 +122,14 @@ export function TemplateCard({
                       size="sm" variant="destructive"
                     >
                       🗑️
+                    </Button>
+                  )}
+                  {onShare && (
+                    <Button
+                      onClick={(e) => { e.stopPropagation(); onShare(template); }}
+                      size="sm" variant="outline"
+                    >
+                      📤 공유
                     </Button>
                   )}
                 </div>
@@ -217,6 +227,18 @@ export function TemplateCard({
                 variant="destructive"
               >
                 🗑️ Delete
+              </Button>
+            )}
+            {onShare && (
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onShare(template);
+                }}
+                className="flex-1"
+                variant="outline"
+              >
+                📤 공유
               </Button>
             )}
           </div>

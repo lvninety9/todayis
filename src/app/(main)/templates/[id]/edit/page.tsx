@@ -13,7 +13,8 @@ import { TemplatePreview } from '@/components/templates/preview/TemplatePreview'
 import { TemplateEditor } from '@/components/templates/editor/TemplateEditor';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { Monitor, Smartphone, Eye, Split, Save } from 'lucide-react';
+import { Monitor, Smartphone, Eye, Split, Save, Share2 } from 'lucide-react';
+import { ShareDialog } from '@/components/publish/ShareDialog';
 
 /**
  * Template Edit 페이지 (Section 기반)
@@ -37,6 +38,11 @@ export default function TemplateEditPage() {
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [splitView, setSplitView] = useState(true);
   const [previewKey, setPreviewKey] = useState(0);
+
+  // Share state
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+  const [shareLoading, setShareLoading] = useState(false);
 
   // Edit state (flat fields for backward compatibility)
   const [name, setName] = useState('');
@@ -249,6 +255,54 @@ export default function TemplateEditPage() {
     }
   };
 
+  // 공유 핸들러 — 초대장 생성 또는 기존 초대장 조회
+  const handleShare = async () => {
+    if (shareLoading || !template || !session.session?.access_token) return;
+    setShareLoading(true);
+
+    try {
+      // 섹션 기반 데이터 추출
+      const values: Record<string, string> = {};
+      if (hasSections) {
+        Object.values(sectionFieldValues).forEach((sectionValues) => {
+          Object.assign(values, sectionValues);
+        });
+      } else {
+        template.fields.forEach((field) => {
+          values[field.name] = field.defaultValue ?? '';
+        });
+      }
+
+      const response = await fetch('/api/invitations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.session.access_token}`,
+        },
+        body: JSON.stringify({
+          templateId: template.id,
+          title: name || template.name,
+          data: values,
+          is_published: true,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '초대장 생성에 실패했습니다');
+      }
+
+      const data = await response.json();
+      const url = `${window.location.origin}/${data.invitation.slug}`;
+      setShareUrl(url);
+      setShareOpen(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : '공유 링크 생성에 실패했습니다');
+    } finally {
+      setShareLoading(false);
+    }
+  };
+
   // Build preview data from section field values
   const previewData = React.useMemo(() => {
     if (!template) return null;
@@ -318,6 +372,10 @@ export default function TemplateEditPage() {
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={saving}>
               삭제
+            </Button>
+            <Button onClick={handleShare} disabled={shareLoading} variant="outline">
+              <Share2 className="w-4 h-4 mr-1" />
+              {shareLoading ? '생성 중...' : '공유'}
             </Button>
             <Button onClick={() => handleSaveFlat()} disabled={saving}>
               {saving ? '저장 중...' : '저장하기'}
@@ -600,6 +658,14 @@ export default function TemplateEditPage() {
             </Button>
           </div>
         )}
+
+        {/* 공유 다이얼로그 */}
+        <ShareDialog
+          open={shareOpen}
+          onOpenChange={setShareOpen}
+          shareUrl={shareUrl}
+          title="초대장 공유"
+        />
       </div>
     </div>
   );

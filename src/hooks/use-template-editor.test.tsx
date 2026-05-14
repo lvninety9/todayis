@@ -22,6 +22,7 @@ const mockTemplate: Template = {
   downloadCount: 0,
   price: 0,
   isPurchased: false,
+  isPremium: false,
 };
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (

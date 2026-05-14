@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+test-results
+playwright-report
+.git
+.planning
+wiki
+*.md
+images
+prisma
+setup-storage-bucket.js
+supabase-*.sql
+scripts
+tsconfig.tsbuildinfo

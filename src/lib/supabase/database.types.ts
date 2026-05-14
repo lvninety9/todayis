@@ -43,6 +43,10 @@ export interface Template {
   download_count: number;
   /** 가격 (원화, 무료면 0) */
   price: number;
+  /** 프리미엄 템플릿 여부 */
+  is_premium: boolean;
+  /** 원본 템플릿 ID (구매 후 복사된 템플릿) */
+  original_template_id: string | null;
   /** 생성일시 */
   created_at: string;
   /** 수정일시 */
@@ -75,6 +79,10 @@ export interface TemplateInsert {
   download_count?: number;
   /** 가격 (원화, 무료면 0, 기본값: 0) */
   price?: number;
+  /** 프리미엄 템플릿 여부 (기본값: false) */
+  is_premium?: boolean;
+  /** 원본 템플릿 ID (구매 후 복사된 템플릿) */
+  original_template_id?: string | null;
   /** 생성일시 (생략 시 자동 설정) */
   created_at?: string;
   /** 수정일시 (생략 시 자동 설정) */

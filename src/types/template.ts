@@ -16,7 +16,7 @@ export type FieldType = 'text' | 'date' | 'image' | 'location' | 'account' | 'au
 /**
  * 섹션 타입 (section 기반 렌더링)
  */
-export type SectionType = 'image' | 'announcement' | 'invitation' | 'map' | 'accounts' | 'gallery' | 'story';
+export type SectionType = 'image' | 'announcement' | 'invitation' | 'map' | 'accounts' | 'gallery' | 'story' | 'video' | 'audio';
 
 /**
  * 폰트 크기 옵션
@@ -102,6 +102,8 @@ export interface Template {
   price: number;
   /** 구매 여부 */
   isPurchased: boolean;
+  /** 프리미엄 템플릿 여부 */
+  isPremium: boolean;
   /** 섹션 기반 구조 (신규, sections가 있으면 우선 사용) */
   sections?: Section[];
 }

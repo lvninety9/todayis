@@ -41,7 +41,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalTemplates, setTotalTemplates] = useState(0);
-  const [page, setPage] = useState(1);
+  const [userPage, setUserPage] = useState(1);
   const [templatePage, setTemplatePage] = useState(1);
 
   const fetchUsers = useCallback(async () => {
@@ -51,7 +51,7 @@ export default function AdminPage() {
     }
 
     try {
-      const response = await fetch('/api/admin/users', {
+      const response = await fetch(`/api/admin/users?page=${userPage}&limit=10`, {
         headers: {
           Authorization: `Bearer ${session.session.access_token}`,
         },
@@ -74,7 +74,7 @@ export default function AdminPage() {
     } finally {
       setLoading(false);
     }
-  }, [session.session?.access_token, router]);
+  }, [session.session?.access_token, userPage, router]);
 
   const fetchTemplates = useCallback(async () => {
     if (!session.session?.access_token) {
@@ -130,7 +130,7 @@ export default function AdminPage() {
     } else {
       fetchTemplates();
     }
-  }, [session.loading, session.user, activeTab, fetchUsers, fetchTemplates, router, isAdmin]);
+  }, [session.loading, session.user, activeTab, fetchUsers, fetchTemplates, router, isAdmin, userPage]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     if (!session.session?.access_token) return;
@@ -270,7 +270,7 @@ export default function AdminPage() {
         {/* 탭 네비게이션 */}
         <div className="flex gap-4 mb-6 border-b border-gray-200">
           <button
-            onClick={() => setActiveTab('users')}
+            onClick={() => { setActiveTab('users'); setUserPage(1); }}
             className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
               activeTab === 'users'
                 ? 'border-indigo-600 text-indigo-600'
@@ -280,7 +280,7 @@ export default function AdminPage() {
             회원 관리 ({totalUsers})
           </button>
           <button
-            onClick={() => setActiveTab('templates')}
+            onClick={() => { setActiveTab('templates'); setTemplatePage(1); }}
             className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
               activeTab === 'templates'
                 ? 'border-indigo-600 text-indigo-600'
@@ -350,6 +350,31 @@ export default function AdminPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+
+            {/* 페이지네이션 */}
+            {totalUsers > 10 && (
+              <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                <Button
+                  onClick={() => setUserPage((p) => Math.max(1, p - 1))}
+                  disabled={userPage <= 1}
+                  variant="outline"
+                  size="sm"
+                >
+                  이전
+                </Button>
+                <span className="text-sm text-gray-600">
+                  페이지 {userPage}
+                </span>
+                <Button
+                  onClick={() => setUserPage((p) => p + 1)}
+                  disabled={userPage * 10 >= totalUsers}
+                  variant="outline"
+                  size="sm"
+                >
+                  다음
+                </Button>
               </div>
             )}
           </div>
