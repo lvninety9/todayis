@@ -113,6 +113,12 @@
 | large files 제거 | git filter-branch | BFG Repo-Cleaner | git filter-branch | 외부 도구 설치 불필요, git 기본 도구로 해결 |
 | .gitignore 추가 | images/ 추가 | 이미 추가됨 | images/ 추가 | stash 손실로 .gitignore에서 images/ 제거됨 — 복원 |
 
+## Phase 30: 템플릿 편집 페이지 로그인 리다이렉트 재발 — 진행 중 (2026-05-15)
+
+| 결정 | 선택지 A | 선택지 B | 선택 | 근거 |
+|------|----------|----------|------|------|
+| 리다이렉트 조건 | `session.loading` 체크 추가 | hasCheckedSession만 | session.loading 추가 | hasCheckedSession은 true가 되지만 user는 null일 수 있음(로딩 중). loading 체크가 더 근본적인 해결 |
+
 ## 미결/논의 중
 
 - (Phase 12 항목 2개는 Phase 19에서 Supabase Storage + HTML5 Audio로 결정됨 — stale 제거 예정)

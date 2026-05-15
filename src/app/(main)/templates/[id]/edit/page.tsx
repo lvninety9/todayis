@@ -134,6 +134,7 @@ export default function TemplateEditPage() {
   }, [templateId, session.session, router]);
 
   useEffect(() => {
+    if (session.loading) return;
     if (session.hasCheckedSession && !session.user) {
       router.push('/login');
       return;
@@ -141,7 +142,7 @@ export default function TemplateEditPage() {
     if (templateId) {
       fetchTemplate();
     }
-  }, [session.hasCheckedSession, session.user, templateId, fetchTemplate, router]);
+  }, [session.loading, session.hasCheckedSession, session.user, templateId, fetchTemplate, router]);
 
   // Debounced preview update
   useEffect(() => {
