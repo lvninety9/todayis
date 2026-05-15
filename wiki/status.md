@@ -2,7 +2,7 @@
 
 ## 활성 페이즈
 
-Phase 30: 템플릿 편집 페이지 로그인 리다이렉트 버그 수정 — 진행 중
+Phase 30: 템플릿 편집 페이지 로그인 리다이렉트 버그 수정 — ✅ 완료 (2026-05-16 — session.loading guard 추가, build 통과, git push)
 
 ## 완료된 페이즈 (29개)
 
@@ -33,4 +33,4 @@ Phase 29: 대시보드 최근 템플릿 버튼 비클릭 문제 — ✅ 완료 (
 2026-05-07 slim화 완료 (스킬 22개 제거, AGENTS.md 60줄, .planning/ 6개, wiki slim화). 상세: `wiki/CONTEXT-OPTIMIZATION-LOG.md`
 
 ---
-*최신 업데이트: 2026-05-15 (Phase 1~29 전체 완료, bug 1~7 해결, build/lint 통과, git push 99 commits)*
+*최신 업데이트: 2026-05-16 (Phase 1~30 전체 완료, bug 1~7 해결, build/lint 통과, git push)*
