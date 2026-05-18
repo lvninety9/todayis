@@ -123,6 +123,15 @@
 
 - (Phase 12 항목 2개는 Phase 19에서 Supabase Storage + HTML5 Audio로 결정됨 — stale 제거 예정)
 
+## Bug 8: Sample 템플릿 수정/공유 실패 — 논의 중 (2026-05-16)
+
+| 결정 | 선택지 A | 선택지 B | 선택 | 근거 |
+|------|----------|----------|------|------|
+| PATCH 시 sample 템플릿 처리 | DB에 없으면 sample.ts에서 읽어 INSERT 후 UPDATE | sample.ts에서 직접 수정 (DB 미영향) | INSERT 후 UPDATE | sample 템플릿도 DB에 저장되어야 공유/삭제 가능. sample.ts는 seed 역할만 |
+| sample 템플릿 소유권 검증 | sample 템플릿은 모든 로그인 사용자에게 소유권 부여 | sample 템플릿은 수정 불가 | 모든 로그인 사용자에게 소유권 부여 | sample 템플릿은 "내 템플릿으로 복사" 후 수정하는 UX가 일반적 |
+| invitations API sample 처리 | PATCH와 동일하게 sample.ts fallback | sample 템플릿으로 초대장 생성 불가 | PATCH와 동일하게 fallback | 일관된 UX. sample 템플릿도 초대장 생성 가능해야 함 |
+| 기존 DB 템플릿과의 구분 | `is_sample` flag 추가 | template_id 패턴으로 구분 | `is_sample` flag 추가 | 명확한 구분. sample 템플릿은 다운로드 카운트 증가 제외 등 별도 처리 가능 |
+
 ## Bug 6: 대시보드 버튼 비클릭 문제 — ✅ Phase 29로 이관 (2026-05-15)
 
 | 결정 | 선택지 A | 선택지 B | 선택 | 근거 |

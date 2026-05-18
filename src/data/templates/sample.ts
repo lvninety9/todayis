@@ -2332,8 +2332,24 @@ export const SECTION_BASED_TEMPLATES: Template[] = [
 ];
 
 /**
+ * Sample template ID 목록 (runtime 빠른 식별용)
+ */
+export const SAMPLE_TEMPLATE_IDS = new Set([
+  'romantic-001',
+  'classic-001',
+  'modern-001',
+  'premium-romantic-001',
+  'premium-classic-001',
+  'jang-ding-001',
+]);
+
+/**
  * Section 기반 템플릿 ID로 찾기
  */
 export function findSectionBasedTemplate(id: string): Template | undefined {
-  return SECTION_BASED_TEMPLATES.find((t) => t.id === id);
+  const template = SECTION_BASED_TEMPLATES.find((t) => t.id === id);
+  if (template) {
+    return { ...template, isSample: true };
+  }
+  return undefined;
 }

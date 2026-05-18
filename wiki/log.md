@@ -24,3 +24,6 @@
 ## [2026-05-15] /gsd 29 | Phase 29 완료 — GlassCard ::before pseudo-element에 pointer-events-none 추가, build 통과
 ## [2026-05-15] /gsd | Phase 29까지 완료 확인 — 활성 페이즈 없음, bug 1~7 모두 해결, build/lint 통과, git push 완료
 ## [2026-05-15] /gsd | 세션 종료 — 마일스톤 완료 상태 확인, 다음 세션 프롬프트 제공
+## [2026-05-16] update | AGENTS.md에 Vercel 배포 정보 추가 (GitHub 연동 자동 배포 활성화, git push로 배포, CLI token 불필요), wiki/next-session.md 업데이트
+## [2026-05-16] bug | Bug 8 발견 — sample 템플릿(ROMANTIC/CLASSIC/MODERN) 수정/공유 시 "템플릿을 찾을 수 없습니다" 404. GET은 sample.ts fallback 성공, PATCH/DELETE/invitations은 DB에서만 조회 → 404. wiki/status.md + wiki/decisions.md에 기록, /gsd discuss로 이관
+## [2026-05-17] plan | Bug 8 해결 plan 수립 — phase 31 PLAN.md 생성. sample.ts 템플릿 PATCH/DELETE/invitations 생성 시 DB upsert 후 동작하도록 3파일 수정 계획. wiki/status.md + wiki/next-session.md 업데이트

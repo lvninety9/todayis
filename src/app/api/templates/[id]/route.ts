@@ -178,10 +178,100 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       .single();
     
     if (fetchError || !existingTemplate) {
-      return NextResponse.json(
-        { error: '템플릿을 찾을 수 없습니다.' },
-        { status: 404 }
-      );
+      // sample.ts에서 fallback 조회
+      const sampleTemplate = findSectionBasedTemplate(id);
+      if (sampleTemplate) {
+        // DB에 user의 템플릿으로 INSERT (upsert)
+        const insertData: any = {
+          id,
+          user_id: user.id,
+          name: sampleTemplate.name,
+          category: sampleTemplate.category,
+          thumbnail: sampleTemplate.thumbnail,
+          fields: sampleTemplate.fields || [],
+          layout: sampleTemplate.layout || 'simple',
+          config: { sections: sampleTemplate.sections || [], is_sample: true },
+          is_published: false,
+          download_count: 0,
+          price: sampleTemplate.price || 0,
+          is_premium: sampleTemplate.isPremium || false,
+        };
+        
+        const { data: insertedTemplate, error: insertError } = await supabase
+          .from('templates')
+          .upsert(insertData, { onConflict: 'id' })
+          .select()
+          .single();
+        
+        if (insertError) {
+          console.error('Sample template upsert error:', insertError);
+          return NextResponse.json(
+            { error: '템플릿 초기화 중 오류가 발생했습니다.' },
+            { status: 500 }
+          );
+        }
+        
+        // upsert 후 업데이트 진행
+        const updateData: Partial<TemplateUpdate> = {};
+        if ('name' in body) updateData.name = body.name;
+        if ('category' in body) updateData.category = body.category;
+        if ('thumbnail' in body) updateData.thumbnail = body.thumbnail;
+        if ('fields' in body) updateData.fields = body.fields;
+        if ('layout' in body) updateData.layout = body.layout;
+        if ('is_published' in body) updateData.is_published = body.is_published;
+        if ('download_count' in body) updateData.download_count = body.download_count;
+        if ('sections' in body) {
+          const existingConfig: any = insertedTemplate.config || {};
+          updateData.config = {
+            ...existingConfig,
+            sections: body.sections,
+          };
+        }
+        
+        updateData.updated_at = new Date().toISOString();
+        
+        const { data: updatedTemplate, error } = await supabase
+          .from('templates')
+          .update(updateData)
+          .eq('id', id)
+          .select()
+          .single();
+        
+        if (error) {
+          return NextResponse.json(
+            { error: '템플릿 수정 중 오류가 발생했습니다.' },
+            { status: 500 }
+          );
+        }
+        
+        const formattedTemplate: Template = {
+          id: updatedTemplate.id,
+          userId: updatedTemplate.user_id,
+          name: updatedTemplate.name,
+          category: updatedTemplate.category,
+          thumbnail: updatedTemplate.thumbnail,
+          fields: updatedTemplate.fields as TemplateField[],
+          layout: updatedTemplate.layout,
+          isPublished: updatedTemplate.is_published,
+          downloadCount: updatedTemplate.download_count,
+          price: updatedTemplate.price || 0,
+          isPurchased: false,
+          isPremium: updatedTemplate.is_premium || updatedTemplate.price > 0,
+          createdAt: updatedTemplate.created_at,
+          updatedAt: updatedTemplate.updated_at,
+          sections: (updatedTemplate.config as any)?.sections || [],
+        };
+        
+        return NextResponse.json(
+          formattedTemplate,
+          { status: 200 }
+        );
+      } else {
+        return NextResponse.json(
+          { error: '템플릿을 찾을 수 없습니다.' },
+          { status: 404 }
+        );
+      }
     }
     
     // 소유자 검증
@@ -285,14 +375,37 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       .single();
     
     if (fetchError || !existingTemplate) {
-      return NextResponse.json(
-        { error: '템플릿을 찾을 수 없습니다.' },
-        { status: 404 }
-      );
+      // sample.ts에서 fallback 조회
+      const sampleTemplate = findSectionBasedTemplate(id);
+      if (sampleTemplate) {
+        // sample 템플릿은 모든 로그인 사용자에게 소유권 부여
+        // DB에 해당 user의 row가 없으면 먼저 INSERT
+        const insertData: any = {
+          id,
+          user_id: user.id,
+          name: sampleTemplate.name,
+          category: sampleTemplate.category,
+          thumbnail: sampleTemplate.thumbnail,
+          fields: sampleTemplate.fields || [],
+          layout: sampleTemplate.layout || 'simple',
+          config: { sections: sampleTemplate.sections || [], is_sample: true },
+          is_published: false,
+          download_count: 0,
+          price: sampleTemplate.price || 0,
+          is_premium: sampleTemplate.isPremium || false,
+        };
+        
+        await supabase.from('templates').upsert(insertData, { onConflict: 'id' });
+      } else {
+        return NextResponse.json(
+          { error: '템플릿을 찾을 수 없습니다.' },
+          { status: 404 }
+        );
+      }
     }
     
-    // 소유자 검증
-    if (existingTemplate.user_id !== user.id) {
+    // 소유자 검증 (sample 템플릿은 upsert 후 user_id가 user.id이므로 항상 통과)
+    if (existingTemplate && (existingTemplate as any).user_id !== user.id) {
       return NextResponse.json(
         { error: '이 템플릿을 삭제할 권한이 없습니다.' },
         { status: 403 }

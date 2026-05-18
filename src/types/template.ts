@@ -106,6 +106,8 @@ export interface Template {
   isPremium: boolean;
   /** 섹션 기반 구조 (신규, sections가 있으면 우선 사용) */
   sections?: Section[];
+  /** sample.ts에서 로드된 템플릿인지 (Phase 31) */
+  isSample?: boolean;
 }
 
 /**

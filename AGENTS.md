@@ -36,6 +36,12 @@ GSD = 실행 엔진, wiki = 지식베이스. GSD PLAN/SUMMARY → wiki 병기. G
 NEXT_PUBLIC_SUPABASE_URL=... · NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 TOSS_PAYMENTS_SECRET_KEY=... · NAVER_PAY_CLIENT_ID=... · NAVER_PAY_CLIENT_SECRET=...
 ```
+
+## Vercel 배포
+- GitHub 연동 자동 배포 활성화됨 (https://vercel.com/lvninety9/todayis → Settings → Git)
+- `git push origin master` → Vercel에서 자동 빌드/배포
+- Vercel CLI token 불필요 (git push로 자동 배포)
+- 배포 URL: `https://todayis-my.vercel.app`
 <!-- BEGIN:token-rules -->
 ## 토큰 규칙 (65K 컨텍스트 최적화)
 

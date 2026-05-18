@@ -94,5 +94,10 @@
 - 다음: 신규 기능 요청 또는 V2/V3 마일스톤 시작
 - 추정 토큰: 100
 
+## 체크포인트: Phase 31 - Bug 8 sample template fix execute
+- 완료: Bug 8 해결 — src/types/template.ts에 isSample 추가, templates/[id]/route.ts PATCH/DELETE에 sample template fallback + DB upsert, invitations/route.ts POST에 sample template fallback + DB upsert, build/lint 통과
+- 다음: git push → Vercel 재배포 → 모바일 테스트 → 신규 기능 논의
+- 추정 토큰: 200
+
 ---
 *append-only — 체크포인트 추가만. 삭제 금지.*

@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import type { InvitationInsert } from '@/types/publish';
+import { findSectionBasedTemplate } from '@/data/templates/sample';
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,18 +51,39 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (templateError || !template) {
-      return NextResponse.json(
-        { error: '템플릿을 찾을 수 없습니다.' },
-        { status: 404 }
-      );
-    }
-
-    const templateUserId = (template as Record<string, unknown>).user_id as string;
-    if (templateUserId !== user.id) {
-      return NextResponse.json(
-        { error: '이 템플릿으로 초대장을 만들 권한이 없습니다.' },
-        { status: 403 }
-      );
+      // sample.ts에서 fallback 조회
+      const sampleTemplate = findSectionBasedTemplate(templateId);
+      if (sampleTemplate) {
+        const insertData: any = {
+          id: templateId,
+          user_id: user.id,
+          name: sampleTemplate.name,
+          category: sampleTemplate.category,
+          thumbnail: sampleTemplate.thumbnail,
+          fields: sampleTemplate.fields || [],
+          layout: sampleTemplate.layout || 'simple',
+          config: { sections: sampleTemplate.sections || [], is_sample: true },
+          is_published: false,
+          download_count: 0,
+          price: sampleTemplate.price || 0,
+          is_premium: sampleTemplate.isPremium || false,
+        };
+        await supabase.from('templates').upsert(insertData, { onConflict: 'id' });
+        // sample template upsert 후 user.id로 소유권 부여됨 — 검증 생략
+      } else {
+        return NextResponse.json(
+          { error: '템플릿을 찾을 수 없습니다.' },
+          { status: 404 }
+        );
+      }
+    } else {
+      const templateUserId = (template as Record<string, unknown>).user_id as string;
+      if (templateUserId !== user.id) {
+        return NextResponse.json(
+          { error: '이 템플릿으로 초대장을 만들 권한이 없습니다.' },
+          { status: 403 }
+        );
+      }
     }
 
     // slug 자동 생성
